@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#FCF8F7">
   <title>女力 AI 數位職涯課程介紹｜五大實用學習路徑比較</title>
   <meta name="description" content="專為重新就業、轉職女性設計的五大女力 AI 數位職涯課程：一日工具班、企業任務班、網頁工具班、LINE OA 工作流進階班及轉職作品強化方案。提供清晰客觀的課程目標、課綱時數與費用比較。">
 
@@ -550,6 +551,282 @@
       }
     }
 
+
+    /* 女力柔和質感主題 | 霧玫瑰 × 奶油杏 × 鼠尾草
+       保留既有課程內容、資訊架構及 RWD，取代高對比硬線條視覺。 */
+    :root {
+      --bg-canvas: #FCF8F7;
+      --text-main: #342B35;
+      --text-muted: #675A65;
+      --border-dark: #E8D9DF;
+      --card-bg: #FFFFFF;
+      --color-orange: #984662;
+      --color-orange-bg: #FBE9EF;
+      --color-yellow: #A87348;
+      --color-yellow-bg: #FFF2E7;
+      --color-blue: #486C89;
+      --color-blue-bg: #E9F1F7;
+      --color-green: #426F62;
+      --color-green-bg: #E8F2ED;
+      --color-purple: #72588B;
+      --color-purple-bg: #F0EBF6;
+      --shadow-border: 1px solid var(--border-dark);
+      --shadow-soft: 0 10px 30px rgba(77, 45, 63, 0.07);
+      --shadow-hover: 0 16px 36px rgba(77, 45, 63, 0.13);
+      --primary-deep: #79334F;
+    }
+
+    body { background: linear-gradient(180deg, #FFFBF9 0%, var(--bg-canvas) 48%, #FAF5F3 100%); }
+    header {
+      background: rgba(255, 251, 249, 0.96);
+      border-bottom: 1px solid #EEDFE5;
+      padding: 20px 0;
+    }
+    .site-branding { color: var(--primary-deep); font-weight: 800; letter-spacing: 0.02em; }
+    nav { gap: 8px; }
+    nav a {
+      background: #FFFFFF;
+      border: 1px solid #F0E4E8;
+      border-radius: 999px;
+      box-shadow: none;
+      color: #654958;
+      font-weight: 650;
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+    nav a:hover {
+      transform: none;
+      box-shadow: none;
+      background: #FBE9EF;
+      border-color: #E7BACB;
+      color: var(--primary-deep);
+    }
+    a:focus-visible, nav a:focus-visible, summary:focus-visible {
+      outline: 3px solid var(--color-orange);
+      outline-offset: 3px;
+    }
+    main { gap: 64px; }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      background: linear-gradient(125deg, #FFF1EB 0%, #FAEAF1 56%, #F2EDF8 100%);
+      border: 1px solid #EBD3DD;
+      border-radius: 28px;
+      box-shadow: var(--shadow-soft);
+      padding: 44px 38px;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      top: -155px;
+      right: -115px;
+      width: 390px;
+      height: 390px;
+      border-radius: 47% 53% 59% 41%;
+      background: radial-gradient(circle at 35% 38%, rgba(255,255,255,0.78), rgba(226,178,202,0.2) 58%, transparent 72%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      background: var(--primary-deep);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 999px;
+      box-shadow: none;
+      padding: 7px 15px;
+      letter-spacing: 0.03em;
+      font-weight: 750;
+    }
+    h1 { color: #68384E; font-weight: 850; letter-spacing: 0; }
+    .hero-intro { color: #5E4C59; font-weight: 500; max-width: 850px; }
+    .hero-paths {
+      background: rgba(255,255,255,0.82);
+      border: 1px solid #EDDCE2;
+      border-radius: 18px;
+      box-shadow: 0 8px 24px rgba(77,45,63,0.04);
+      padding: 24px;
+      gap: 18px;
+    }
+    .path-item { align-items: flex-start; gap: 12px; }
+    .path-number {
+      flex: 0 0 auto;
+      background: #F3DCE5;
+      color: #743A52;
+      border-radius: 8px;
+      font-size: 0.83rem;
+      letter-spacing: 0.02em;
+      padding: 3px 9px;
+    }
+    h2 {
+      background: transparent;
+      border: none;
+      border-bottom: 3px solid #E8B8CA;
+      border-radius: 0;
+      box-shadow: none;
+      color: #6F3D55;
+      padding: 0 0 10px;
+      margin-bottom: 26px;
+      font-weight: 800;
+    }
+    .overview-grid { gap: 22px; }
+    .course-card {
+      --course-accent: #984662;
+      --course-tint: #FBE9EF;
+      border: 1px solid #EFE2E6;
+      border-top: 4px solid var(--course-accent);
+      border-radius: 20px;
+      box-shadow: var(--shadow-soft);
+      padding: 27px;
+      gap: 20px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .course-card:nth-child(1) { --course-accent: #984662; --course-tint: #FBE9EF; }
+    .course-card:nth-child(2) { --course-accent: #A87348; --course-tint: #FFF2E7; }
+    .course-card:nth-child(3) { --course-accent: #486C89; --course-tint: #E9F1F7; }
+    .course-card:nth-child(4) { --course-accent: #426F62; --course-tint: #E8F2ED; }
+    .course-card:nth-child(5) { --course-accent: #72588B; --course-tint: #F0EBF6; }
+    .course-card:nth-child(n) .card-price-tag {
+      color: var(--course-accent);
+      background: var(--course-tint);
+      border: none;
+      border-radius: 11px;
+      padding: 7px 12px;
+    }
+    .card-title { color: #44313F; font-weight: 800; }
+    .card-format { color: #715D69; font-weight: 600; }
+    .card-positioning { color: #524753; }
+    .card-link {
+      background: var(--primary-deep);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 12px;
+      box-shadow: none;
+      font-weight: 750;
+      transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card-link::after { content: "↗"; margin-left: 9px; font-size: 1.05em; }
+    .card-link:hover {
+      background: #5F263D;
+      box-shadow: 0 7px 18px rgba(95,38,61,0.18);
+      transform: translateY(-2px);
+    }
+    .course-detail {
+      --course-accent: #984662;
+      background: #FFFFFF;
+      border: 1px solid #EFE2E6;
+      border-top: 4px solid var(--course-accent);
+      border-radius: 22px;
+      box-shadow: var(--shadow-soft);
+      padding: 34px;
+      gap: 26px;
+      scroll-margin-top: 20px;
+    }
+    #course-ai-tasks { --course-accent: #A87348; }
+    #course-ai-web { --course-accent: #486C89; }
+    #course-line-workflow { --course-accent: #426F62; }
+    #course-career-portfolio { --course-accent: #72588B; }
+    .course-header { border-bottom: 1px solid #F0E5E9; padding-bottom: 18px; }
+    .course-title { color: #56384B; font-weight: 800; }
+    .title-note {
+      background: #FFF4E8;
+      border: 1px solid #F0D6B8;
+      border-radius: 9px;
+      color: #715338;
+      font-weight: 550;
+      line-height: 1.5;
+      padding: 8px 12px;
+    }
+    .course-fields { gap: 15px; }
+    .field-block {
+      background: #FFFBFA;
+      border: 1px solid #F0E7E9;
+      border-left: 3px solid #E5BCCB;
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+    h4, .info-card h3 {
+      color: #6E3E55;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+    h4::before, .info-card h3::before {
+      width: 7px;
+      height: 15px;
+      border-radius: 99px;
+      background: #C77996;
+    }
+    .field-content { color: #453A44; }
+    .curriculum-details {
+      background: #FFFFFF;
+      border: 1px solid #EADDE2;
+      border-radius: 13px;
+      overflow: hidden;
+    }
+    .curriculum-summary {
+      background: #F9EDF2;
+      color: #673B51;
+      font-weight: 750;
+      padding: 14px 17px;
+      transition: background-color 0.2s ease;
+    }
+    .curriculum-summary:hover { background: #F3DFE7; }
+    .curriculum-details[open] .curriculum-summary { border-bottom: 1px solid #EADDE2; }
+    .curriculum-body { gap: 15px; }
+    .curriculum-unit-item {
+      background: #FFFCFB;
+      border: 1px solid #EEE3E6;
+      border-radius: 9px;
+      padding: 11px 13px;
+    }
+    .unit-time {
+      background: #F1DCE5;
+      color: #723B54;
+      border-radius: 7px;
+      padding: 3px 7px;
+    }
+    .info-card, .faq-item {
+      background: #FFFFFF;
+      border: 1px solid #EFE2E6;
+      border-radius: 18px;
+      box-shadow: var(--shadow-soft);
+    }
+    .faq-question { color: #654057; font-weight: 800; }
+    .notice-box {
+      background: #FFF5EB;
+      border: 1px solid #EFDECA;
+      border-left: 5px solid #C28B60;
+      border-radius: 16px;
+      box-shadow: 0 9px 25px rgba(120,80,40,0.05);
+      color: #644D3D;
+      font-weight: 550;
+    }
+    footer {
+      background: #473543;
+      color: #FFFFFF;
+      border-top: none;
+      padding: 44px 0;
+    }
+    .footer-nav a:hover { color: #F8D5E2; }
+
+    @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+      .course-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+    }
+    @media (max-width: 600px) {
+      .container { padding-left: 16px; padding-right: 16px; }
+      header { padding: 18px 0; }
+      nav { gap: 8px; }
+      nav a { font-size: 0.88rem; padding: 6px 12px; }
+      main { gap: 50px; padding-top: 24px; }
+      .hero { padding: 30px 20px; border-radius: 20px; }
+      .hero-paths { padding: 17px; gap: 14px; }
+      .course-card { padding: 22px; }
+      .course-detail { padding: 21px; }
+      .field-block { padding: 15px; }
+      .info-card { padding: 21px; }
+      h2 { font-size: 1.55rem; }
+    }
+
     /* Reduced Motion */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
@@ -581,10 +858,10 @@
     <div class="container">
       <!-- Hero Section -->
       <section id="hero" class="hero" aria-labelledby="hero-title">
-        <div class="hero-badge">AI 數位培訓比較專頁</div>
-        <h1 id="hero-title">女力 AI 數位職涯課程介紹</h1>
+        <div class="hero-badge">女力 AI 數位職涯課程</div>
+        <h1 id="hero-title">重新開始的這一步，讓 AI 陪妳走</h1>
         <p class="hero-intro">
-          協助想重新就業、轉換工作的女性，依據自身經驗與職涯方向，選擇合適的數位技能培育路徑。五種課程規劃提供循序漸進的實務技能與作品準備：
+          無論是離開職場一段時間，想重新出發；或希望在熟悉的工作裡，學會更有效率的方法，都可以從適合自己的起點開始。從 AI 工具入門、真實工作任務，到能展示的數位作品，五種學習方案，陪妳一步步累積實用能力。
         </p>
         <div class="hero-paths">
           <div class="path-item">
