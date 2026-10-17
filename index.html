@@ -70,1011 +70,756 @@
   }
   </script>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-canvas: #FFFDF8;
-      --text-main: #1A1A1A;
-      --text-muted: #3D3D3D;
-      --border-dark: #1A1A1A;
-      --card-bg: #FFFFFF;
-      --color-orange: #C2410C;
-      --color-orange-bg: #FFE0B2;
-      --color-yellow: #F59E0B;
-      --color-yellow-bg: #FEF3C7;
-      --color-blue: #1565C0;
-      --color-blue-bg: #BBDEFB;
-      --color-green: #2E7D32;
-      --color-green-bg: #C8E6C9;
-      --color-purple: #6A1B9A;
-      --color-purple-bg: #E1BEE7;
-      --shadow-offset: 4px;
-      --shadow-border: 2.5px solid var(--border-dark);
-      --font-stack: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+      --ink: #141414;
+      --paper: #FFFDF7;
+      --yellow: #FFD43B;
+      --pink: #F7AFC6;
+      --blue: #93CBEA;
+      --green: #5BB592;
+      --mint: #CFEBDD;
+      --orange: #FF6B3D;
+      --cream: #FFF4D6;
+      --muted: #8C8C8C;
+      --line: 3px solid var(--ink);
+      --display: "Lilita One", "Noto Sans TC", sans-serif;
+      --sans: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-      background-color: var(--bg-canvas);
-      color: var(--text-main);
-      font-family: var(--font-stack);
-      line-height: 1.6;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 76px; }
     body {
-      background-color: var(--bg-canvas);
-      color: var(--text-main);
-      min-height: 100vh;
+      font-family: var(--sans); color: var(--ink); line-height: 1.75; font-size: 16px;
+      background:
+        radial-gradient(ellipse 30% 8% at 20% 6%, rgba(255,255,255,.9), transparent 70%),
+        radial-gradient(ellipse 25% 6% at 75% 12%, rgba(255,255,255,.8), transparent 70%),
+        radial-gradient(ellipse 35% 7% at 55% 3%, rgba(255,255,255,.7), transparent 70%),
+        linear-gradient(180deg, #3E8FD6 0, #7DB9E8 600px, #BFE0F5 1100px, #BFE0F5 100%);
     }
+    a { color: inherit; }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+    .skip-link { position: absolute; left: -9999px; top: 0; background: var(--yellow); padding: 8px 14px; border: var(--line); z-index: 100; }
+    .skip-link:focus { left: 8px; top: 8px; }
+    :focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
 
-    /* Accessibility Skip Link */
-    .skip-link {
-      position: absolute;
-      top: -60px;
-      left: 16px;
-      background: var(--text-main);
-      color: #FFFFFF;
-      padding: 12px 20px;
-      font-weight: 700;
-      z-index: 1000;
-      text-decoration: none;
-      border: var(--shadow-border);
-      transition: top 0.15s ease-in-out;
-    }
-    .skip-link:focus {
-      top: 16px;
-      outline: 3px solid var(--color-orange);
-    }
-
-    /* Layout Containers */
-    .container {
-      width: 100%;
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
+    /* Shared bits */
+    .panel { background: var(--paper); border: var(--line); border-radius: 26px; box-shadow: 8px 8px 0 var(--ink); }
+    .dots { background-image: radial-gradient(#D9D4C7 1.4px, transparent 1.4px); background-size: 22px 22px; background-color: var(--paper); }
+    .pill { display: inline-flex; align-items: center; gap: 6px; border: 2.5px solid var(--ink); border-radius: 999px; padding: 4px 14px; font-weight: 700; font-size: .85rem; background: #fff; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; background: var(--ink); color: #fff; text-decoration: none; font-weight: 900; border-radius: 999px; padding: 10px 20px; border: 2.5px solid var(--ink); font-size: .92rem; cursor: pointer; transition: transform .15s, box-shadow .15s; font-family: var(--sans); }
+    .btn:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--orange); }
+    .btn.light { background: #fff; color: var(--ink); }
+    .kicker { font-family: var(--display); letter-spacing: .14em; font-size: .85rem; text-transform: uppercase; }
+    .big-title { font-family: var(--display); font-size: clamp(2.6rem, 7vw, 4.6rem); line-height: 1; letter-spacing: .01em; }
+    .hl { background: linear-gradient(transparent 55%, var(--yellow) 55%); font-weight: 900; }
 
     /* Header */
-    header {
-      background-color: var(--bg-canvas);
-      border-bottom: var(--shadow-border);
-      padding: 24px 0;
-    }
-    .header-inner {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    .site-branding {
-      font-size: 1.25rem;
-      font-weight: 900;
-      letter-spacing: -0.5px;
-      text-transform: uppercase;
-    }
-    nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    nav a {
-      display: inline-flex;
-      align-items: center;
-      min-height: 44px;
-      padding: 6px 14px;
-      background-color: var(--card-bg);
-      color: var(--text-main);
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 0.95rem;
-      border: var(--shadow-border);
-      box-shadow: 2px 2px 0px var(--border-dark);
-      transition: transform 0.1s ease, box-shadow 0.1s ease;
-    }
-    nav a:hover {
-      transform: translate(-2px, -2px);
-      box-shadow: 4px 4px 0px var(--border-dark);
-      background-color: var(--color-yellow-bg);
-    }
-    nav a:focus-visible, a:focus-visible, summary:focus-visible {
-      outline: 3px solid var(--color-orange);
-      outline-offset: 3px;
-    }
-
-    /* Main Sections */
-    main {
-      padding: 40px 0 80px 0;
-      display: flex;
-      flex-direction: column;
-      gap: 60px;
-    }
+    header { position: sticky; top: 0; z-index: 40; padding: 12px 0; }
+    .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--paper); border: var(--line); border-radius: 999px; padding: 8px 10px 8px 20px; box-shadow: 4px 4px 0 var(--ink); flex-wrap: wrap; }
+    .brand { font-weight: 900; }
+    .brand b { background: var(--yellow); border: 2px solid var(--ink); border-radius: 8px; padding: 0 6px; margin-right: 4px; }
+    header nav { display: flex; gap: 4px; flex-wrap: wrap; }
+    header nav a { text-decoration: none; font-weight: 700; font-size: .88rem; padding: 6px 12px; border-radius: 999px; }
+    header nav a:hover { background: var(--yellow); }
 
     /* Hero */
-    .hero {
-      background-color: var(--color-yellow-bg);
-      border: var(--shadow-border);
-      box-shadow: 6px 6px 0px var(--border-dark);
-      padding: 36px 28px;
-    }
-    .hero-badge {
-      display: inline-block;
-      background-color: var(--color-orange);
-      color: #FFFFFF;
-      font-weight: 800;
-      font-size: 0.85rem;
-      padding: 4px 10px;
-      border: var(--shadow-border);
-      box-shadow: 2px 2px 0px var(--border-dark);
-      margin-bottom: 16px;
-      text-transform: uppercase;
-    }
-    h1 {
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      font-weight: 900;
-      line-height: 1.25;
-      margin-bottom: 16px;
-      letter-spacing: -0.5px;
-    }
-    .hero-intro {
-      font-size: 1.15rem;
-      font-weight: 600;
-      margin-bottom: 24px;
-      color: var(--text-muted);
-    }
-    .hero-paths {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      background-color: var(--card-bg);
-      border: var(--shadow-border);
-      padding: 20px;
-    }
-    .path-item {
-      display: flex;
-      gap: 12px;
-      align-items: baseline;
-      font-size: 1rem;
-    }
-    .path-number {
-      font-weight: 900;
-      background-color: var(--text-main);
-      color: #FFFFFF;
-      padding: 2px 8px;
-      font-size: 0.85rem;
-    }
-    .path-desc strong {
-      color: var(--text-main);
-    }
+    .hero { margin-top: 28px; padding: 56px 40px; text-align: center; position: relative; overflow: hidden; }
+    .hero .pill { background: var(--yellow); margin-bottom: 18px; }
+    .hero h1 { font-weight: 900; font-size: clamp(2rem, 5.4vw, 3.6rem); line-height: 1.25; }
+    .hero h1 .en { display: block; font-family: var(--display); font-weight: 400; font-size: .55em; letter-spacing: .04em; margin-bottom: 6px; color: var(--orange); }
+    .hero p { max-width: 640px; margin: 18px auto 26px; font-size: 1.05rem; }
+    .hero-cta { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .hero-stats { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-top: 34px; }
+    .stat { border: var(--line); border-radius: 18px; padding: 10px 18px; background: #fff; box-shadow: 4px 4px 0 var(--ink); text-align: left; }
+    .stat strong { font-family: var(--display); font-size: 1.6rem; display: block; line-height: 1.1; }
+    .stat span { font-size: .82rem; font-weight: 700; }
+    .stat:nth-child(1) { background: var(--pink); } .stat:nth-child(2) { background: var(--blue); } .stat:nth-child(3) { background: var(--yellow); }
 
-    /* Section Titles */
-    h2 {
-      font-size: clamp(1.5rem, 3vw, 2.2rem);
-      font-weight: 900;
-      margin-bottom: 24px;
-      display: inline-block;
-      background-color: var(--card-bg);
-      border: var(--shadow-border);
-      box-shadow: 4px 4px 0px var(--border-dark);
-      padding: 8px 18px;
-    }
+    section.block { padding-top: 80px; }
+    .sec-head { text-align: center; margin-bottom: 30px; }
+    .sec-head p { max-width: 640px; margin: 10px auto 0; font-weight: 500; }
+    .sec-head .sub { font-weight: 900; font-size: 1.15rem; margin-top: 8px; }
 
-    /* Overview Section */
-    .overview-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 24px;
-    }
-    .course-card {
-      background-color: var(--card-bg);
-      border: var(--shadow-border);
-      box-shadow: 4px 4px 0px var(--border-dark);
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 18px;
-    }
-    .card-header {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .card-price-tag {
-      align-self: flex-start;
-      font-weight: 900;
-      font-size: 1.25rem;
-      padding: 4px 12px;
-      border: var(--shadow-border);
-      background-color: var(--bg-canvas);
-    }
-    .course-card:nth-child(1) .card-price-tag { background-color: var(--color-orange-bg); }
-    .course-card:nth-child(2) .card-price-tag { background-color: var(--color-yellow-bg); }
-    .course-card:nth-child(3) .card-price-tag { background-color: var(--color-blue-bg); }
-    .course-card:nth-child(4) .card-price-tag { background-color: var(--color-green-bg); }
-    .course-card:nth-child(5) .card-price-tag { background-color: var(--color-purple-bg); }
+    /* Diagnosis map */
+    .diag { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; align-items: start; }
+    .map { position: relative; padding: 26px 26px 30px 96px; }
+    .map-banner { background: var(--yellow); border: var(--line); border-radius: 999px; text-align: center; font-weight: 900; padding: 8px 18px; margin-bottom: 20px; font-size: .95rem; }
+    .row-label { position: absolute; left: -76px; width: 56px; text-align: center; font-weight: 900; font-size: .82rem; }
+    .row-label i { display: grid; place-items: center; width: 46px; height: 46px; margin: 0 auto 4px; border: var(--line); border-radius: 50%; background: #fff; font-style: normal; font-size: 1.25rem; }
+    .chips { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; position: relative; z-index: 2; }
+    .chip { font-family: var(--sans); font-size: .9rem; font-weight: 700; color: #6F6F6F; background: #fff; border: 2.5px solid #C9C9C9; border-radius: 999px; padding: 7px 16px; cursor: pointer; transition: all .15s; }
+    .chip:hover { border-color: var(--ink); color: var(--ink); }
+    .chip.on { background: var(--ink); color: #fff; border-color: var(--ink); box-shadow: 0 0 0 4px var(--orange); }
+    .divider { border-top: 2.5px dashed #E2D9C2; margin: 24px 0; }
+    .parts { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; position: relative; z-index: 2; }
+    .part { display: inline-flex; align-items: center; gap: 8px; font-weight: 900; font-size: .9rem; border: 2.5px solid #CFCFCF; color: #A0A0A0; background: #F4F6F8; border-radius: 999px; padding: 7px 10px 7px 16px; text-decoration: none; transition: all .2s; }
+    .part small { font-weight: 500; font-size: .76rem; }
+    .part .n { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: #C9C9C9; color: #fff; font-size: .75rem; }
+    .map.has-pick .part:not(.lit) { opacity: .55; }
+    .part.lit { color: var(--ink); border-color: var(--ink); box-shadow: 4px 4px 0 var(--ink); background: var(--pink); }
+    .part.lit .n { background: var(--ink); }
+    .goal { margin-top: 26px; text-align: center; position: relative; z-index: 2; }
+    .goal span { display: inline-block; background: var(--ink); color: #fff; font-weight: 900; border-radius: 999px; padding: 10px 24px; }
+    .wires { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: visible; }
+    .wires path { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 900; stroke-dashoffset: 900; animation: draw .7s ease forwards; }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
 
-    .card-title {
-      font-size: 1.35rem;
-      font-weight: 800;
-      line-height: 1.35;
-    }
-    .card-format {
-      font-weight: 700;
-      color: var(--text-muted);
-      font-size: 0.95rem;
-    }
-    .card-positioning {
-      font-size: 0.95rem;
-      color: var(--text-main);
-      line-height: 1.5;
-    }
-    .card-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      background-color: var(--text-main);
-      color: #FFFFFF;
-      text-decoration: none;
-      font-weight: 800;
-      padding: 10px 18px;
-      border: var(--shadow-border);
-      box-shadow: 2px 2px 0px var(--border-dark);
-      transition: transform 0.1s ease, box-shadow 0.1s ease;
-    }
-    .card-link:hover {
-      transform: translate(-2px, -2px);
-      box-shadow: 4px 4px 0px var(--border-dark);
-      background-color: var(--color-orange);
-    }
+    .side { padding: 24px; position: sticky; top: 92px; }
+    .side h3 { font-size: 1.5rem; font-weight: 900; line-height: 1.35; margin: 4px 0 10px; }
+    .side .tag { background: var(--pink); margin-bottom: 12px; }
+    .todo { margin: 16px 0; border: 2.5px dashed var(--ink); border-radius: 18px; padding: 14px 16px; background: var(--cream); }
+    .todo .pill { background: var(--yellow); font-size: .78rem; padding: 2px 10px; margin-bottom: 6px; }
+    .side-actions { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+    .side-empty { color: #666; }
 
-    /* Course Detail Articles */
-    .courses-list {
-      display: flex;
-      flex-direction: column;
-      gap: 48px;
-    }
-    .course-detail {
-      background-color: var(--card-bg);
-      border: var(--shadow-border);
-      box-shadow: 6px 6px 0px var(--border-dark);
-      padding: 32px;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-    .course-header {
-      border-bottom: 2px dashed var(--border-dark);
-      padding-bottom: 16px;
-    }
-    .course-title {
-      font-size: clamp(1.4rem, 2.5vw, 1.85rem);
-      font-weight: 900;
-      line-height: 1.3;
-      margin-bottom: 8px;
-    }
-    .title-note {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      background-color: var(--color-yellow-bg);
-      border: 1.5px solid var(--border-dark);
-      padding: 4px 10px;
-      display: inline-block;
-      margin-top: 6px;
-    }
-    .course-fields {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-    .field-block {
-      background-color: var(--bg-canvas);
-      border: 2px solid var(--border-dark);
-      padding: 16px;
-    }
-    h4,
-    .info-card h3 {
-      font-size: 1.05rem;
-      font-weight: 900;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    h4::before,
-    .info-card h3::before {
-      content: "";
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      background-color: var(--text-main);
-    }
-    .field-content {
-      font-size: 0.98rem;
-      line-height: 1.6;
-    }
-    .curriculum-details {
-      margin-top: 12px;
-      border: 2px solid var(--border-dark);
-      background-color: #FFFFFF;
-    }
-    .curriculum-summary {
-      font-weight: 800;
-      cursor: pointer;
-      padding: 12px 16px;
-      background-color: var(--color-yellow-bg);
-      border-bottom: 2px solid transparent;
-      user-select: none;
-      min-height: 44px;
-      display: flex;
-      align-items: center;
-    }
-    .curriculum-details[open] .curriculum-summary {
-      border-bottom: 2px solid var(--border-dark);
-    }
-    .curriculum-body {
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-    .curriculum-unit-list {
-      list-style-type: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .curriculum-unit-item {
-      padding: 10px 12px;
-      border: 1.5px solid var(--border-dark);
-      background-color: var(--bg-canvas);
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
-    .curriculum-unit-item strong {
-      color: var(--text-main);
-    }
-    .unit-time {
-      display: inline-block;
-      background-color: var(--text-main);
-      color: #FFFFFF;
-      font-size: 0.8rem;
-      font-weight: 800;
-      padding: 1px 6px;
-      margin-right: 8px;
-    }
+    /* The Map */
+    .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; position: relative; }
+    .stage { border: var(--line); border-radius: 22px; background: #fff; box-shadow: 6px 6px 0 var(--ink); overflow: hidden; display: flex; flex-direction: column; position: relative; }
+    .stage:not(:last-child)::after { content: "→"; position: absolute; right: -22px; top: 32px; font-weight: 900; color: var(--orange); font-size: 1.2rem; }
+    .stage-head { padding: 14px 16px; border-bottom: var(--line); display: flex; gap: 10px; align-items: center; }
+    .stage-head .no { display: grid; place-items: center; min-width: 40px; height: 40px; border: var(--line); border-radius: 50%; background: #fff; font-family: var(--display); font-size: 1.05rem; }
+    .stage-head b { display: block; font-weight: 900; }
+    .stage-head small { font-size: .8rem; font-weight: 500; }
+    .s1 .stage-head { background: var(--pink); } .s2 .stage-head { background: var(--blue); } .s3 .stage-head { background: var(--yellow); } .s4 .stage-head { background: var(--green); }
+    .stage-body { padding: 14px; display: grid; gap: 10px; }
+    .mini { display: block; text-decoration: none; border: 2.5px solid var(--ink); border-radius: 14px; padding: 8px 12px; font-weight: 900; font-size: .9rem; line-height: 1.4; transition: transform .15s; }
+    .mini:hover { transform: translate(-2px, -2px); box-shadow: 3px 3px 0 var(--ink); }
+    .mini small { display: block; font-weight: 500; font-size: .78rem; }
+    .flow-note { margin-top: 22px; border: 2.5px dashed var(--ink); border-radius: 18px; background: #fff; padding: 14px 18px; font-weight: 700; }
 
-    /* Teaching & FAQ */
-    .info-card {
-      background-color: var(--card-bg);
-      border: var(--shadow-border);
-      box-shadow: 4px 4px 0px var(--border-dark);
-      padding: 28px;
-      margin-bottom: 24px;
-    }
-    .faq-list {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    .faq-item {
-      border: var(--shadow-border);
-      background-color: var(--card-bg);
-      padding: 20px;
-      box-shadow: 2px 2px 0px var(--border-dark);
-    }
-    .faq-question {
-      font-size: 1.15rem;
-      font-weight: 800;
-      margin-bottom: 10px;
-      color: var(--text-main);
-    }
-    .faq-answer {
-      font-size: 1rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
+    /* Cards */
+    .cards-zone { margin-top: 80px; background: var(--green); border-top: var(--line); border-bottom: var(--line); padding: 64px 0 72px; }
+    .cards-zone .sec-head { color: var(--ink); }
+    .filters { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 30px; }
+    .filters button { font-family: var(--sans); font-weight: 900; font-size: .88rem; border: 2.5px solid var(--ink); background: #fff; border-radius: 999px; padding: 6px 16px; cursor: pointer; }
+    .filters button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 370px)); justify-content: center; gap: 26px; align-items: start; }
+    .ccard { background: #fff; border: var(--line); border-radius: 24px; box-shadow: 8px 8px 0 var(--ink); overflow: hidden; scroll-margin-top: 90px; }
+    .ccard.flash { animation: flash 1.2s ease; }
+    @keyframes flash { 0%, 100% { box-shadow: 8px 8px 0 var(--ink); } 40% { box-shadow: 8px 8px 0 var(--orange), 0 0 0 6px var(--orange); } }
+    .ccard[hidden] { display: none; }
+    .c-head { padding: 18px 20px 16px; border-bottom: var(--line); }
+    .c-head .pill { font-size: .78rem; padding: 2px 10px; }
+    .c-head h3 { font-family: var(--display); font-weight: 400; font-size: 1.7rem; line-height: 1.1; margin: 10px 0 2px; }
+    .c-head .zh { font-weight: 900; font-size: 1rem; line-height: 1.45; }
+    .pink .c-head { background: var(--pink); } .blue .c-head { background: var(--blue); } .yellow .c-head { background: var(--yellow); } .mint .c-head { background: var(--mint); } .orange .c-head { background: #FFB79E; }
+    .c-body { padding: 18px 20px 20px; font-size: .93rem; }
+    .c-price { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+    .c-price strong { font-family: var(--display); font-weight: 400; font-size: 1.8rem; }
+    .c-format { font-weight: 700; margin-bottom: 10px; }
+    .c-lead { font-weight: 700; margin-bottom: 12px; }
+    .dotlist { list-style: none; display: grid; gap: 6px; margin-bottom: 12px; }
+    .dotlist li { padding-left: 22px; position: relative; }
+    .dotlist li::before { content: ""; position: absolute; left: 0; top: .55em; width: 12px; height: 12px; border: 2px solid var(--ink); border-radius: 50%; background: var(--pink); }
+    .big-num { border: 2.5px solid var(--ink); border-radius: 16px; background: var(--cream); padding: 10px 14px; margin: 12px 0; }
+    .big-num strong { font-family: var(--display); font-weight: 400; color: var(--orange); font-size: 1.5rem; margin-right: 6px; }
+    .warn { display: flex; gap: 8px; border-radius: 12px; background: #FFF0EA; padding: 10px 12px; font-size: .86rem; font-weight: 500; margin-top: 10px; }
+    .warn b { flex: none; background: var(--orange); color: #fff; border-radius: 6px; padding: 0 6px; height: fit-content; font-size: .78rem; }
+    .c-label { font-weight: 900; margin: 12px 0 4px; font-size: .88rem; }
+    details.syl { border: 2.5px solid var(--ink); border-radius: 16px; margin-top: 12px; overflow: hidden; }
+    details.syl summary { cursor: pointer; font-weight: 900; padding: 8px 14px; background: var(--paper); list-style: none; }
+    details.syl summary::-webkit-details-marker { display: none; }
+    details.syl summary::before { content: "＋ "; }
+    details.syl[open] summary::before { content: "－ "; }
+    details.syl[open] summary { border-bottom: 2.5px solid var(--ink); }
+    .syl-body { padding: 10px 14px 14px; font-size: .88rem; }
+    .syl-body h4 { font-size: .88rem; font-weight: 900; margin: 10px 0 4px; }
+    .syl-body ul { list-style: none; }
+    .syl-body li { display: flex; justify-content: space-between; gap: 10px; padding: 4px 0; border-bottom: 1px dotted #CFC8B6; }
+    .syl-body li:last-child { border-bottom: 0; }
+    .syl-body li span { flex: none; font-weight: 900; font-size: .78rem; background: var(--mint); border-radius: 999px; padding: 0 8px; height: fit-content; }
+    .syl-body p { margin-top: 6px; font-style: italic; }
 
-    /* Important Notes */
-    .notice-box {
-      background-color: #FFEBEE;
-      border: var(--shadow-border);
-      box-shadow: 4px 4px 0px var(--border-dark);
-      padding: 24px;
-      font-size: 1.05rem;
-      line-height: 1.65;
-      font-weight: 600;
-    }
+    /* Teaching / FAQ / Notes */
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .note-card { padding: 22px 24px; }
+    .note-card h3 { font-weight: 900; font-size: 1.15rem; margin-bottom: 6px; }
+    .note-card:nth-child(1) { background: var(--cream); } .note-card:nth-child(2) { background: var(--mint); }
+    .faq { max-width: 860px; margin: 0 auto; display: grid; gap: 14px; }
+    .faq details { background: #fff; border: var(--line); border-radius: 20px; box-shadow: 5px 5px 0 var(--ink); }
+    .faq summary { cursor: pointer; padding: 14px 18px; font-weight: 900; list-style: none; display: flex; gap: 10px; }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::before { content: "Q"; flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--yellow); border: 2px solid var(--ink); font-family: var(--display); }
+    .faq details p { padding: 0 18px 16px 56px; }
+    .notice { max-width: 860px; margin: 0 auto; padding: 20px 24px; border: 2.5px dashed var(--ink); border-radius: 20px; background: var(--cream); font-weight: 500; }
 
-    /* Footer */
-    footer {
-      background-color: var(--text-main);
-      color: #FFFFFF;
-      border-top: var(--shadow-border);
-      padding: 40px 0;
-      font-size: 0.95rem;
-    }
-    .footer-inner {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-    .footer-nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-    .footer-nav a {
-      color: #FFFFFF;
-      text-decoration: underline;
-      font-weight: 700;
-    }
-    .footer-nav a:hover {
-      color: var(--color-yellow);
-    }
+    footer { margin-top: 80px; background: var(--ink); color: #fff; padding: 36px 0; text-align: center; font-size: .9rem; }
+    footer nav { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin: 12px 0; }
+    footer .small { opacity: .7; font-size: .82rem; }
 
-    /* Responsive Queries */
-    @media (min-width: 768px) {
-      .header-inner {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-      }
-      .overview-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .course-card:nth-child(5) {
-        grid-column: span 2;
-      }
-      .hero-paths {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    @media (max-width: 980px) {
+      .diag { grid-template-columns: 1fr; }
+      .side { position: static; }
+      .flow { grid-template-columns: 1fr 1fr; }
+      .stage::after { display: none; }
     }
-
-    @media (min-width: 1024px) {
-      .overview-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-      .course-card:nth-child(5) {
-        grid-column: span 1;
-      }
-      .hero-paths {
-        grid-template-columns: repeat(3, 1fr);
-      }
+    @media (max-width: 640px) {
+      .hero { padding: 40px 18px; }
+      .map { padding: 18px 14px 22px; }
+      .row-label { position: static; display: flex; align-items: center; gap: 8px; width: auto; margin-bottom: 10px; }
+      .row-label i { margin: 0; width: 36px; height: 36px; font-size: 1rem; }
+      .flow, .two { grid-template-columns: 1fr; }
+      .card-grid { grid-template-columns: 1fr; }
+      header { position: static; }
+      .bar { border-radius: 22px; }
+      .chip, .part { font-size: .84rem; }
     }
-
-    /* Reduced Motion */
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation: none !important;
-        transition: none !important;
-        scroll-behavior: auto !important;
-      }
+      html { scroll-behavior: auto; }
+      .wires path { animation: none; stroke-dashoffset: 0; }
+      * { transition: none !important; }
     }
   </style>
 </head>
 <body>
-  <!-- Accessibility Skip Navigation Link -->
-  <a href="#overview" class="skip-link">跳至課程總覽主要內容</a>
+  <a href="#diagnose" class="skip-link">跳至主要內容</a>
 
   <header>
-    <div class="container header-inner">
-      <div class="site-branding">女力 AI 數位職涯培育</div>
-      <nav aria-label="主要導覽">
-        <a href="#overview">課程總覽</a>
-        <a href="#courses">課程詳情</a>
-        <a href="#teaching">共同教學方式</a>
-        <a href="#faq">常見問題</a>
-        <a href="#important-notes">重要說明</a>
-      </nav>
+    <div class="wrap">
+      <div class="bar">
+        <div class="brand"><b>女力</b>AI 數位職涯培育</div>
+        <nav aria-label="主要導覽">
+          <a href="#diagnose">01 對症找課</a>
+          <a href="#map">02 學習地圖</a>
+          <a href="#cards">03 五張課卡</a>
+          <a href="#faq">常見問題</a>
+          <a href="#important-notes">重要說明</a>
+        </nav>
+      </div>
     </div>
   </header>
 
   <main id="main-content">
-    <div class="container">
-      <!-- Hero Section -->
-      <section id="hero" class="hero" aria-labelledby="hero-title">
-        <div class="hero-badge">AI 數位培訓比較專頁</div>
-        <h1 id="hero-title">女力 AI 數位職涯課程介紹</h1>
-        <p class="hero-intro">
-          協助想重新就業、轉換工作的女性，依據自身經驗與職涯方向，選擇合適的數位技能培育路徑。五種課程規劃提供循序漸進的實務技能與作品準備：
-        </p>
-        <div class="hero-paths">
-          <div class="path-item">
-            <span class="path-number">01</span>
-            <div class="path-desc"><strong>職場 AI 入門</strong>：工具一日實作與成果包建立</div>
+    <div class="wrap">
+      <section class="hero panel dots" aria-labelledby="hero-title">
+        <span class="pill">給想重新出發的妳</span>
+        <h1 id="hero-title"><span class="en">Back to Work Map</span>重返職場，<br>先找到卡住妳的那一個點</h1>
+        <p>想重新就業、轉換工作，卻不知道從哪開始？先點出妳最在意的狀況，地圖會幫妳連到對應的課程。五門課，一張地圖，一次看懂。</p>
+        <div class="hero-cta">
+          <a class="btn" href="#diagnose">開始對症找課 →</a>
+          <a class="btn light" href="#cards">直接看五張課卡</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><strong>5</strong><span>種學習路徑</span></div>
+          <div class="stat"><strong>8–12h</strong><span>實體實作課程</span></div>
+          <div class="stat"><strong>4 週</strong><span>線上專題輔導（轉職方案）</span></div>
+        </div>
+      </section>
+
+      <!-- 01 Diagnose -->
+      <section id="diagnose" class="block" aria-labelledby="diag-title">
+        <div class="sec-head">
+          <div class="kicker">01 · Diagnose</div>
+          <h2 id="diag-title" class="big-title">Find Your Spot</h2>
+          <div class="sub">點一個最像妳的狀況，看看該從哪門課開始</div>
+        </div>
+        <div class="diag">
+          <div class="map panel dots" id="map-box">
+            <svg class="wires" id="wires" aria-hidden="true"></svg>
+            <div class="map-banner" id="banner" aria-live="polite">點一個狀況，往下連到的課程就會亮起來。再點一次就收起來。</div>
+            <div style="position:relative">
+              <div class="row-label" style="top:0"><i aria-hidden="true">💭</i>狀況</div>
+              <div class="chips" id="chips" role="group" aria-label="選擇妳目前的狀況"></div>
+            </div>
+            <div class="divider"></div>
+            <div style="position:relative">
+              <div class="row-label" style="top:0"><i aria-hidden="true">🧩</i>課程</div>
+              <div class="parts" id="parts">
+                <a class="part" data-id="c1" href="#course-ai-tools">① AI 職場實用工具一日班 <small>Starter</small> <span class="n">1</span></a>
+                <a class="part" data-id="c2" href="#course-ai-tasks">② AI 企業工作任務實作班 <small>Real Tasks</small> <span class="n">2</span></a>
+                <a class="part" data-id="c3" href="#course-ai-web">③ AI 協作程式設計與網頁工具實作班 <small>Web Tool</small> <span class="n">3</span></a>
+                <a class="part" data-id="c4" href="#course-line-workflow">④ LINE OA × AI 工作流進階班 <small>LINE Flow</small> <span class="n">4</span></a>
+                <a class="part" data-id="c5" href="#course-career-portfolio">⑤ AI 數位轉職作品強化方案 <small>Portfolio</small> <span class="n">5</span></a>
+              </div>
+            </div>
+            <div class="goal"><span>目標：做出作品、準備好重返職場</span></div>
           </div>
-          <div class="path-item">
-            <span class="path-number">02</span>
-            <div class="path-desc"><strong>企業任務實作</strong>：六格工作法與真實情境解題</div>
+          <aside class="side panel" id="side" aria-live="polite">
+            <div class="kicker">Symptom</div>
+            <h3>先點左邊一個狀況</h3>
+            <p class="side-empty">這裡會告訴妳：這個狀況通常卡在哪、今天就能做的一件小事，以及可以先翻到哪張課卡。</p>
+          </aside>
+        </div>
+      </section>
+
+      <!-- 02 The Map -->
+      <section id="map" class="block" aria-labelledby="map-title">
+        <div class="sec-head">
+          <div class="kicker">02 · The Map</div>
+          <h2 id="map-title" class="big-title">The Map</h2>
+          <div class="sub">4 個階段，排成一條線</div>
+          <p>五門課回答同一條路上的四個問題：從哪開始、職場怎麼做事、要學什麼技能、怎麼拿作品去面試。點任一門課，直接跳到它的卡片。</p>
+        </div>
+        <div class="flow">
+          <div class="stage s1">
+            <div class="stage-head"><span class="no">01</span><div><b>入門｜先動起來</b><small>從零認識 AI</small></div></div>
+            <div class="stage-body"><a class="mini" href="#course-ai-tools">① AI 職場實用工具一日班<small>一日 8 小時・NT$8,800</small></a></div>
           </div>
-          <div class="path-item">
-            <span class="path-number">03</span>
-            <div class="path-desc"><strong>AI 網頁工具</strong>：無程式基礎網頁建立與部署</div>
+          <div class="stage s2">
+            <div class="stage-head"><span class="no">02</span><div><b>實作｜像上班一樣練</b><small>企業真實情境</small></div></div>
+            <div class="stage-body"><a class="mini" href="#course-ai-tasks">② AI 企業工作任務實作班<small>兩天 10 小時・NT$14,800</small></a></div>
           </div>
-          <div class="path-item">
-            <span class="path-number">04</span>
-            <div class="path-desc"><strong>LINE OA 工作流</strong>：官方帳號與 AI 自動化接待</div>
+          <div class="stage s3">
+            <div class="stage-head"><span class="no">03</span><div><b>技能｜選一條專長</b><small>網頁工具或 LINE 流程</small></div></div>
+            <div class="stage-body">
+              <a class="mini" href="#course-ai-web">③ 網頁工具實作班<small>兩天 12 小時・NT$20,000</small></a>
+              <a class="mini" href="#course-line-workflow">④ LINE OA × AI 工作流<small>兩天 12 小時・NT$20,000</small></a>
+            </div>
           </div>
-          <div class="path-item">
-            <span class="path-number">05</span>
-            <div class="path-desc"><strong>轉職作品強化</strong>：四週線上專題輔導與面試作品集</div>
+          <div class="stage s4">
+            <div class="stage-head"><span class="no">04</span><div><b>轉職｜帶作品面試</b><small>四週專題輔導</small></div></div>
+            <div class="stage-body"><a class="mini" href="#course-career-portfolio">⑤ AI 數位轉職作品強化方案<small>12 小時＋四週・NT$29,800</small></a></div>
           </div>
         </div>
+        <div class="flow-note">不一定要從 01 開始：可以依自己的經驗直接選一門課。⑤ 的 NT$29,800 是以 ③ 為基礎的完整方案總價，不是另外加收的費用。</div>
       </section>
     </div>
 
-    <!-- Overview Section -->
-    <section id="overview" class="container" aria-labelledby="overview-title">
-      <h2 id="overview-title">課程總覽</h2>
-      <div class="overview-grid">
-        <!-- Card 1 -->
-        <div class="course-card">
-          <div class="card-header">
-            <div class="card-price-tag">NT$8,800／人</div>
-            <h3 class="card-title">女力 AI 職場實用工具一日班</h3>
-            <div class="card-format">一日實體 8 小時（AI 實務 6h ＋ 職涯發展 2h）</div>
-          </div>
-          <p class="card-positioning">
-            不需要程式基礎，適合 AI 初學者。透過一日密集學習，完成「第一份 AI 職場工作成果包」，快速盤點個人優勢與行政文書數位技能。
-          </p>
-          <a href="#course-ai-tools" class="card-link">查看課程內容</a>
+    <!-- 03 Cards -->
+    <section id="cards" class="cards-zone" aria-labelledby="cards-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <div class="kicker">03 · 5 Cards</div>
+          <h2 id="cards-title" class="big-title">5 Cards</h2>
+          <div class="sub">每張只講一門課：費用、時數、課綱、成果</div>
+        </div>
+        <div class="filters" role="group" aria-label="依階段篩選課卡">
+          <button type="button" data-f="all" aria-pressed="true">全部 5</button>
+          <button type="button" data-f="s1" aria-pressed="false">入門 1</button>
+          <button type="button" data-f="s2" aria-pressed="false">實作 1</button>
+          <button type="button" data-f="s3" aria-pressed="false">技能 2</button>
+          <button type="button" data-f="s4" aria-pressed="false">轉職 1</button>
         </div>
 
-        <!-- Card 2 -->
-        <div class="course-card">
-          <div class="card-header">
-            <div class="card-price-tag">NT$14,800／人</div>
-            <h3 class="card-title">女力 AI 企業工作任務實作班</h3>
-            <div class="card-format">兩天實作 10 小時（合計 600 分鐘）</div>
-          </div>
-          <p class="card-positioning">
-            依內容命名之描述性標題。以企業真實情境為導向，運用六格工作法處理工作追蹤、資料核對、主管報告與獨立挑戰題。
-          </p>
-          <a href="#course-ai-tasks" class="card-link">查看課程內容</a>
-        </div>
+        <div class="card-grid">
+          <article id="course-ai-tools" class="ccard pink" data-stage="s1" aria-labelledby="t1">
+            <div class="c-head">
+              <span class="pill">① 入門</span>
+              <h3>AI Starter</h3>
+              <div class="zh" id="t1">女力 AI 職場實用工具一日班</div>
+            </div>
+            <div class="c-body">
+              <div class="c-price"><strong>NT$8,800</strong>／人</div>
+              <div class="c-format">一日實體、共 8 小時；AI 實務 6 小時、職涯發展 2 小時</div>
+              <p class="c-lead">不需要程式基礎，適合 AI 初學者。透過一日實體密集學習快速掌握 AI 職場實用技能與職涯盤點，完成<span class="hl">第一份職場工作成果包</span>。</p>
+              <div class="c-label">實作成果</div>
+              <ul class="dotlist">
+                <li>AI 工作待辦清單、會議重點與工作事項整理表</li>
+                <li>AI 商務溝通信件、Google Sheets 工作追蹤表</li>
+                <li>AI 行政工作 SOP、AI 職場工作成果包</li>
+                <li>個人職涯方向規劃表、個人履歷重點初稿與作品介紹</li>
+              </ul>
+              <div class="c-label">培養能力</div>
+              <p>掌握生成式 AI 提示詞提問、行政文書數位處理、會議摘要與追蹤、商務信件撰寫、試算表資料整理、行政標準作業程序梳理，以及個人職涯盤點與作品集初稿建立。</p>
+              <div class="c-label">適合對象</div>
+              <p>適合重返職場、轉職、提升行政文書效率或從零認識 AI 的女性。</p>
+              <details class="syl">
+                <summary>展開完整課綱與時間安排</summary>
+                <div class="syl-body">
+                  <h4>AI 實務（6 個各 1 小時單元，共 6 小時）</h4>
+                  <ul>
+                    <li>AI 職場工具入門（生成式 AI、ChatGPT、清楚表達需求、整理主管交辦、資訊正確性與安全）<span>1h</span></li>
+                    <li>行政文書與工作整理（會議紀錄、長文擷取、待辦、分工期限）<span>1h</span></li>
+                    <li>商務溝通與信件（Email、客服回覆、公告通知、語氣與內容檢查）<span>1h</span></li>
+                    <li>工作表格與資料整理（Google Sheets、進度表、排序篩選、資料檢查）<span>1h</span></li>
+                    <li>工作流程與 SOP（工作步驟、活動報名行政流程、交接文件、可重用指令）<span>1h</span></li>
+                    <li>職場情境綜合實作（任務整理、通知信、追蹤表、SOP、資料檢核）<span>1h</span></li>
+                  </ul>
+                  <h4>職涯發展（2 小時）</h4>
+                  <ul>
+                    <li>職涯探索與個人優勢盤點<span>1h</span></li>
+                    <li>AI 履歷準備與作品展示<span>1h</span></li>
+                  </ul>
+                </div>
+              </details>
+            </div>
+          </article>
 
-        <!-- Card 3 -->
-        <div class="course-card">
-          <div class="card-header">
-            <div class="card-price-tag">NT$20,000／人</div>
-            <h3 class="card-title">女力 AI 協作程式設計與網頁工具實作班</h3>
-            <div class="card-format">兩天實體 12 小時（專業技能 10h ＋ 職涯發展 2h）</div>
-          </div>
-          <p class="card-positioning">
-            讓無程式背景學員透過 AI 分析需求、建立／修改簡易網頁工具、測試並部署至 Cloudflare Pages，產出進度管理工具。
-          </p>
-          <a href="#course-ai-web" class="card-link">查看課程內容</a>
-        </div>
+          <article id="course-ai-tasks" class="ccard blue" data-stage="s2" aria-labelledby="t2">
+            <div class="c-head">
+              <span class="pill">② 實作</span>
+              <h3>Real Tasks</h3>
+              <div class="zh" id="t2">女力 AI 企業工作任務實作班</div>
+            </div>
+            <div class="c-body">
+              <div class="c-price"><strong>NT$14,800</strong>／人</div>
+              <div class="c-format">兩天實作：Day 1 共 360 分鐘、Day 2 共 240 分鐘，合計 600 分鐘／10 小時</div>
+              <p class="c-lead">以企業真實情境為導向，從<span class="hl">六格工作法</span>到獨立處理新資料、新需求及工作挑戰，只提供明列之實作任務訓練。</p>
+              <div class="c-label">實作成果</div>
+              <ul class="dotlist">
+                <li>工作追蹤表、會議摘要、資料核對</li>
+                <li>主管報告、客服回覆／FAQ</li>
+                <li>獨立挑戰成果</li>
+              </ul>
+              <div class="c-label">培養能力</div>
+              <p>新資料、新需求、變更、查核及獨立解題能力。</p>
+              <div class="c-label">適合對象</div>
+              <p>想重新就業、轉換工作的女性，尤其有行政、門市、客服、業務或服務業經驗、希望培養數位工作技能的媽媽。</p>
+              <div class="warn"><b>注意</b><span>課名為依內容命名之描述性標題，不宣稱是已核定正式課名。只宣稱提供內容明列的實作，不另編造結業作品、職涯時數、就業成果或保證。</span></div>
+              <details class="syl">
+                <summary>展開完整課綱與時間安排</summary>
+                <div class="syl-body">
+                  <h4>Day 1「建立 AI 工作能力」（360 分鐘）</h4>
+                  <ul>
+                    <li>企業情境與六格工作法<span>25 分</span></li>
+                    <li>主管交辦轉成工作追蹤表<span>60 分</span></li>
+                    <li>會議紀錄摘要與來源查核<span>35 分</span></li>
+                    <li>主管需求變更與修正<span>20 分</span></li>
+                    <li>第一階段成果檢查<span>25 分</span></li>
+                    <li>報名／付款／客服資料關聯<span>55 分</span></li>
+                    <li>異常資料核對與人工驗算<span>65 分</span></li>
+                    <li>AI 協作完成主管報告<span>45 分</span></li>
+                    <li>客服回覆與 FAQ<span>30 分</span></li>
+                  </ul>
+                  <h4>Day 2「獨立解決企業問題」（240 分鐘）</h4>
+                  <ul>
+                    <li>新資料／新需求／欄位變更<span>40 分</span></li>
+                    <li>六格工作卡重複使用<span>35 分</span></li>
+                    <li>陌生題示範及評分說明<span>20 分</span></li>
+                    <li>教師個別派題與讀題<span>15 分</span></li>
+                    <li>學員獨立完成挑戰<span>85 分</span></li>
+                    <li>自我檢查與成果提交<span>25 分</span></li>
+                    <li>共通回饋與職涯交接<span>20 分</span></li>
+                  </ul>
+                </div>
+              </details>
+            </div>
+          </article>
 
-        <!-- Card 4 -->
-        <div class="course-card">
-          <div class="card-header">
-            <div class="card-price-tag">NT$20,000／人</div>
-            <h3 class="card-title">女力 LINE OA × AI 工作流進階班</h3>
-            <div class="card-format">兩天實體 12 小時（專業技能 10h ＋ 職涯發展 2h）</div>
-          </div>
-          <p class="card-positioning">
-            學習 LINE 官方帳號、表單與資料管理，使用講師預建環境與範本快速建立客戶接待及 AI 工作流自動化展示系統。
-          </p>
-          <a href="#course-line-workflow" class="card-link">查看課程內容</a>
-        </div>
+          <article id="course-ai-web" class="ccard yellow" data-stage="s3" aria-labelledby="t3">
+            <div class="c-head">
+              <span class="pill">③ 技能</span>
+              <h3>Web Tool</h3>
+              <div class="zh" id="t3">女力 AI 協作程式設計與網頁工具實作班</div>
+            </div>
+            <div class="c-body">
+              <div class="c-price"><strong>NT$20,000</strong>／人</div>
+              <div class="c-format">兩天實體、12 小時（專業技能 10 小時＋職涯發展 2 小時）</div>
+              <p class="c-lead">讓無程式背景學員透過 AI 分析需求、建立／修改簡易網頁工具、測試與<span class="hl">部署到 Cloudflare Pages</span>。</p>
+              <div class="c-label">實作成果</div>
+              <ul class="dotlist">
+                <li>企業工作進度管理系統：工作登記、編輯、狀態更新、搜尋、篩選、匯出</li>
+                <li>作品展示網址、原始碼</li>
+                <li>操作說明及功能測試紀錄</li>
+              </ul>
+              <div class="c-label">培養能力</div>
+              <p>需求轉換、AI 輔助網頁建立／修改、基本測試除錯、作品整理展示能力。</p>
+              <div class="c-label">對應職涯</div>
+              <p>數位營運助理、AI 應用助理、專案行政助理、初階系統應用支援人員。</p>
+              <details class="syl">
+                <summary>展開完整課綱與時間安排</summary>
+                <div class="syl-body">
+                  <h4>Day 1 六小時</h4>
+                  <ul>
+                    <li>AI 協作程式設計概念<span>1h</span></li>
+                    <li>工作需求分析<span>1h</span></li>
+                    <li>AI 建立 HTML/CSS/JavaScript 網頁介面<span>1.5h</span></li>
+                    <li>新增／編輯／刪除／儲存資料<span>2h</span></li>
+                    <li>測試與錯誤訊息入門<span>0.5h</span></li>
+                  </ul>
+                  <p>Day 1 日成果：企業工作進度管理工具初版。</p>
+                  <h4>Day 2 六小時</h4>
+                  <ul>
+                    <li>搜尋／篩選／CSV 匯出<span>1h</span></li>
+                    <li>AI 協作除錯<span>1.5h</span></li>
+                    <li>部署到 Cloudflare Pages<span>1h</span></li>
+                    <li>依指定需求修改並測試<span>0.5h</span></li>
+                    <li>職涯發展與作品展示<span>2h</span></li>
+                  </ul>
+                </div>
+              </details>
+            </div>
+          </article>
 
-        <!-- Card 5 -->
-        <div class="course-card">
-          <div class="card-header">
-            <div class="card-price-tag">NT$29,800／人</div>
-            <h3 class="card-title">女力 AI 數位轉職作品強化方案</h3>
-            <div class="card-format">兩天實體 12 小時 ＋ 四週線上專題輔導</div>
-          </div>
-          <p class="card-positioning">
-            完整方案總價，不是另加費用。以網頁工具實作班為基礎，搭配四週專題輔導（每週 90 分鐘小組＋兩次個別指導），打造轉職作品集。
-          </p>
-          <a href="#course-career-portfolio" class="card-link">查看課程內容</a>
-        </div>
-      </div>
-    </section>
+          <article id="course-line-workflow" class="ccard mint" data-stage="s3" aria-labelledby="t4">
+            <div class="c-head">
+              <span class="pill">④ 技能</span>
+              <h3>LINE Flow</h3>
+              <div class="zh" id="t4">女力 LINE OA × AI 工作流進階班</div>
+            </div>
+            <div class="c-body">
+              <div class="c-price"><strong>NT$20,000</strong>／人</div>
+              <div class="c-format">兩天實體、12 小時（專業技能 10 小時＋職涯發展 2 小時）</div>
+              <p class="c-lead">學習 LINE 官方帳號、表單與資料管理，建立客戶接待及基礎數位服務流程。</p>
+              <div class="big-num"><strong>預建環境</strong>AI 工作流使用講師預建環境與範本，避免大量課堂時間耗在安裝與串接。</div>
+              <div class="c-label">實作成果</div>
+              <ul class="dotlist">
+                <li>LINE 客戶接待與預約管理展示系統</li>
+                <li>LINE OA、圖文選單、FAQ、Google 預約表單</li>
+                <li>客戶追蹤表、AI 工作流測試紀錄</li>
+              </ul>
+              <div class="c-label">培養能力</div>
+              <p>LINE OA 操作、客戶接待和資料登記、客戶狀態管理、數位流程測試說明能力。</p>
+              <div class="c-label">對應職涯</div>
+              <p>LINE 客服行政、數位客服、業務助理、數位營運助理、系統應用助理。</p>
+              <details class="syl">
+                <summary>展開完整課綱與時間安排</summary>
+                <div class="syl-body">
+                  <h4>Day 1 六小時</h4>
+                  <ul>
+                    <li>LINE 數位服務應用<span>0.5h</span></li>
+                    <li>官方帳號基本設定<span>1h</span></li>
+                    <li>圖文選單<span>1.5h</span></li>
+                    <li>AI 整理 FAQ／客服話術／關鍵字回覆<span>1.5h</span></li>
+                    <li>Google Forms 客戶需求表單<span>1.5h</span></li>
+                  </ul>
+                  <p>Day 1 日成果：基本 LINE 接待及需求登記流程。</p>
+                  <h4>Day 2 六小時</h4>
+                  <ul>
+                    <li>Google Sheets 客戶資料與狀態追蹤<span>1h</span></li>
+                    <li>AI 工作流（資料觸發、AI 分類、摘要、預建流程）<span>1.5h</span></li>
+                    <li>客戶登記、資料接收與人工處理整合測試<span>1h</span></li>
+                    <li>系統驗收與操作紀錄<span>0.5h</span></li>
+                    <li>職涯發展與作品展示<span>2h</span></li>
+                  </ul>
+                </div>
+              </details>
+            </div>
+          </article>
 
-    <!-- Courses Detail Section -->
-    <section id="courses" class="container" aria-labelledby="courses-title">
-      <h2 id="courses-title">課程詳情與完整課綱</h2>
-      <div class="courses-list">
-
-        <!-- Course 1 -->
-        <article id="course-ai-tools" class="course-detail" aria-labelledby="title-ai-tools">
-          <div class="course-header">
-            <h3 id="title-ai-tools" class="course-title">女力 AI 職場實用工具一日班</h3>
-          </div>
-          <div class="course-fields">
-            <div class="field-block">
-              <h4>費用</h4>
-              <div class="field-content field-price">NT$8,800／人</div>
+          <article id="course-career-portfolio" class="ccard orange" data-stage="s4" aria-labelledby="t5">
+            <div class="c-head">
+              <span class="pill">⑤ 轉職</span>
+              <h3>Portfolio</h3>
+              <div class="zh" id="t5">女力 AI 數位轉職作品強化方案</div>
             </div>
-            <div class="field-block">
-              <h4>形式與時數</h4>
-              <div class="field-content field-format">一日實體、共 8 小時；AI 實務 6 小時、職涯發展 2 小時；不需要程式基礎，適合 AI 初學者。</div>
+            <div class="c-body">
+              <div class="c-price"><strong>NT$29,800</strong>／人<span class="pill" style="font-size:.75rem;padding:1px 8px">完整方案總價，不是另加費用</span></div>
+              <div class="c-format">兩天實體 12 小時＋四週線上專題輔導</div>
+              <p class="c-lead">以 NT$20,000「女力 AI 協作程式設計與網頁工具實作班」為基礎，加上四週專題深入輔導與個別指導，打造<span class="hl">個人轉職作品集</span>。</p>
+              <div class="big-num"><strong>90 分 × 4 週</strong>每週一次線上小組輔導，共 6 小時；另有兩次個別作品指導，每次約 25 分鐘。</div>
+              <div class="c-label">實作成果</div>
+              <ul class="dotlist">
+                <li>個人化網頁工具、需求及功能說明</li>
+                <li>測試與修改紀錄、操作說明</li>
+                <li>可展示作品網址、履歷作品介紹、三分鐘作品展示</li>
+              </ul>
+              <div class="c-label">培養能力</div>
+              <p>獨立專題規劃、客製範本修改、系統除錯測試、技術文件撰寫與三分鐘成果口語展示能力。</p>
+              <div class="c-label">對應職涯</div>
+              <p>AI 應用助理、數位營運助理、資訊助理、專案行政助理等。希望以完整專案作品進行數位轉職準備的女性。</p>
+              <div class="warn"><b>注意</b><span>以作品與轉職準備為目標，不保證就業，也不代表學員可獨立開發企業級系統；不包含無限制技術支援或正式商業系統客製化。</span></div>
+              <details class="syl">
+                <summary>展開完整課綱與時間安排</summary>
+                <div class="syl-body">
+                  <h4>第一階段（實體兩天，每日 6 小時，共 12 小時）</h4>
+                  <ul>
+                    <li>Day 1：AI 協作開發、需求分析、網頁介面與資料功能<span>6h</span></li>
+                    <li>Day 2：系統測試、功能修改、部署、職涯發展及標準作品驗收<span>6h</span></li>
+                  </ul>
+                  <p>第一階段完成標準企業工作進度管理系統。</p>
+                  <h4>第二階段（四週線上專題輔導）</h4>
+                  <ul>
+                    <li>分析工作經驗、選產業情境、規劃功能（產出：個人專題需求書）<span>第 1 週</span></li>
+                    <li>改標準範本並加個人需求／資料功能（產出：個人化系統初版）<span>第 2 週</span></li>
+                    <li>功能檢查、除錯、操作流程與文件（產出：完整系統作品）<span>第 3 週</span></li>
+                    <li>作品整理、系統展示與面試介紹（產出：個人轉職作品集）<span>第 4 週</span></li>
+                  </ul>
+                  <h4>專題可選三大方向（可選專題，非三項皆須完成）</h4>
+                  <ul>
+                    <li>企業工作進度管理系統（行政／專案／數位營運）<span>A</span></li>
+                    <li>客戶需求與服務追蹤系統（客服／門市／業務行政）<span>B</span></li>
+                    <li>Excel 訂單資料核對與報表工具（行政／資料處理／營運助理）<span>C</span></li>
+                  </ul>
+                </div>
+              </details>
             </div>
-            <div class="field-block">
-              <h4>課程目標或定位</h4>
-              <div class="field-content field-positioning">不需要程式基礎，適合 AI 初學者。透過一日實體密集學習快速掌握 AI 職場實用技能與職涯盤點，完成第一份職場工作成果包。</div>
-            </div>
-            <div class="field-block">
-              <h4>課程內容與安排</h4>
-              <div class="field-content field-curriculum">
-                <p>包含 6 小時 AI 實務單元與 2 小時職涯發展單元，內容完整涵蓋行政文書、商務溝通、試算表整理與個人履歷準備：</p>
-                <details class="curriculum-details">
-                  <summary class="curriculum-summary curriculum-toggle">展開完整課綱與時間安排</summary>
-                  <div class="curriculum-body">
-                    <strong>AI 實務（6 個各 1 小時單元，共 6 小時）：</strong>
-                    <ul class="curriculum-unit-list">
-                      <li class="curriculum-unit-item"><span class="unit-time">1 小時</span><strong>AI 職場工具入門</strong>（生成式 AI、ChatGPT、清楚表達需求、整理主管交辦、資訊正確性與安全）</li>
-                      <li class="curriculum-unit-item"><span class="unit-time">1 小時</span><strong>行政文書與工作整理</strong>（會議紀錄、長文擷取、待辦、分工期限）</li>
-                      <li class="curriculum-unit-item"><span class="unit-time">1 小時</span><strong>商務溝通與信件</strong>（Email、客服回覆、公告通知、語氣與內容檢查）</li>
-                      <li class="curriculum-unit-item"><span class="unit-time">1 小時</span><strong>工作表格與資料整理</strong>（Google Sheets、進度表、排序篩選、資料檢查）</li>
-                      <li class="curriculum-unit-item"><span class="unit-time">1 小時</span><strong>工作流程與 SOP</strong>（工作步驟、活動報名行政流程、交接文件、可重用指令）</li>
-                      <li class="curriculum-unit-item"><span class="unit-time">1 小時</span><strong>職場情境綜合實作</strong>（任務整理、通知信、追蹤表、SOP、資料檢核）</li>
-                    </ul>
-                    <strong>職涯發展（2 小時）：</strong>
-                    <ul class="curriculum-unit-list">
-                      <li class="curriculum-unit-item"><span class="unit-time">1 小時</span><strong>職涯探索與個人優勢盤點 1 小時</strong></li>
-                      <li class="curriculum-unit-item"><span class="unit-time">1 小時</span><strong>AI 履歷準備與作品展示 1 小時</strong></li>
-                    </ul>
-                  </div>
-                </details>
-              </div>
-            </div>
-            <div class="field-block">
-              <h4>實作成果</h4>
-              <div class="field-content field-outcomes">AI 工作待辦清單、會議重點與工作事項整理表、AI 商務溝通信件、Google Sheets 工作追蹤表、AI 行政工作 SOP、AI 職場工作成果包、個人職涯方向規劃表、個人履歷重點初稿與作品介紹。對外主打「第一份 AI 職場工作成果包」。</div>
-            </div>
-            <div class="field-block">
-              <h4>培養能力</h4>
-              <div class="field-content field-capabilities">掌握生成式 AI 提示詞提問、行政文書數位處理、會議摘要與追蹤、商務信件撰寫、試算表資料整理、行政標準作業程序梳理，以及個人職涯盤點與作品集初稿建立。</div>
-            </div>
-            <div class="field-block">
-              <h4>適合對象或對應職涯</h4>
-              <div class="field-content field-target">適合重返職場、轉職、提升行政文書效率或從零認識 AI 的女性。不需要程式基礎，適合 AI 初學者。</div>
-            </div>
-          </div>
-        </article>
-
-        <!-- Course 2 -->
-        <article id="course-ai-tasks" class="course-detail" aria-labelledby="title-ai-tasks">
-          <div class="course-header">
-            <h3 id="title-ai-tasks" class="course-title">女力 AI 企業工作任務實作班</h3>
-            <div class="title-note">提供資料未列正式課名；使用依內容命名之描述性標題，不宣稱是已核定正式課名。</div>
-          </div>
-          <div class="course-fields">
-            <div class="field-block">
-              <h4>費用</h4>
-              <div class="field-content field-price">NT$14,800／人</div>
-            </div>
-            <div class="field-block">
-              <h4>形式與時數</h4>
-              <div class="field-content field-format">兩天實作，Day 1 共 360 分鐘（6 小時），Day 2 共 240 分鐘（4 小時），合計 600 分鐘／10 小時。</div>
-            </div>
-            <div class="field-block">
-              <h4>課程目標或定位</h4>
-              <div class="field-content field-positioning">以企業真實情境為導向，從六格工作法到獨立處理新資料、新需求及工作挑戰，只提供明列之實作任務訓練。</div>
-            </div>
-            <div class="field-block">
-              <h4>課程內容與安排</h4>
-              <div class="field-content field-curriculum">
-                <p>兩天精確計時實作訓練，涵蓋企業情境解析至獨立解題挑戰：</p>
-                <details class="curriculum-details">
-                  <summary class="curriculum-summary curriculum-toggle">展開完整課綱與時間安排</summary>
-                  <div class="curriculum-body">
-                    <strong>Day 1「建立 AI 工作能力」（合計 360 分鐘／6 小時）：</strong>
-                    <ul class="curriculum-unit-list">
-                      <li class="curriculum-unit-item">企業情境與六格工作法 <span class="unit-time">25 分</span></li>
-                      <li class="curriculum-unit-item">主管交辦轉成工作追蹤表 <span class="unit-time">60 分</span></li>
-                      <li class="curriculum-unit-item">會議紀錄摘要與來源查核 <span class="unit-time">35 分</span></li>
-                      <li class="curriculum-unit-item">主管需求變更與修正 <span class="unit-time">20 分</span></li>
-                      <li class="curriculum-unit-item">第一階段成果檢查 <span class="unit-time">25 分</span></li>
-                      <li class="curriculum-unit-item">報名／付款／客服資料關聯 <span class="unit-time">55 分</span></li>
-                      <li class="curriculum-unit-item">異常資料核對與人工驗算 <span class="unit-time">65 分</span></li>
-                      <li class="curriculum-unit-item">AI 協作完成主管報告 <span class="unit-time">45 分</span></li>
-                      <li class="curriculum-unit-item">客服回覆與 FAQ <span class="unit-time">30 分</span></li>
-                    </ul>
-                    <strong>Day 2「獨立解決企業問題」（合計 240 分鐘／4 小時）：</strong>
-                    <ul class="curriculum-unit-list">
-                      <li class="curriculum-unit-item">新資料／新需求／欄位變更 <span class="unit-time">40 分</span></li>
-                      <li class="curriculum-unit-item">六格工作卡重複使用 <span class="unit-time">35 分</span></li>
-                      <li class="curriculum-unit-item">陌生題示範及評分說明 <span class="unit-time">20 分</span></li>
-                      <li class="curriculum-unit-item">教師個別派題與讀題 <span class="unit-time">15 分</span></li>
-                      <li class="curriculum-unit-item">學員獨立完成挑戰 <span class="unit-time">85 分</span></li>
-                      <li class="curriculum-unit-item">自我檢查與成果提交 <span class="unit-time">25 分</span></li>
-                      <li class="curriculum-unit-item">共通回饋與職涯交接 <span class="unit-time">20 分</span></li>
-                    </ul>
-                  </div>
-                </details>
-              </div>
-            </div>
-            <div class="field-block">
-              <h4>實作成果</h4>
-              <div class="field-content field-outcomes">工作追蹤表、會議摘要、資料核對、主管報告、客服回覆／FAQ 與獨立挑戰成果。</div>
-            </div>
-            <div class="field-block">
-              <h4>培養能力</h4>
-              <div class="field-content field-capabilities">新資料、新需求、變更、查核及獨立解題能力。</div>
-            </div>
-            <div class="field-block">
-              <h4>適合對象或對應職涯</h4>
-              <div class="field-content field-target">想重新就業、轉換工作的女性，尤其有行政、門市、客服、業務或服務業經驗、希望培養數位工作技能的媽媽。</div>
-              <div class="field-content field-limits" style="margin-top: 10px; font-weight: 600;">重點是從企業情境到獨立處理新資料、新需求及工作挑戰。只宣稱提供內容明列的實作，不另編造結業作品、職涯時數、就業成果或保證。</div>
-            </div>
-          </div>
-        </article>
-
-        <!-- Course 3 -->
-        <article id="course-ai-web" class="course-detail" aria-labelledby="title-ai-web">
-          <div class="course-header">
-            <h3 id="title-ai-web" class="course-title">女力 AI 協作程式設計與網頁工具實作班</h3>
-          </div>
-          <div class="course-fields">
-            <div class="field-block">
-              <h4>費用</h4>
-              <div class="field-content field-price">NT$20,000／人</div>
-            </div>
-            <div class="field-block">
-              <h4>形式與時數</h4>
-              <div class="field-content field-format">兩天實體、12 小時（專業技能 10 小時＋職涯發展 2 小時）。</div>
-            </div>
-            <div class="field-block">
-              <h4>課程目標或定位</h4>
-              <div class="field-content field-positioning">讓無程式背景學員透過 AI 分析需求、建立／修改簡易網頁工具、測試與部署。</div>
-            </div>
-            <div class="field-block">
-              <h4>課程內容與安排</h4>
-              <div class="field-content field-curriculum">
-                <p>兩天密集實體教學，專業技能 10 小時加上 2 小時職涯發展與作品展示：</p>
-                <details class="curriculum-details">
-                  <summary class="curriculum-summary curriculum-toggle">展開完整課綱與時間安排</summary>
-                  <div class="curriculum-body">
-                    <strong>Day 1 六小時：</strong>
-                    <ul class="curriculum-unit-list">
-                      <li class="curriculum-unit-item"><span class="unit-time">1.0h</span>AI 協作程式設計概念 1h</li>
-                      <li class="curriculum-unit-item"><span class="unit-time">1.0h</span>工作需求分析 1h</li>
-                      <li class="curriculum-unit-item"><span class="unit-time">1.5h</span>AI 建立 HTML/CSS/JavaScript 網頁介面 1.5h</li>
-                      <li class="curriculum-unit-item"><span class="unit-time">2.0h</span>新增／編輯／刪除／儲存資料 2h</li>
-                      <li class="curriculum-unit-item"><span class="unit-time">0.5h</span>測試與錯誤訊息入門 0.5h</li>
-                    </ul>
-                    <p><em>Day 1 日成果：企業工作進度管理工具初版。</em></p>
-                    <strong>Day 2 六小時：</strong>
-                    <ul class="curriculum-unit-list">
-                      <li class="curriculum-unit-item"><span class="unit-time">1.0h</span>搜尋／篩選／CSV 匯出 1h</li>
-                      <li class="curriculum-unit-item"><span class="unit-time">1.5h</span>AI 協作除錯 1.5h</li>
-                      <li class="curriculum-unit-item"><span class="unit-time">1.0h</span>部署到 Cloudflare Pages 1h</li>
-                      <li class="curriculum-unit-item"><span class="unit-time">0.5h</span>依指定需求修改並測試 0.5h</li>
-                      <li class="curriculum-unit-item"><span class="unit-time">2.0h</span>職涯發展與作品展示 2h</li>
-                    </ul>
-                  </div>
-                </details>
-              </div>
-            </div>
-            <div class="field-block">
-              <h4>實作成果</h4>
-              <div class="field-content field-outcomes">企業工作進度管理系統，可工作登記、編輯、狀態更新、搜尋、篩選、匯出；完成作品展示網址、原始碼、操作說明及功能測試紀錄。</div>
-            </div>
-            <div class="field-block">
-              <h4>培養能力</h4>
-              <div class="field-content field-capabilities">需求轉換、AI 輔助網頁建立／修改、基本測試除錯、作品整理展示能力。</div>
-            </div>
-            <div class="field-block">
-              <h4>適合對象或對應職涯</h4>
-              <div class="field-content field-target field-careers">數位營運助理、AI 應用助理、專案行政助理、初階系統應用支援人員。</div>
-            </div>
-          </div>
-        </article>
-
-        <!-- Course 4 -->
-        <article id="course-line-workflow" class="course-detail" aria-labelledby="title-line-workflow">
-          <div class="course-header">
-            <h3 id="title-line-workflow" class="course-title">女力 LINE OA × AI 工作流進階班</h3>
-          </div>
-          <div class="course-fields">
-            <div class="field-block">
-              <h4>費用</h4>
-              <div class="field-content field-price">NT$20,000／人</div>
-            </div>
-            <div class="field-block">
-              <h4>形式與時數</h4>
-              <div class="field-content field-format">兩天實體、12 小時（專業技能 10 小時＋職涯發展 2 小時）。</div>
-            </div>
-            <div class="field-block">
-              <h4>課程目標或定位</h4>
-              <div class="field-content field-positioning">
-                學習 LINE 官方帳號、表單與資料管理，建立客戶接待及基礎數位服務流程。
-                <div class="template-note" style="margin-top: 8px; font-weight: 700;">AI 工作流使用講師預建環境與範本，避免大量課堂時間耗在安裝與串接。</div>
-              </div>
-            </div>
-            <div class="field-block">
-              <h4>課程內容與安排</h4>
-              <div class="field-content field-curriculum">
-                <p>兩天實務建置流程，包含 LINE OA 客服設定、表單收集與 AI 流程串接測試：</p>
-                <details class="curriculum-details">
-                  <summary class="curriculum-summary curriculum-toggle">展開完整課綱與時間安排</summary>
-                  <div class="curriculum-body">
-                    <strong>Day 1 六小時：</strong>
-                    <ul class="curriculum-unit-list">
-                      <li class="curriculum-unit-item"><span class="unit-time">0.5h</span>LINE 數位服務應用 0.5h</li>
-                      <li class="curriculum-unit-item"><span class="unit-time">1.0h</span>官方帳號基本設定 1h</li>
-                      <li class="curriculum-unit-item"><span class="unit-time">1.5h</span>圖文選單 1.5h</li>
-                      <li class="curriculum-unit-item"><span class="unit-time">1.5h</span>AI 整理 FAQ／客服話術／關鍵字回覆 1.5h</li>
-                      <li class="curriculum-unit-item"><span class="unit-time">1.5h</span>Google Forms 客戶需求表單 1.5h</li>
-                    </ul>
-                    <p><em>Day 1 日成果：基本 LINE 接待及需求登記流程。</em></p>
-                    <strong>Day 2 六小時：</strong>
-                    <ul class="curriculum-unit-list">
-                      <li class="curriculum-unit-item"><span class="unit-time">1.0h</span>Google Sheets 客戶資料與狀態追蹤 1h</li>
-                      <li class="curriculum-unit-item"><span class="unit-time">1.5h</span>AI 工作流（資料觸發、AI 分類、摘要、預建流程）1.5h</li>
-                      <li class="curriculum-unit-item"><span class="unit-time">1.0h</span>客戶登記、資料接收與人工處理整合測試 1h</li>
-                      <li class="curriculum-unit-item"><span class="unit-time">0.5h</span>系統驗收與操作紀錄 0.5h</li>
-                      <li class="curriculum-unit-item"><span class="unit-time">2.0h</span>職涯發展與作品展示 2h</li>
-                    </ul>
-                  </div>
-                </details>
-              </div>
-            </div>
-            <div class="field-block">
-              <h4>實作成果</h4>
-              <div class="field-content field-outcomes">LINE 客戶接待與預約管理展示系統，含 LINE OA、圖文選單、FAQ、Google 預約表單、客戶追蹤表、AI 工作流測試紀錄。</div>
-            </div>
-            <div class="field-block">
-              <h4>培養能力</h4>
-              <div class="field-content field-capabilities">LINE OA 操作、客戶接待和資料登記、客戶狀態管理、數位流程測試說明能力。</div>
-            </div>
-            <div class="field-block">
-              <h4>適合對象或對應職涯</h4>
-              <div class="field-content field-target field-careers">LINE 客服行政、數位客服、業務助理、數位營運助理、系統應用助理。</div>
-            </div>
-          </div>
-        </article>
-
-        <!-- Course 5 -->
-        <article id="course-career-portfolio" class="course-detail" aria-labelledby="title-career-portfolio">
-          <div class="course-header">
-            <h3 id="title-career-portfolio" class="course-title">女力 AI 數位轉職作品強化方案</h3>
-          </div>
-          <div class="course-fields">
-            <div class="field-block">
-              <h4>費用</h4>
-              <div class="field-content field-price">NT$29,800／人（完整方案總價，不是另加費用）</div>
-            </div>
-            <div class="field-block">
-              <h4>形式與時數</h4>
-              <div class="field-content field-format">兩天實體 12 小時＋四週線上專題輔導；每週一次 90 分鐘線上小組輔導，共 6 小時；另有兩次個別作品指導，每次約 25 分鐘。</div>
-            </div>
-            <div class="field-block">
-              <h4>課程目標或定位</h4>
-              <div class="field-content field-positioning field-foundation">是以 NT$20,000「女力 AI 協作程式設計與網頁工具實作班」為基礎增加指導的完整方案，NT$29,800 為總價，不是另加費用。以網頁工具班為基礎，加上四週專題深入輔導與個別指導，打造高說服力的個人轉職作品集。</div>
-            </div>
-            <div class="field-block">
-              <h4>課程內容與安排</h4>
-              <div class="field-content field-curriculum">
-                <p>包含第一階段兩天實體課程與第二階段四週專題輔導與個別指導：</p>
-                <details class="curriculum-details">
-                  <summary class="curriculum-summary curriculum-toggle">展開完整課綱與時間安排</summary>
-                  <div class="curriculum-body">
-                    <strong>第一階段（實體兩天，每日 6 小時，共 12 小時）：</strong>
-                    <ul class="curriculum-unit-list">
-                      <li class="curriculum-unit-item"><strong>Day 1</strong>：AI 協作開發、需求分析、網頁介面與資料功能（6 小時）</li>
-                      <li class="curriculum-unit-item"><strong>Day 2</strong>：系統測試、功能修改、部署、職涯發展及標準作品驗收（6 小時）</li>
-                    </ul>
-                    <p><em>第一階段完成標準企業工作進度管理系統。</em></p>
-
-                    <strong>第二階段（四週線上專題輔導）：</strong>
-                    <ul class="curriculum-unit-list">
-                      <li class="curriculum-unit-item"><strong>第 1 週</strong>：分析工作經驗、選產業情境、規劃功能（產出：個人專題需求書）</li>
-                      <li class="curriculum-unit-item"><strong>第 2 週</strong>：改標準範本並加個人需求／資料功能（產出：個人化系統初版）</li>
-                      <li class="curriculum-unit-item"><strong>第 3 週</strong>：功能檢查、除錯、操作流程與文件（產出：完整系統作品）</li>
-                      <li class="curriculum-unit-item"><strong>第 4 週</strong>：作品整理、系統展示與面試介紹（產出：個人轉職作品集）</li>
-                    </ul>
-                    <p>輔導安排：每週一次 90 分鐘線上小組輔導，四週共 6 小時；另有兩次個別作品指導，每次約 25 分鐘。</p>
-
-                    <strong>專題可選三大方向（可選專題，非三項皆須完成）：</strong>
-                    <ul class="curriculum-unit-list">
-                      <li class="curriculum-unit-item"><strong>A 專題</strong>：企業工作進度管理系統（行政／專案／數位營運）</li>
-                      <li class="curriculum-unit-item"><strong>B 專題</strong>：客戶需求與服務追蹤系統（客服／門市／業務行政）</li>
-                      <li class="curriculum-unit-item"><strong>C 專題</strong>：Excel 訂單資料核對與報表工具（行政／資料處理／營運助理）</li>
-                    </ul>
-                  </div>
-                </details>
-              </div>
-            </div>
-            <div class="field-block">
-              <h4>實作成果</h4>
-              <div class="field-content field-outcomes">個人化網頁工具、需求及功能說明、測試與修改紀錄、操作說明、可展示作品網址、履歷作品介紹、三分鐘作品展示。</div>
-            </div>
-            <div class="field-block">
-              <h4>培養能力</h4>
-              <div class="field-content field-capabilities">具備獨立專題規劃、客製範本修改、系統除錯測試、技術文件撰寫與三分鐘成果口語展示能力。</div>
-            </div>
-            <div class="field-block">
-              <h4>適合對象或對應職涯</h4>
-              <div class="field-content field-target">AI 應用助理、數位營運助理、資訊助理、專案行政助理等。希望以完整專案作品進行數位轉職準備的女性。</div>
-              <div class="field-content field-limits" style="margin-top: 10px; font-weight: 600;">以作品與轉職準備為目標，不保證就業，也不代表學員可獨立開發企業級系統；不包含無限制技術支援或正式商業系統客製化。</div>
-            </div>
-          </div>
-        </article>
-
-      </div>
-    </section>
-
-    <!-- Teaching Principles Section -->
-    <section id="teaching" class="container" aria-labelledby="teaching-title">
-      <h2 id="teaching-title">共同教學方式</h2>
-      <div class="info-card">
-        <h3>共同招生對象</h3>
-        <div class="field-content audience-content" style="margin-bottom: 20px;">
-          想重新就業、轉換工作的女性，尤其有行政、門市、客服、業務或服務業經驗、希望培養數位工作技能的媽媽。
-        </div>
-        <h3>共同教學原則</h3>
-        <div class="field-content principles-content">
-          實體操作與作品導向；講師提供標準教學素材、操作範本和測試案例；結業驗收確認學員能自行操作、修改、測試、說明成果。
+          </article>
         </div>
       </div>
     </section>
 
-    <!-- FAQ Section -->
-    <section id="faq" class="container" aria-labelledby="faq-title">
-      <h2 id="faq-title">常見問題</h2>
-      <div class="faq-list">
-        <div class="faq-item">
-          <div class="faq-question">這五門課程的適合對象為何？是否需要程式基礎？</div>
-          <div class="faq-answer">共同招生對象為想重新就業、轉換工作的女性，尤其有行政、門市、客服、業務或服務業經驗、希望培養數位工作技能的媽媽。其中「一日班」與「網頁工具班」不需要程式基礎，適合 AI 初學者；「企業任務班」著重真實工作任務實作；「LINE OA 班」使用講師預建環境與範本；「轉職作品強化方案」則以網頁工具班為基礎進行延伸指導。</div>
+    <div class="wrap">
+      <section id="teaching" class="block" aria-labelledby="teaching-title">
+        <div class="sec-head">
+          <div class="kicker">04 · How We Teach</div>
+          <h2 id="teaching-title" class="big-title">How We Teach</h2>
+          <div class="sub">共同教學方式</div>
         </div>
-        <div class="faq-item">
-          <div class="faq-question">兩門 NT$20,000 的課程有什麼不同？</div>
-          <div class="faq-answer">兩門課皆為兩天實體 12 小時（專業 10 小時＋職涯 2 小時）。「女力 AI 協作程式設計與網頁工具實作班」專注於需求分析、網頁介面開發、資料 CRUD、除錯與 Cloudflare Pages 部署；「女力 LINE OA × AI 工作流進階班」則專注於 LINE 官方帳號設定、圖文選單、表單資料串接與 AI 自動化工作流應用。</div>
+        <div class="two">
+          <div class="note-card panel">
+            <h3>共同招生對象</h3>
+            <p>想重新就業、轉換工作的女性，尤其有行政、門市、客服、業務或服務業經驗、希望培養數位工作技能的媽媽。</p>
+          </div>
+          <div class="note-card panel">
+            <h3>共同教學原則</h3>
+            <p>實體操作與作品導向；講師提供標準教學素材、操作範本和測試案例；結業驗收確認學員能自行操作、修改、測試、說明成果。</p>
+          </div>
         </div>
-        <div class="faq-item">
-          <div class="faq-question">NT$29,800 的「數位轉職作品強化方案」費用如何計算？與網頁班有何關係？</div>
-          <div class="faq-answer">NT$29,800 為完整方案總價，不是另外加收的費用。該方案是以 NT$20,000 的「女力 AI 協作程式設計與網頁工具實作班」兩天實體課程為基礎，再加上四週線上專題輔導與兩次個別作品指導所組成的完整培訓方案。</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-question">四週專題輔導的進行方式與時數為何？</div>
-          <div class="faq-answer">四週期間包含每週一次 90 分鐘的線上小組輔導，四週合計 6 小時；此外另外安排兩次個別作品指導，每次約 25 分鐘，協助學員依個人選定主題完成客製化作品集。</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-question">參加課程是否保證就業或保證接案？</div>
-          <div class="faq-answer">課程以建立實際作品與轉職準備為目標，不保證學員取得特定工作或就業，也不代表學員可獨立開發企業級系統，課程不包含無限制技術支援或正式商業系統客製化。</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-question">課程的開課日期、上課地點與政府補助方案何時公布？</div>
-          <div class="faq-answer">課程時數、實體與線上輔導內容、政府獎勵適用方式，均須依實際核定計畫確認。本頁面僅提供課程內容與課綱架構比較，未列出的日期、地址、招生名額或補助金額須以未來正式核定計畫為準。</div>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Important Notes Section -->
-    <section id="important-notes" class="container" aria-labelledby="notes-title">
-      <h2 id="notes-title">共通重要說明</h2>
-      <div class="notice-box">
-        課程目標為建立實際作品及轉職準備能力，不保證學員取得特定工作。課程時數、實體與線上輔導內容、政府獎勵適用方式，均須依實際核定計畫確認。不得自行增加上課日期、地址、招生名額、政府補助金額或適用資格。
-      </div>
-    </section>
+      <section id="faq" class="block" aria-labelledby="faq-title">
+        <div class="sec-head">
+          <div class="kicker">05 · Q&amp;A</div>
+          <h2 id="faq-title" class="big-title">Q &amp; A</h2>
+          <div class="sub">常見問題</div>
+        </div>
+        <div class="faq">
+          <details><summary>這五門課程的適合對象為何？是否需要程式基礎？</summary><p>共同招生對象為想重新就業、轉換工作的女性，尤其有行政、門市、客服、業務或服務業經驗、希望培養數位工作技能的媽媽。其中「一日班」與「網頁工具班」不需要程式基礎，適合 AI 初學者；「企業任務班」著重真實工作任務實作；「LINE OA 班」使用講師預建環境與範本；「轉職作品強化方案」則以網頁工具班為基礎進行延伸指導。</p></details>
+          <details><summary>兩門 NT$20,000 的課程有什麼不同？</summary><p>兩門課皆為兩天實體 12 小時（專業 10 小時＋職涯 2 小時）。「女力 AI 協作程式設計與網頁工具實作班」專注於需求分析、網頁介面開發、資料 CRUD、除錯與 Cloudflare Pages 部署；「女力 LINE OA × AI 工作流進階班」則專注於 LINE 官方帳號設定、圖文選單、表單資料串接與 AI 自動化工作流應用。</p></details>
+          <details><summary>NT$29,800 的「數位轉職作品強化方案」費用如何計算？與網頁班有何關係？</summary><p>NT$29,800 為完整方案總價，不是另外加收的費用。該方案是以 NT$20,000 的「女力 AI 協作程式設計與網頁工具實作班」兩天實體課程為基礎，再加上四週線上專題輔導與兩次個別作品指導所組成的完整培訓方案。</p></details>
+          <details><summary>四週專題輔導的進行方式與時數為何？</summary><p>四週期間包含每週一次 90 分鐘的線上小組輔導，四週合計 6 小時；此外另外安排兩次個別作品指導，每次約 25 分鐘，協助學員依個人選定主題完成客製化作品集。</p></details>
+          <details><summary>參加課程是否保證就業或保證接案？</summary><p>課程以建立實際作品與轉職準備為目標，不保證學員取得特定工作或就業，也不代表學員可獨立開發企業級系統，課程不包含無限制技術支援或正式商業系統客製化。</p></details>
+          <details><summary>課程的開課日期、上課地點與政府補助方案何時公布？</summary><p>課程時數、實體與線上輔導內容、政府獎勵適用方式，均須依實際核定計畫確認。本頁面僅提供課程內容與課綱架構比較，未列出的日期、地址、招生名額或補助金額須以未來正式核定計畫為準。</p></details>
+        </div>
+      </section>
+
+      <section id="important-notes" class="block" aria-labelledby="notes-title">
+        <div class="sec-head">
+          <div class="kicker">Notice</div>
+          <h2 id="notes-title" style="font-weight:900;font-size:1.6rem">共通重要說明</h2>
+        </div>
+        <div class="notice">課程目標為建立實際作品及轉職準備能力，不保證學員取得特定工作。課程時數、實體與線上輔導內容、政府獎勵適用方式，均須依實際核定計畫確認。不得自行增加上課日期、地址、招生名額、政府補助金額或適用資格。</div>
+      </section>
+    </div>
   </main>
 
   <footer>
-    <div class="container footer-inner">
+    <div class="wrap">
       <p>女力 AI 數位職涯課程介紹專頁｜客觀提供各班別內容、課綱與時數資訊</p>
-      <div class="footer-nav">
-        <a href="#overview">返回課程總覽</a>
-        <a href="#courses">課程詳情</a>
-        <a href="#teaching">共同教學方式</a>
+      <nav aria-label="頁尾導覽">
+        <a href="#diagnose">對症找課</a>
+        <a href="#map">學習地圖</a>
+        <a href="#cards">五張課卡</a>
         <a href="#faq">常見問題</a>
         <a href="#important-notes">重要說明</a>
-      </div>
-      <p style="font-size: 0.85rem; color: #CCCCCC;">本頁面不提供報名、付款或個人資料收集服務。</p>
+      </nav>
+      <p class="small">本頁面不提供報名、付款或個人資料收集服務。</p>
     </div>
   </footer>
+
+  <script>
+    (function () {
+      var NAMES = { c1: "① 一日班", c2: "② 任務班", c3: "③ 網頁工具班", c4: "④ LINE OA 班", c5: "⑤ 轉職方案" };
+      var CARD_IDS = { c1: "course-ai-tools", c2: "course-ai-tasks", c3: "course-ai-web", c4: "course-line-workflow", c5: "course-career-portfolio" };
+      var SYMPTOMS = [
+        { t: "離開職場太久，不知道從哪開始", to: ["c1"], tag: "入門｜先動起來",
+          d: "空白期越久，越容易覺得自己什麼都不會。其實不用一次補齊，先完成一份看得到的小成果，信心就會回來。",
+          todo: "寫下過去做過的 3 件工作或家務統籌，每件用一句話說明「我負責什麼」。" },
+        { t: "完全沒用過 AI，有點怕", to: ["c1"], tag: "入門｜從零認識 AI",
+          d: "AI 工具不需要程式基礎，重點是會把需求說清楚。一日班從最基本的提問開始練。",
+          todo: "打開任一 AI 工具，請它把一段長訊息整理成 3 點待辦。" },
+        { t: "不會寫程式，怕跟不上", to: ["c1", "c3"], tag: "入門｜不需要程式基礎",
+          d: "一日班與網頁工具班都不需要程式基礎。網頁工具班是讓 AI 協助寫程式，妳負責說清楚需求、測試和修改。",
+          todo: "列出一個妳常用表格整理的工作，想想如果有個小工具，妳希望它做什麼。" },
+        { t: "主管交辦一多就亂成一團", to: ["c2", "c1"], tag: "實作｜工作追蹤",
+          d: "交辦事項亂，多半是缺一個固定的整理方式。任務班用六格工作法，把交辦轉成追蹤表。",
+          todo: "把這週要做的事列成表：事項、期限、負責人、狀態四欄。" },
+        { t: "想知道真正上班怎麼做事", to: ["c2"], tag: "實作｜企業真實情境",
+          d: "課程以企業情境為主：會議摘要、資料核對、主管報告、客服回覆，最後獨立完成陌生挑戰題。",
+          todo: "回想一個以前遇過的工作難題，寫下當時缺了什麼資料或工具。" },
+        { t: "資料、表格一多就慌", to: ["c2", "c1"], tag: "實作｜資料核對",
+          d: "看到大量資料會慌很正常。練習先分欄、排序、找異常，再用 AI 協作與人工驗算交叉檢查。",
+          todo: "打開一份試算表，試著用排序與篩選找出一筆看起來不對的資料。" },
+        { t: "做過客服或門市，想往數位客服", to: ["c4"], tag: "技能｜LINE OA",
+          d: "妳已經懂得接待客人，LINE OA 班把這份經驗搬到官方帳號、圖文選單、表單與追蹤表上。",
+          todo: "寫下客人最常問的 5 個問題，這就是 FAQ 的起點。" },
+        { t: "做業務，客戶資料總是很亂", to: ["c4", "c2"], tag: "技能｜客戶狀態管理",
+          d: "客戶資料亂，通常是登記和追蹤沒有串起來。用表單收集、試算表追蹤狀態，再用 AI 協助分類摘要。",
+          todo: "把手上客戶依「新詢問／跟進中／已成交」分三類，算算各有幾位。" },
+        { t: "想做一個能展示的作品", to: ["c3", "c5"], tag: "技能｜做出作品",
+          d: "網頁工具班兩天內做出可部署的工作進度管理工具；想做得更貼近自己的經驗，可以接轉職方案的四週專題。",
+          todo: "想一個妳過去工作中「如果有工具就好了」的情境，寫成一句需求。" },
+        { t: "想往數位營運、專案行政發展", to: ["c3", "c5"], tag: "技能｜對應職涯",
+          d: "網頁工具班與轉職方案對應的職涯包含數位營運助理、AI 應用助理、專案行政助理等。",
+          todo: "找 3 則有興趣的職缺，圈出重複出現的技能關鍵字。" },
+        { t: "履歷有空白期，不知道怎麼寫", to: ["c1", "c5"], tag: "轉職｜履歷與作品",
+          d: "一日班有 AI 履歷準備；轉職方案則把作品放進履歷，並練習三分鐘作品展示。",
+          todo: "用一句話寫下空白期做了什麼，例如照顧家人、統籌家務或自學。" },
+        { t: "面試不知道怎麼介紹自己", to: ["c5"], tag: "轉職｜三分鐘展示",
+          d: "有作品可以講，介紹自己就容易得多。轉職方案第 4 週專門整理作品、練習展示與面試介紹。",
+          todo: "對著手機錄 1 分鐘：我是誰、我做過什麼、我想做什麼。" }
+      ];
+
+      var chipsEl = document.getElementById("chips");
+      var mapEl = document.getElementById("map-box");
+      var wires = document.getElementById("wires");
+      var banner = document.getElementById("banner");
+      var side = document.getElementById("side");
+      var parts = Array.prototype.slice.call(document.querySelectorAll(".part"));
+      var DEFAULT_BANNER = banner.textContent;
+      var current = -1;
+
+      SYMPTOMS.forEach(function (s, i) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "chip";
+        b.textContent = s.t;
+        b.setAttribute("aria-pressed", "false");
+        b.addEventListener("click", function () { pick(current === i ? -1 : i); });
+        chipsEl.appendChild(b);
+      });
+      var chips = chipsEl.querySelectorAll(".chip");
+
+      function esc(s) { return s.replace(/[&<>]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]; }); }
+
+      function pick(i) {
+        current = i;
+        Array.prototype.forEach.call(chips, function (c, j) {
+          c.classList.toggle("on", j === i);
+          c.setAttribute("aria-pressed", j === i ? "true" : "false");
+        });
+        var s = SYMPTOMS[i];
+        mapEl.classList.toggle("has-pick", !!s);
+        parts.forEach(function (p) { p.classList.toggle("lit", !!s && s.to.indexOf(p.dataset.id) > -1); });
+        if (!s) {
+          banner.textContent = DEFAULT_BANNER;
+          side.innerHTML = '<div class="kicker">Symptom</div><h3>先點左邊一個狀況</h3><p class="side-empty">這裡會告訴妳：這個狀況通常卡在哪、今天就能做的一件小事，以及可以先翻到哪張課卡。</p>';
+        } else {
+          banner.textContent = "「" + s.t + "」往下連到的課程都亮起來了。再點一次就收起來。";
+          side.innerHTML = '<div class="kicker">Symptom</div><h3>' + esc(s.t) + '</h3>' +
+            '<span class="pill tag">' + esc(s.tag) + '</span><p>' + esc(s.d) + '</p>' +
+            '<div class="todo"><span class="pill">今天就做這一件事</span><p>' + esc(s.todo) + '</p></div>' +
+            '<div class="side-actions">' + s.to.map(function (id) {
+              return '<a class="btn" href="#' + CARD_IDS[id] + '" data-jump="' + CARD_IDS[id] + '">翻到 ' + NAMES[id] + ' 卡片 →</a>';
+            }).join("") + '</div>';
+        }
+        draw();
+      }
+
+      function draw() {
+        wires.innerHTML = "";
+        var s = SYMPTOMS[current];
+        if (!s) return;
+        var box = mapEl.getBoundingClientRect();
+        var a = chips[current].getBoundingClientRect();
+        var x1 = a.left + a.width / 2 - box.left, y1 = a.bottom - box.top;
+        parts.forEach(function (p) {
+          if (s.to.indexOf(p.dataset.id) < 0) return;
+          var r = p.getBoundingClientRect();
+          var x2 = r.left + r.width / 2 - box.left, y2 = r.top - box.top;
+          var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          var dy = Math.max(40, (y2 - y1) * 0.5);
+          path.setAttribute("d", "M" + x1 + "," + y1 + " C" + x1 + "," + (y1 + dy) + " " + x2 + "," + (y2 - dy) + " " + x2 + "," + y2);
+          wires.appendChild(path);
+        });
+      }
+      window.addEventListener("resize", draw);
+
+      // Card filters
+      var filterBtns = document.querySelectorAll(".filters button");
+      var cards = document.querySelectorAll(".ccard");
+      function filter(f) {
+        Array.prototype.forEach.call(filterBtns, function (b) { b.setAttribute("aria-pressed", b.dataset.f === f ? "true" : "false"); });
+        Array.prototype.forEach.call(cards, function (c) { c.hidden = f !== "all" && c.dataset.stage !== f; });
+      }
+      Array.prototype.forEach.call(filterBtns, function (b) { b.addEventListener("click", function () { filter(b.dataset.f); }); });
+
+      // Any jump to a card: make sure it's visible, then flash it
+      document.addEventListener("click", function (e) {
+        var a = e.target.closest('a[href^="#course-"]');
+        if (!a) return;
+        var card = document.getElementById(a.getAttribute("href").slice(1));
+        if (!card) return;
+        if (card.hidden) filter("all");
+        card.classList.remove("flash");
+        void card.offsetWidth;
+        card.classList.add("flash");
+      });
+    })();
+  </script>
 </body>
 </html>
