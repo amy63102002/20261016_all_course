@@ -1,0 +1,63 @@
+/* Outcome-first course website: progressive enhancement layer */
+.site-branding{font-size:clamp(1.55rem,2.8vw,2.05rem);letter-spacing:0;line-height:1.3}
+.hero{background:linear-gradient(125deg,#fff2d9 0%,#fff9ed 62%,#eef5ea 100%)}
+.hero-intro{max-width:840px;line-height:1.8}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}
+.primary-action,.secondary-action{font:inherit;font-weight:850;border:2px solid #222;text-decoration:none;min-height:48px;padding:11px 20px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.primary-action{background:#92412f;color:#fff;box-shadow:3px 3px #222}
+.primary-action:hover{background:#733226}
+.secondary-action{background:#fff;color:#222}
+.learning-map{margin-top:18px;border:2px solid #222;background:#fff}
+.learning-map>summary{list-style:none;cursor:pointer;padding:13px 18px;display:flex;align-items:center;justify-content:space-between;font-weight:850;gap:12px}
+.learning-map>summary::-webkit-details-marker{display:none}
+.learning-map[open]>summary .toggle-sign{transform:rotate(45deg)}
+.map-content{padding:14px;border-top:2px solid #222;display:grid;grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:10px}
+.map-content a{padding:12px;color:#222;text-decoration:none;background:#fff7e7;border:1px solid #dfccb0;line-height:1.6}
+.map-content a:hover{background:#fce7bc}
+.section-lead{max-width:850px;line-height:1.75;color:#444;margin:-8px 0 20px}
+.card-result{background:#f9f0e4;border-left:4px solid #a54b34;padding:12px;display:grid;gap:5px;font-size:.95rem}
+.card-result span{color:#414141}
+.comparison-scroll{overflow:auto;border:2px solid #222;box-shadow:4px 4px #222;background:white}
+.comparison-table{width:100%;min-width:900px;border-collapse:collapse;font-size:.95rem}
+.comparison-table th,.comparison-table td{padding:14px;text-align:left;vertical-align:top;border:1px solid #e4dbcf}
+.comparison-table thead th{background:#f9e4c7;font-weight:900}
+.comparison-table tbody tr:nth-child(even){background:#fff9ee}
+.comparison-table tbody th a{color:#8d3c29}
+.small-note{color:#515151;font-size:.88rem;line-height:1.7;margin-top:12px}
+.course-disclosure{border:2.5px solid #222;box-shadow:4px 4px #222;background:#fff;scroll-margin-top:24px}
+.courses-list{gap:19px}
+.course-disclosure-summary{background:#fff3dd;cursor:pointer;list-style:none;padding:18px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-weight:850;font-size:1.15rem}
+.course-disclosure-summary::-webkit-details-marker{display:none}
+.course-disclosure-summary span{font-size:.88rem;font-weight:700;color:#8a422f}
+.course-disclosure[open]>.course-disclosure-summary{background:#f8e4c4;border-bottom:2px solid #222}
+.course-disclosure .course-detail{padding:24px;border:none;box-shadow:none}
+.deliverables{background:#fff2dd;border:2px solid #984a33}
+.deliverable-hero{font-weight:900;font-size:1.2rem;color:#873b28;margin-bottom:10px}
+.kit-link{display:inline-block;margin-top:14px;color:#7b3426;font-weight:850;text-underline-offset:4px;overflow-wrap:anywhere}
+.instructor-panel{display:grid;grid-template-columns:1.6fr 1fr;gap:24px;padding:28px;border:2.5px solid #222;background:#fff;box-shadow:4px 4px #222}
+.instructor-panel h3{font-size:1.35rem;margin:8px 0 12px;line-height:1.35}
+.instructor-panel p{line-height:1.75}
+.eyebrow{color:#8d402b;font-weight:800;font-size:.88rem}
+.instructor-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.instructor-tags span{background:#f8ead9;border:1px solid #dfc7a9;padding:6px 10px;font-size:.86rem}
+.company-card{border:2px solid #375344;padding:18px;background:#f0f6ef}
+.company-card p{font-size:1.15rem;font-weight:900;margin:12px 0}
+.company-card small{line-height:1.7}
+.registration-box{max-width:780px;padding:25px;border:2.5px solid #222;box-shadow:4px 4px #222;background:#fff4df}
+.registration-box p{line-height:1.75}
+.registration-box label{font-weight:850;display:block;margin:16px 0 6px}
+.registration-box select{font:inherit;width:100%;max-width:560px;padding:12px;border:2px solid #222;background:white;display:block;margin-bottom:14px}
+.floating-signup{position:fixed;bottom:23px;right:22px;z-index:80;text-decoration:none;color:white;background:#9e3f2e;border:2px solid #222;box-shadow:4px 4px #222;padding:13px 23px;min-height:54px;display:flex;align-items:center;justify-content:center;font-size:1.13rem;font-weight:900}
+.floating-signup:hover{background:#7c2c21}
+#registration{scroll-margin-top:24px}
+@media(max-width:767px){
+ main{padding-bottom:100px}
+ .container{padding-inline:16px}
+ .site-branding{font-size:1.57rem}
+ .hero{padding:25px 18px}
+ .course-disclosure .course-detail{padding:15px}
+ .course-disclosure-summary{font-size:1.04rem;padding:16px}
+ .instructor-panel{grid-template-columns:1fr;padding:18px}
+ .floating-signup{left:0;right:0;bottom:0;width:100%;border-width:2px 0 0;box-shadow:0 -3px 15px #0002;font-size:1.15rem;padding:14px}
+}
+@media(prefers-reduced-motion:reduce){.learning-map .toggle-sign{transition:none}}
