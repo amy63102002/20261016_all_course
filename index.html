@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+  <script>document.documentElement.classList.add("js");</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>女力 AI 數位職涯培育｜重新開始的這一步，讓 AI 陪妳走</title>
@@ -156,7 +157,7 @@
 
     /* Takeaway table */
     .compare { display: grid; gap: 14px; }
-    .crow { display: grid; grid-template-columns: 200px 1.2fr 1.2fr 1fr; background: #fff; border: var(--line); border-radius: 20px; box-shadow: 6px 6px 0 var(--ink); overflow: hidden; }
+    .crow { display: grid; grid-template-columns: 220px 1fr 1fr; background: #fff; border: var(--line); border-radius: 20px; box-shadow: 6px 6px 0 var(--ink); overflow: hidden; }
     .crow > div { padding: 14px 16px; font-size: .9rem; }
     .crow > div + div { border-left: 2.5px dashed #D9D2C0; }
     .crow .who { border-right: var(--line); border-left: 0 !important; }
@@ -167,9 +168,10 @@
     .crow ul { list-style: none; display: grid; gap: 4px; }
     .crow li { padding-left: 18px; position: relative; }
     .crow li::before { content: ""; position: absolute; left: 0; top: .55em; width: 10px; height: 10px; border: 2px solid var(--ink); border-radius: 50%; background: var(--pink); }
-    .crow .no li::before { background: #fff; border-style: dashed; }
+    .crow .open-plan { display: block; width: fit-content; margin-top: 10px; border: 2.5px solid var(--ink); border-radius: 999px; padding: 3px 12px; background: var(--yellow); font-weight: 900; font-size: .82rem; text-decoration: none; color: var(--ink); box-shadow: 3px 3px 0 var(--ink); }
+    .crow .open-plan:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink); }
     .r-a .who { background: var(--pink); } .r-b .who { background: var(--blue); } .r-c .who { background: var(--yellow); } .r-d .who { background: var(--mint); } .r-e .who { background: var(--peach); }
-    .compare-head { display: grid; grid-template-columns: 200px 1.2fr 1.2fr 1fr; padding: 0 3px; font-weight: 900; font-size: .85rem; }
+    .compare-head { display: grid; grid-template-columns: 220px 1fr 1fr; padding: 0 3px; font-weight: 900; font-size: .85rem; }
     .compare-head span { padding: 0 16px; }
     .compare-foot { margin-top: 16px; font-size: .88rem; font-weight: 500; }
     .cta-band { margin-top: 28px; display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: center; padding: 22px 26px; background: var(--yellow); }
@@ -180,6 +182,21 @@
     .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 370px)); justify-content: center; gap: 26px; align-items: start; }
     .ccard { background: #fff; border: var(--line); border-radius: 24px; box-shadow: 8px 8px 0 var(--ink); overflow: hidden; scroll-margin-top: 90px; }
     .ccard.flash { animation: flash 1.2s ease; }
+    /* Plans start collapsed; picking one (tab, compare row or map) opens only that card */
+    .js .card-grid { grid-template-columns: minmax(0, 780px); }
+    .js .ccard:not(.open) { display: none; }
+    .plan-tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 22px; }
+    .ptab { border: var(--line); border-radius: 999px; padding: 6px 16px; background: #fff; font-weight: 900; text-decoration: none; color: var(--ink); box-shadow: 4px 4px 0 var(--ink); }
+    .ptab[aria-current="true"] { background: var(--yellow); transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+    .plan-empty { max-width: 560px; margin: 0 auto; text-align: center; background: #fff; border: 2.5px dashed var(--ink); border-radius: 18px; padding: 22px 18px; font-weight: 700; }
+    html:not(.js) .plan-tabs, html:not(.js) .plan-empty { display: none; }
+    .sched { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
+    .sched .day { border: 2.5px solid var(--ink); border-radius: 14px; padding: 10px 12px; background: var(--paper); }
+    .sched h4 { font-weight: 900; font-size: .9rem; margin-bottom: 6px; }
+    .sched ol { list-style: none; display: grid; gap: 6px; font-size: .86rem; }
+    .sched li { display: grid; grid-template-columns: 78px 1fr; gap: 6px; line-height: 1.5; }
+    .sched li span { font-weight: 900; }
+    .sched .day-out { margin-top: 6px; font-size: .82rem; font-weight: 700; }
     @keyframes flash { 0%, 100% { box-shadow: 8px 8px 0 var(--ink); } 40% { box-shadow: 8px 8px 0 var(--orange), 0 0 0 6px var(--orange); } }
     .c-head { padding: 18px 20px 16px; border-bottom: var(--line); }
     .c-head .pill { font-size: .78rem; padding: 2px 10px; }
@@ -211,8 +228,10 @@
     /* Instructor */
     .coach { display: grid; grid-template-columns: 240px 1fr; gap: 28px; padding: 28px; align-items: center; }
     .avatar { aspect-ratio: 1; border: var(--line); border-radius: 50%; background: var(--yellow); display: grid; place-items: center; box-shadow: 6px 6px 0 var(--ink); }
-    .avatar span { font-weight: 900; font-size: 3.4rem; }
+    .avatar { overflow: hidden; }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .coach h3 { font-weight: 900; font-size: 1.8rem; line-height: 1.3; }
+    .coach h3 .en-name { font-family: var(--display); font-weight: 400; margin-left: 6px; }
     .coach .role { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 14px; }
     .coach .role .pill:nth-child(1) { background: var(--pink); } .coach .role .pill:nth-child(2) { background: var(--blue); }
     .principles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 22px; }
@@ -266,7 +285,7 @@
       .crow { grid-template-columns: 1fr 1fr; }
       .crow .who { grid-column: 1 / -1; border-right: 0; border-bottom: var(--line); }
       .crow > div + div { border-left: 0; }
-      .crow .no { grid-column: 1 / -1; border-top: 2.5px dashed #D9D2C0; }
+      .crow > div:nth-child(3) { border-left: 2.5px dashed #D9D2C0; }
       .flow4, .principles { grid-template-columns: 1fr 1fr; }
       .sessions { grid-template-columns: repeat(3, 1fr); }
       .coach { grid-template-columns: 160px 1fr; }
@@ -281,11 +300,11 @@
       .row-label i { margin: 0; width: 36px; height: 36px; font-size: 1rem; }
       .takeaways, .crow, .flow4, .principles, .tracks, .cta-band { grid-template-columns: 1fr; }
       .sessions { grid-template-columns: 1fr 1fr; }
-      .crow > div:not(.who):not(:nth-child(2)) { border-top: 2.5px dashed #D9D2C0; }
-      .card-grid { grid-template-columns: 1fr; }
+      .crow > div:not(.who):not(:nth-child(2)) { border-top: 2.5px dashed #D9D2C0; border-left: 0; }
+      .card-grid, .js .card-grid { grid-template-columns: 1fr; }
+      .sched { grid-template-columns: 1fr; }
       .coach { grid-template-columns: 1fr; }
-      .avatar { width: 120px; }
-      .avatar span { font-size: 2rem; }
+      .avatar { width: 160px; }
       .chip, .part { font-size: .84rem; }
       .sticky-cta { display: flex; }
       footer { padding-bottom: 100px; }
@@ -380,37 +399,32 @@
           <div class="sub">五個方案，學完各自帶走什麼</div>
           <p>每門課都是全班先完成同一套共同範例，再帶走可以回家反覆使用、修改的資料。</p>
         </div>
-        <div class="compare-head" aria-hidden="true"><span>方案</span><span>課堂完成的成果</span><span>課後工具包（規劃中）</span><span>不包含</span></div>
+        <div class="compare-head" aria-hidden="true"><span>方案</span><span>課堂完成的成果</span><span>課後工具包（規劃中）</span></div>
         <div class="compare">
           <div class="crow r-a">
-            <div class="who"><span class="code">A</span><b>AI 職場實用工具一日班</b><span class="price">NT$8,800</span></div>
+            <div class="who"><span class="code">A</span><b>AI 職場實用工具一日班</b><span class="price">NT$8,800</span><a class="open-plan" href="#course-a">看 A 詳細內容與時程 ↓</a></div>
             <div><span class="h">課堂成果</span><ul><li>文案初稿＋提示詞</li><li>AI 圖片＋提示詞</li><li>簡報初稿＋資料來源</li><li>短影音體驗＋分鏡</li></ul></div>
             <div><span class="h">工具包</span><ul><li>四類提示詞卡</li><li>選工具速查表</li><li>成果保存步驟</li></ul></div>
-            <div class="no"><span class="h">不包含</span><ul><li>完整行政工作流程訓練</li><li>Canva</li></ul></div>
           </div>
           <div class="crow r-b">
-            <div class="who"><span class="code">B</span><b>AI 工作任務實作班</b><span class="price">NT$14,800</span></div>
+            <div class="who"><span class="code">B</span><b>AI 工作任務實作班</b><span class="price">NT$14,800</span><a class="open-plan" href="#course-b">看 B 詳細內容與時程 ↓</a></div>
             <div><span class="h">課堂成果</span><ul><li>一份共同職場情境的任務成果包</li><li>從需求確認到人工查核的完整交付</li></ul></div>
             <div><span class="h">工具包</span><ul><li>需求確認表、追問範本</li><li>任務拆解表、AI 協作指令</li><li>交付查核表</li></ul></div>
-            <div class="no"><span class="h">不包含</span><ul><li>每人不同題目</li><li>逐一書面批改</li></ul></div>
           </div>
           <div class="crow r-c">
-            <div class="who"><span class="code">C</span><b>AI 協作程式設計與網頁工具實作班</b><span class="price">NT$20,000</span></div>
+            <div class="who"><span class="code">C</span><b>AI 協作程式設計與網頁工具實作班</b><span class="price">NT$20,000</span><a class="open-plan" href="#course-c">看 C 詳細內容與時程 ↓</a></div>
             <div><span class="h">課堂成果</span><ul><li>可操作的網頁工作管理工具</li><li>原始碼＋展示網址</li><li>使用與修改指引</li></ul></div>
             <div><span class="h">工具包</span><ul><li>資料欄位表、架構圖</li><li>AI 修改指令</li><li>部署、修改、測試 SOP</li></ul></div>
-            <div class="no"><span class="h">不包含</span><ul><li>商業級系統開發</li><li>長期代管維護</li></ul></div>
           </div>
           <div class="crow r-d">
-            <div class="who"><span class="code">D</span><b>LINE OA × AI 工作流進階班</b><span class="price">NT$20,000</span></div>
+            <div class="who"><span class="code">D</span><b>LINE OA × AI 工作流進階班</b><span class="price">NT$20,000</span><a class="open-plan" href="#course-d">看 D 詳細內容與時程 ↓</a></div>
             <div><span class="h">課堂成果</span><ul><li>LINE 官方帳號接單入口</li><li>商品／服務後台：新增、修改、上下架</li><li>訂單查看與狀態管理</li><li>LIFF 多欄位服務申請示範</li></ul></div>
             <div><span class="h">工具包</span><ul><li>流程圖、設定步驟</li><li>後台操作卡、測試表</li><li>AI 修改指南</li></ul></div>
-            <div class="no"><span class="h">不包含</span><ul><li>線上金流</li><li>自動排程、防重複預約</li></ul></div>
           </div>
           <div class="crow r-e">
-            <div class="who"><span class="code">E</span><b>AI 數位轉職作品強化方案</b><span class="price">NT$29,800</span></div>
+            <div class="who"><span class="code">E</span><b>AI 數位轉職作品強化方案</b><span class="price">NT$29,800</span><a class="open-plan" href="#course-e">看 E 詳細內容與時程 ↓</a></div>
             <div><span class="h">課堂成果</span><ul><li>C 或 D 擇一的共同作品</li><li>改成貼近自身經歷的個人專題</li><li>作品介紹與履歷技能敘述初稿</li></ul></div>
             <div><span class="h">工具包</span><ul><li>個人需求模板</li><li>測試紀錄表</li><li>作品集介紹卡</li></ul></div>
-            <div class="no"><span class="h">不包含</span><ul><li>C、D 兩門一起上</li><li>無限次客製開發</li></ul></div>
           </div>
         </div>
         <p class="compare-foot">工具包內容依方案規劃製作中，實際交付清單以開課前公告為準。</p>
@@ -431,8 +445,16 @@
         <div class="sec-head">
           <div class="kicker">03 · Plans</div>
           <h2 id="cards-title" class="big-title">5 Plans</h2>
-          <div class="sub">適合誰、怎麼學、價格多少，一張卡看完</div>
+          <div class="sub">適合誰、怎麼學、當天時程，點一個方案看完整內容</div>
         </div>
+        <div class="plan-tabs" role="group" aria-label="選擇要查看的方案">
+          <a class="ptab" href="#course-a" data-plan="A">A 一日班</a>
+          <a class="ptab" href="#course-b" data-plan="B">B 任務班</a>
+          <a class="ptab" href="#course-c" data-plan="C">C 網頁班</a>
+          <a class="ptab" href="#course-d" data-plan="D">D LINE 班</a>
+          <a class="ptab" href="#course-e" data-plan="E">E 作品方案</a>
+        </div>
+        <p class="plan-empty" id="plan-empty">點上方任一方案，這裡就會展開該方案的完整內容與當天時程。</p>
         <div class="card-grid">
 
           <article id="course-a" class="ccard pink" aria-labelledby="ta">
@@ -443,7 +465,7 @@
             </div>
             <div class="c-body">
               <div class="c-price"><strong>NT$8,800</strong>／人</div>
-              <div class="c-format">一日實體課<span class="soon">時數開課前公告</span></div>
+              <div class="c-format">一日實體課，暫定 8 小時</div>
               <p class="c-lead">從文字、圖片到簡報與短影片，帶妳把 AI 工具變成看得見的第一批作品。</p>
               <div class="c-label">適合誰</div>
               <p>剛開始接觸 AI，想弄懂各種工具差別、需要快速產出不同內容的妳。</p>
@@ -451,6 +473,21 @@
               <div class="steps"><span>認識 AI 能做什麼</span><i>→</i><span>文案</span><i>→</i><span>圖片</span><i>→</i><span>NotebookLM 簡報</span><i>→</i><span>分鏡＋短影片</span><i>→</i><span>保存成果</span></div>
               <div class="c-label">使用工具</div>
               <p>ChatGPT、NotebookLM、豆包或即夢</p>
+              <div class="c-label">當天時程（一日 8 小時）<span class="soon">暫定，試教後公告定版</span></div>
+              <div class="sched">
+                  <div class="day"><h4>上午</h4><ol>
+                    <li><span>第 1 小時</span>認識 AI 能做什麼：工具怎麼選、怎麼把需求說清楚、資料安全</li>
+                    <li><span>第 2 小時</span>文案：活動通知、貼文、Email 初稿，留下自己的提示詞</li>
+                    <li><span>第 3 小時</span>AI 圖片：活動海報、宣傳圖，學會調整風格與修改</li>
+                    <li><span>第 4 小時</span>NotebookLM：把資料整理成重點，產出簡報初稿</li>
+                  </ol></div>
+                  <div class="day"><h4>下午</h4><ol>
+                    <li><span>第 5 小時</span>短影音分鏡：把一個主題拆成腳本與畫面</li>
+                    <li><span>第 6 小時</span>短影片生成體驗（豆包或即夢），平台受限時用示範案例</li>
+                    <li><span>第 7 小時</span>綜合練習：同一場活動，一次做出文案、海報、簡報</li>
+                    <li><span>第 8 小時</span>整理與保存成果、提示詞卡用法，回家怎麼自己再做一次</li>
+                  </ol><p class="day-out">帶走：四類作品＋各自的提示詞</p></div>
+              </div>
               <div class="warn"><b>注意</b><span>短影片長度與能否生成，視各平台帳號與地區限制而定；工具受限時以事先準備的示範案例替代。本課是多工具體驗，不是行政工作流程訓練。</span></div>
               <a class="btn line block card-cta" href="#signup" data-line>LINE 詢問 A 一日班</a>
             </div>
@@ -464,12 +501,29 @@
             </div>
             <div class="c-body">
               <div class="c-price"><strong>NT$14,800</strong>／人</div>
-              <div class="c-format">兩天實作課<span class="soon">時數開課前公告</span></div>
+              <div class="c-format">兩天實作課，暫定 10 小時</div>
               <p class="c-lead">練習把一件真正的辦公室工作，從接任務做到可以放心交付。</p>
               <div class="c-label">適合誰</div>
               <p>想回到行政、客服、助理工作，知道 AI 是什麼，但不熟悉主管交辦與驗收流程的妳。</p>
               <div class="c-label">怎麼學</div>
               <div class="steps"><span>接收交辦</span><i>→</i><span>提出待確認問題</span><i>→</i><span>拆分工作</span><i>→</i><span>AI 協作產出</span><i>→</i><span>人工查核</span><i>→</i><span>整理交付</span></div>
+              <div class="c-label">兩天時程（Day 1 六小時＋Day 2 四小時）<span class="soon">暫定，試教後公告定版</span></div>
+              <div class="sched">
+                  <div class="day"><h4>Day 1｜把交辦做對</h4><ol>
+                    <li><span>第 1 小時</span>共同辦公情境介紹，認識六步驟工作法</li>
+                    <li><span>第 2 小時</span>接收交辦：整理成需求確認表，列出要先問的問題</li>
+                    <li><span>第 3 小時</span>拆分工作：任務拆解表、先後順序與期限</li>
+                    <li><span>第 4 小時</span>AI 協作產出①：會議紀錄摘要、通知與報告初稿</li>
+                    <li><span>第 5 小時</span>AI 協作產出②：表格資料整理與核對</li>
+                    <li><span>第 6 小時</span>人工查核：來源、數字、語氣檢查，完成第一輪交付</li>
+                  </ol><p class="day-out">Day 1 成果：第一版任務成果包</p></div>
+                  <div class="day"><h4>Day 2｜需求變了也能接住</h4><ol>
+                    <li><span>第 1 小時</span>主管臨時改需求：重新確認、修正成果</li>
+                    <li><span>第 2 小時</span>客服回覆與常見問題整理</li>
+                    <li><span>第 3 小時</span>整理交付：成果包彙整、用交付查核表自我檢查</li>
+                    <li><span>第 4 小時</span>成果分享與回饋，工具包回家怎麼用</li>
+                  </ol><p class="day-out">Day 2 成果：完整任務成果包</p></div>
+              </div>
               <div class="warn"><b>注意</b><span>全班使用同一個老師設定的辦公情境，不是每人不同專題；具體情境與文件清單開課前公告。</span></div>
               <a class="btn line block card-cta" href="#signup" data-line>LINE 詢問 B 任務班</a>
             </div>
@@ -483,7 +537,7 @@
             </div>
             <div class="c-body">
               <div class="c-price"><strong>NT$20,000</strong>／人</div>
-              <div class="c-format">兩天實體課</div>
+              <div class="c-format">兩天實體課，暫定 12 小時</div>
               <p class="c-lead">把工作上最想改善的一件事，做成能實際操作的網頁工具。</p>
               <div class="c-label">適合誰</div>
               <p>工作常靠表格和訊息反覆登記，想把流程做成數位工具，對 AI 協作寫程式有興趣的新手。</p>
@@ -491,6 +545,24 @@
               <div class="steps"><span>拆需求</span><i>→</i><span>欄位設計</span><i>→</i><span>AI 協作產生工具</span><i>→</i><span>資料儲存</span><i>→</i><span>部署</span><i>→</i><span>測試與修改</span></div>
               <div class="c-label">工具核心功能</div>
               <ul class="dotlist"><li>新增、查看、編輯與更新狀態、資料保存</li><li>搜尋、篩選、匯出等延伸功能依課堂進度分級</li></ul>
+              <div class="c-label">兩天時程（每天 6 小時）<span class="soon">暫定，試教後公告定版</span></div>
+              <div class="sched">
+                  <div class="day"><h4>Day 1｜做出工具初版</h4><ol>
+                    <li><span>第 1 小時</span>AI 協作寫程式是什麼，看一次完成品長什麼樣</li>
+                    <li><span>第 2 小時</span>拆需求：把工作上的表格登記，改寫成功能清單</li>
+                    <li><span>第 3 小時</span>欄位設計：整理資料欄位表與畫面架構</li>
+                    <li><span>第 4–5 小時</span>AI 協作產生網頁介面，邊做邊看懂每一塊</li>
+                    <li><span>第 6 小時</span>新增、查看、編輯與更新狀態功能</li>
+                  </ol><p class="day-out">Day 1 成果：網頁工作管理工具初版</p></div>
+                  <div class="day"><h4>Day 2｜存得住、放上網、改得動</h4><ol>
+                    <li><span>第 1 小時</span>資料儲存：關掉網頁再打開，資料還在</li>
+                    <li><span>第 2 小時</span>搜尋、篩選、匯出（依課堂進度分級）</li>
+                    <li><span>第 3 小時</span>部署上線，取得自己的展示網址</li>
+                    <li><span>第 4 小時</span>AI 協作除錯：看懂錯誤訊息、修好它</li>
+                    <li><span>第 5 小時</span>依指定需求修改並測試，整理修改指引</li>
+                    <li><span>第 6 小時</span>成果展示：說清楚這個工具解決了什麼</li>
+                  </ol><p class="day-out">Day 2 成果：可操作的工具＋原始碼＋展示網址</p></div>
+              </div>
               <div class="c-label">對應職涯</div>
               <p>數位營運助理、AI 應用助理、專案行政助理</p>
               <a class="btn line block card-cta" href="#signup" data-line>LINE 詢問 C 網頁班</a>
@@ -505,7 +577,7 @@
             </div>
             <div class="c-body">
               <div class="c-price"><strong>NT$20,000</strong>／人</div>
-              <div class="c-format">兩天實體課</div>
+              <div class="c-format">兩天實體課，暫定 12 小時</div>
               <p class="c-lead">讓 LINE 可以接單、後台可以管理；學會用 AI 做出自己的商品與服務接單工具。</p>
               <div class="c-label">適合誰</div>
               <p>有商品銷售、個人工作室、教學或服務接單需求，訂單常散落在聊天紀錄裡的妳。</p>
@@ -513,6 +585,23 @@
               <ul class="dotlist"><li><b>賣商品</b>：顧客在 LINE 選品項送出訂單，後台查看並更新狀態</li><li><b>服務／場地申請</b>：用 LIFF 表單一次填完日期、時段、聯絡方式與需求，經營者人工確認</li></ul>
               <div class="c-label">怎麼學</div>
               <div class="steps"><span>LINE OA 與圖文選單</span><i>→</i><span>Webhook</span><i>→</i><span>Cloudflare 與資料庫</span><i>→</i><span>後台管理</span><i>→</i><span>LIFF 表單</span><i>→</i><span>完整測試</span></div>
+              <div class="c-label">兩天時程（每天 6 小時）<span class="soon">暫定，試教後公告定版</span></div>
+              <div class="sched">
+                  <div class="day"><h4>Day 1｜讓 LINE 收得到單</h4><ol>
+                    <li><span>第 1 小時</span>LINE 接單流程總覽：賣商品、服務申請兩種情境</li>
+                    <li><span>第 2 小時</span>LINE 官方帳號設定</li>
+                    <li><span>第 3 小時</span>圖文選單：設計顧客點得到的入口</li>
+                    <li><span>第 4 小時</span>Webhook：讓系統收到 LINE 訊息</li>
+                    <li><span>第 5–6 小時</span>Cloudflare 與資料庫：商品資料與訂單存起來</li>
+                  </ol><p class="day-out">Day 1 成果：顧客能在 LINE 下單，訂單存得進去</p></div>
+                  <div class="day"><h4>Day 2｜後台管得動</h4><ol>
+                    <li><span>第 1–2 小時</span>商品／服務後台：新增、修改、上下架</li>
+                    <li><span>第 3 小時</span>訂單查看與狀態管理</li>
+                    <li><span>第 4 小時</span>LIFF 表單：一次填完日期、時段、聯絡方式與需求</li>
+                    <li><span>第 5 小時</span>完整測試：照測試表從下單走到處理完成</li>
+                    <li><span>第 6 小時</span>回家怎麼改成自己的業務，成果展示</li>
+                  </ol><p class="day-out">Day 2 成果：LINE 接單入口＋後台＋訂單管理</p></div>
+              </div>
               <div class="warn"><b>注意</b><span>全班先做同一套系統，回家再依教材改成自己的業務。不含線上金流（付款由經營者人工聯繫）、即時空檔查詢與自動排程；商品圖片上傳為延伸示範，非必完成項目。</span></div>
               <a class="btn line block card-cta" href="#signup" data-line>LINE 詢問 D LINE 班</a>
             </div>
@@ -533,6 +622,8 @@
                 <div class="track web"><b>E-C 網頁路徑</b>把工作管理工具改成課程名單、售後追蹤或行政待辦</div>
                 <div class="track lineT"><b>E-D LINE 路徑</b>把接單系統改成商品預訂、課程報名或場地申請</div>
               </div>
+              <div class="c-label">實體兩天怎麼上</div>
+              <p>依妳選的主軌，跟 C 網頁班或 D LINE 班同一套兩天時程（點上方 C 或 D 可看每小時安排）。</p>
               <div class="c-label">四週怎麼走<span class="soon">輔導形式與次數開課前公告</span></div>
               <ul class="weeks">
                 <li><span>W1</span>確認需求、限縮題目、訂驗收條件</li>
@@ -554,12 +645,12 @@
       <section id="coach" class="block" aria-labelledby="coach-title">
         <div class="sec-head">
           <div class="kicker">04 · Your Coach</div>
-          <h2 class="big-title">Meet Az</h2>
+          <h2 class="big-title">Meet ARZ</h2>
         </div>
         <div class="coach panel dots">
-          <div class="avatar" aria-hidden="true"><span>阿茲</span></div>
+          <div class="avatar"><img src="assets/arz.jpg" alt="講師阿茲（ARZ）的頭像" width="560" height="560" loading="lazy"></div>
           <div>
-            <h3 id="coach-title">阿茲</h3>
+            <h3 id="coach-title">阿茲 <span class="en-name">ARZ</span></h3>
             <div class="role"><span class="pill">AI 自動化工程師</span><span class="pill">AI 工作流程設計師</span></div>
             <p>20 年工程師經驗，擅長把「我想要有個東西可以幫我⋯⋯」這種模糊的需求，拆成能一步步做出來的工具。課堂上不只教名詞，而是帶妳親手做完，再把修改方法交給妳帶回家。</p>
           </div>
@@ -777,16 +868,38 @@
       }
       window.addEventListener("resize", draw);
 
-      // Flash a plan card when jumping to it
+      // Plan cards stay collapsed until one is picked; only the picked card is shown.
+      // Opening happens before the browser follows the #course-x link, so the jump lands on a visible card.
+      var planEmpty = document.getElementById("plan-empty");
+      var ptabs = document.querySelectorAll(".ptab");
+      function openPlan(cardId) {
+        var card = document.getElementById(cardId);
+        if (!card || !card.classList.contains("ccard")) return null;
+        document.querySelectorAll(".ccard").forEach(function (c) { c.classList.toggle("open", c === card); });
+        Array.prototype.forEach.call(ptabs, function (t) {
+          t.setAttribute("aria-current", t.getAttribute("href") === "#" + cardId ? "true" : "false");
+        });
+        planEmpty.hidden = true;
+        return card;
+      }
       document.addEventListener("click", function (e) {
         var a = e.target.closest('a[href^="#course-"]');
         if (!a) return;
-        var card = document.getElementById(a.getAttribute("href").slice(1));
+        var card = openPlan(a.getAttribute("href").slice(1));
         if (!card) return;
+        // Tabs sit right above the card, so stay put instead of jumping past them
+        if (a.classList.contains("ptab")) { e.preventDefault(); history.replaceState(null, "", "#" + card.id); }
         card.classList.remove("flash");
         void card.offsetWidth;
         card.classList.add("flash");
       });
+      function openFromHash() {
+        if (!/^#course-[a-e]$/.test(location.hash)) return;
+        var card = openPlan(location.hash.slice(1));
+        if (card) card.scrollIntoView();
+      }
+      openFromHash();
+      window.addEventListener("hashchange", openFromHash);
 
       // Sticky CTA after the hero; popup at ~40% and ~80% scroll, at most twice per session.
       // Clicking the LINE button inside it counts as done, so it never shows again.
