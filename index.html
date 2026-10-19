@@ -39,8 +39,13 @@
       },
       {
         "@type": "Question",
+        "name": "學費有包含 AI 工具的訂閱費嗎？",
+        "acceptedAnswer": { "@type": "Answer", "text": "學費不包含 AI 工具訂閱費（包括但不限於 ChatGPT、Claude、Gemini 等），上課前須訂閱其中一種才能學習；不知道如何訂閱，可在課堂中由阿茲協助。" }
+      },
+      {
+        "@type": "Question",
         "name": "上完課保證找到工作嗎？",
-        "acceptedAnswer": { "@type": "Answer", "text": "不保證。課程目標是做出可檢視、可說明的作品，並帶走課後可反覆使用的操作與修改資料；不保證就業、錄取、收入或接案。" }
+        "acceptedAnswer": { "@type": "Answer", "text": "不保證。但課程目標是做出可檢視、可反覆操作的作品和能力，讓妳在求職履歷增加相關應用能力佐證；不保證就業、錄取、收入或接案。" }
       }
     ]
   }
@@ -234,6 +239,14 @@
     .coach h3 .en-name { font-family: var(--display); font-weight: 400; margin-left: 6px; }
     .coach .role { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 14px; }
     .coach .role .pill:nth-child(1) { background: var(--pink); } .coach .role .pill:nth-child(2) { background: var(--blue); }
+    .coach-co { margin-top: 10px; font-weight: 700; }
+    .coach-co a { color: var(--ink); }
+    .coach-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .cases-title { font-weight: 900; font-size: 1.15rem; margin: 26px 0 12px; }
+    .cases { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .case { border: var(--line); border-radius: 18px; background: #fff; padding: 14px 16px; box-shadow: 4px 4px 0 var(--ink); font-size: .9rem; }
+    .case .pill { font-size: .74rem; padding: 1px 9px; background: var(--mint); }
+    .case b { display: block; font-weight: 900; margin: 8px 0 4px; line-height: 1.45; }
     .principles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 22px; }
     .principle { border: var(--line); border-radius: 18px; background: #fff; padding: 14px 16px; box-shadow: 4px 4px 0 var(--ink); }
     .principle b { display: block; font-weight: 900; }
@@ -286,7 +299,7 @@
       .crow .who { grid-column: 1 / -1; border-right: 0; border-bottom: var(--line); }
       .crow > div + div { border-left: 0; }
       .crow > div:nth-child(3) { border-left: 2.5px dashed #D9D2C0; }
-      .flow4, .principles { grid-template-columns: 1fr 1fr; }
+      .flow4, .principles, .cases { grid-template-columns: 1fr 1fr; }
       .sessions { grid-template-columns: repeat(3, 1fr); }
       .coach { grid-template-columns: 160px 1fr; }
     }
@@ -298,7 +311,7 @@
       .map { padding: 18px 14px 22px; }
       .row-label { position: static; display: flex; align-items: center; gap: 8px; width: auto; margin-bottom: 10px; }
       .row-label i { margin: 0; width: 36px; height: 36px; font-size: 1rem; }
-      .takeaways, .crow, .flow4, .principles, .tracks, .cta-band { grid-template-columns: 1fr; }
+      .takeaways, .crow, .flow4, .principles, .cases, .tracks, .cta-band { grid-template-columns: 1fr; }
       .sessions { grid-template-columns: 1fr 1fr; }
       .crow > div:not(.who):not(:nth-child(2)) { border-top: 2.5px dashed #D9D2C0; border-left: 0; }
       .card-grid, .js .card-grid { grid-template-columns: 1fr; }
@@ -653,7 +666,19 @@
             <h3 id="coach-title">阿茲 <span class="en-name">ARZ</span></h3>
             <div class="role"><span class="pill">AI 自動化工程師</span><span class="pill">AI 工作流程設計師</span></div>
             <p>20 年工程師經驗，擅長把「我想要有個東西可以幫我⋯⋯」這種模糊的需求，拆成能一步步做出來的工具。課堂上不只教名詞，而是帶妳親手做完，再把修改方法交給妳帶回家。</p>
+            <p class="coach-co">所屬公司：<a href="https://www.rain-maker.com.tw/" target="_blank" rel="noopener">造雨人科技</a>（2003 年成立的系統開發公司）。阿茲長期替企業做網站、LINE 串接、後台與流程自動化。</p>
+            <div class="coach-links">
+              <a class="btn light" href="https://arz-ai-showcase.pages.dev/" target="_blank" rel="noopener">看阿茲的作品集 ↗</a>
+              <a class="btn light" href="https://www.rain-maker.com.tw/" target="_blank" rel="noopener">造雨人科技官網 ↗</a>
+            </div>
           </div>
+        </div>
+        <h3 class="cases-title">阿茲做過的服務案例：課堂上教的，就是實際案子在用的做法</h3>
+        <div class="cases">
+          <div class="case"><span class="pill">對應 D LINE 班</span><b>LINE 官方帳號自動化客服助理</b><p>傳產企業的客服每天手動整理詢問、建表格、回覆重複問題。改成 LINE 收到訊息就自動建檔、同步到試算表，再由 AI 先做初步回覆。</p></div>
+          <div class="case"><span class="pill">對應 D LINE 班</span><b>團購 LINE 群小助手</b><p>團購主每天手動回訊、整理商品和訂單。把商品上架、收單、訂單列表和商品統計串成同一條流程，不用再一筆筆整理。</p></div>
+          <div class="case"><span class="pill">對應 C 網頁班</span><b>賞鯨預約與現場核銷系統</b><p>旅遊業者旺季常超賣、線上名單和現場對不上。做成預約與後台名單同步，現場掃 QR code 就能核銷。</p></div>
+          <div class="case"><span class="pill">長期合作</span><b>CASIO 台灣官網與維修預約系統</b><p>官網改版、會員資料串接，以及相機、電子琴的維修預約服務，多年持續合作維護。</p></div>
         </div>
         <div class="principles">
           <div class="principle"><b>實體操作、作品導向</b>每堂課都以做出能檢視的成果為目標。</div>
@@ -703,7 +728,8 @@
           <details><summary>LINE 班做出來的系統可以直接線上付款嗎？可以讓客人選時段嗎？</summary><p>不含線上金流串接，系統負責收單與管理，付款由經營者人工聯繫確認。LIFF 表單可以收集客人偏好的日期與時段，但不做即時空檔查詢、時段鎖定或自動排程。</p></details>
           <details><summary>NT$29,800 可以同時學網頁和 LINE 兩門嗎？</summary><p>不能。NT$29,800 是整套總價，內容為 C 網頁班或 D LINE 班其中一門，加上四週個人專題輔導。</p></details>
           <details><summary>開課日期和場次什麼時候公布？怎麼付款？</summary><p>場次確認後會列在本頁「近期場次」，並在 LINE 官方帳號公告，加入好友就能收到通知。每梯次約在開課前一個月開放報名；付款方式在確認報名時說明。</p></details>
-          <details><summary>上完課保證找到工作嗎？</summary><p>不保證。課程目標是做出可檢視、可說明的作品，並帶走課後可反覆使用的操作與修改資料；不保證就業、錄取、收入或接案。</p></details>
+          <details><summary>學費有包含 AI 工具的訂閱費嗎？</summary><p>學費不包含 AI 工具訂閱費（包括但不限於 ChatGPT、Claude、Gemini 等），上課前須訂閱其中一種才能學習；不知道如何訂閱，可在課堂中由阿茲協助。</p></details>
+          <details><summary>上完課保證找到工作嗎？</summary><p>不保證。但課程目標是做出可檢視、可反覆操作的作品和能力，讓妳在求職履歷增加相關應用能力佐證；不保證就業、錄取、收入或接案。</p></details>
         </div>
       </section>
 
@@ -717,6 +743,7 @@
             <li>課程以建立實際作品與轉職準備能力為目標，不保證就業、錄取、收入或接案。</li>
             <li>各課最終時數、課後工具包內容、開課日期與場次，以開課前公告為準。</li>
             <li>課程使用的第三方 AI 工具與雲端平台，可能因帳號、地區或平台政策而有使用限制。</li>
+            <li>學費不包含 AI 工具訂閱費（包括但不限於 ChatGPT、Claude、Gemini 等），上課前須訂閱其中一種才能學習；不知道如何訂閱，可在課堂中由阿茲協助。</li>
           </ul>
         </div>
       </section>
