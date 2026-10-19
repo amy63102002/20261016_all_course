@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>女力 AI 數位職涯培育｜重新開始的這一步，讓 AI 陪妳走</title>
-  <meta name="description" content="給 AI 新手、想重返職場或轉職的女性：五種 AI 實作方案，從多媒體工具體驗、職場任務交付、網頁工具到 LINE 接單系統，每門課都說清楚學完能帶走什麼。講師阿茲，AI 自動化工程師。">
+  <meta name="description" content="給 AI 新手、想重返職場、轉職，或想讓現在的工作做得更好的女性：五種 AI 實作方案，從多媒體工具體驗、職場任務交付、網頁工具到 LINE 接單系統，每門課都說清楚學完能帶走什麼。講師阿茲，AI 自動化工程師。">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="女力 AI 數位職涯培育｜重新開始的這一步，讓 AI 陪妳走">
@@ -226,6 +226,10 @@
     .f4::before { counter-increment: s; content: "0" counter(s); font-family: var(--display); font-size: 1.4rem; color: var(--orange); display: block; line-height: 1.1; }
     .f4 b { display: block; font-weight: 900; }
     .f4 span { font-size: .86rem; }
+    .signup-note { font-weight: 700; font-size: .9rem; margin: 0 0 14px; }
+    .sessions { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 12px; }
+    .session { border: 2.5px dashed var(--ink); border-radius: 14px; padding: 10px 12px; background: var(--cream); font-size: .86rem; }
+    .session b { display: block; font-weight: 900; }
 
     /* FAQ / Notes */
     .faq { max-width: 860px; margin: 0 auto; display: grid; gap: 14px; }
@@ -264,6 +268,7 @@
       .crow > div + div { border-left: 0; }
       .crow .no { grid-column: 1 / -1; border-top: 2.5px dashed #D9D2C0; }
       .flow4, .principles { grid-template-columns: 1fr 1fr; }
+      .sessions { grid-template-columns: repeat(3, 1fr); }
       .coach { grid-template-columns: 160px 1fr; }
     }
     @media (max-width: 640px) {
@@ -275,6 +280,7 @@
       .row-label { position: static; display: flex; align-items: center; gap: 8px; width: auto; margin-bottom: 10px; }
       .row-label i { margin: 0; width: 36px; height: 36px; font-size: 1rem; }
       .takeaways, .crow, .flow4, .principles, .tracks, .cta-band { grid-template-columns: 1fr; }
+      .sessions { grid-template-columns: 1fr 1fr; }
       .crow > div:not(.who):not(:nth-child(2)) { border-top: 2.5px dashed #D9D2C0; }
       .card-grid { grid-template-columns: 1fr; }
       .coach { grid-template-columns: 1fr; }
@@ -314,9 +320,9 @@
   <main id="main-content">
     <div class="wrap">
       <section class="hero panel dots" aria-labelledby="hero-title">
-        <span class="pill">給 AI 新手・想重返職場或轉職的妳</span>
+        <span class="pill">給 AI 新手・想重返職場、轉職或提升工作能力的妳</span>
         <h1 id="hero-title"><span class="en">Restart with AI</span>重新開始的這一步，<br>讓 AI 陪妳走</h1>
-        <p class="lead">不只告訴妳課堂教什麼，每門課都說清楚<span class="hl">學完能做出什麼、帶走什麼</span>。不確定選哪門？加 LINE 用文字問，我們先幫妳判斷。</p>
+        <p class="lead">不管是準備回到職場、想換跑道，還是想讓現在的工作做得更快更好，每門課都說清楚<span class="hl">學完能做出什麼、帶走什麼</span>。不確定選哪門？加 LINE 用文字問，我們先幫妳判斷。</p>
         <div class="hero-cta">
           <a class="btn line" href="#signup" data-line>加 LINE 問適合哪門課 →</a>
           <a class="btn light" href="#takeaway">先看學完帶走什麼</a>
@@ -363,7 +369,7 @@
             <p>這裡會告訴妳：這個狀況該從哪門課開始、今天就能做的一件小事，以及可以先看哪張方案卡。</p>
           </aside>
         </div>
-        <div class="starter-note"><b>AI 新手</b> 請從 A 一日班開始：先親手做出第一批 AI 作品，再依目標往 B、C 或 D 走。基礎不夠直接上進階課，通常學得比較辛苦。</div>
+        <div class="starter-note"><b>AI 新手</b> 請從 A 一日班開始：先親手做出第一批 AI 作品，再依目標往 B、C 或 D 走。基礎不夠直接上進階課，通常學得比較辛苦。對不到自己的狀況？<a href="#signup" data-line>加 LINE 用文字問我們</a>。</div>
       </section>
 
       <!-- 02 Takeaway -->
@@ -521,7 +527,7 @@
             <div class="c-body">
               <div class="c-price"><strong>NT$29,800</strong>／人・整套總價</div>
               <div class="c-format">C 或 D 擇一門兩天實體課 ＋ 四週線上個人專題輔導</div>
-              <p class="c-lead">先完成一套能操作的工具，再用四週把共同作品改成貼近妳工作經驗的個人專題，面試時可以直接打開展示。</p>
+              <p class="c-lead">先完成一套能操作的工具，再用四週把共同作品改成貼近妳工作經驗的個人專題，轉職時有一份能打開展示、說得清楚的作品。</p>
               <div class="c-label">選一條主軌</div>
               <div class="tracks">
                 <div class="track web"><b>E-C 網頁路徑</b>把工作管理工具改成課程名單、售後追蹤或行政待辦</div>
@@ -532,7 +538,7 @@
                 <li><span>W1</span>確認需求、限縮題目、訂驗收條件</li>
                 <li><span>W2</span>在共同作品上做第一輪 AI 協作修改</li>
                 <li><span>W3</span>測試、排錯、補修改紀錄</li>
-                <li><span>W4</span>作品展示、作品介紹與履歷技能敘述</li>
+                <li><span>W4</span>作品展示，整理作品介紹與履歷上的技能說明</li>
               </ul>
               <div class="warn"><b>注意</b><span>NT$29,800 只含 C 或 D 其中一門，不含兩門；個人專題有範圍限制，不含線上金流、複雜排程或無限次客製開發。以作品與轉職準備為目標，不保證就業。</span></div>
               <a class="btn line block card-cta" href="#signup" data-line>LINE 詢問 E 作品方案</a>
@@ -576,9 +582,19 @@
           <div class="flow4">
             <div class="f4"><b>加 LINE 官方帳號</b><span>點下方按鈕加入好友。</span></div>
             <div class="f4"><b>用文字說說妳的狀況</b><span>過去的工作經驗、想做的事、目前會用哪些工具。</span></div>
-            <div class="f4"><b>幫妳判斷適合的方案</b><span>AI 新手會建議從 A 開始；有需要時再安排通話。</span></div>
-            <div class="f4"><b>選場次、完成報名</b><span>開課日期、場次與付款方式在 LINE 上說明。</span></div>
+            <div class="f4"><b>幫妳判斷適合的方案</b><span>AI 新手會建議從 A 開始。確定想報名、還有個別問題時，再約時間通話。</span></div>
+            <div class="f4"><b>選場次、完成報名</b><span>從下方場次挑一場，付款方式在 LINE 上說明。</span></div>
           </div>
+          <p class="signup-note">不需要先預約一對一諮詢，也不用參加說明會，用文字問就可以。</p>
+          <div class="c-label">近期場次</div>
+          <div class="sessions" aria-label="各方案近期場次">
+            <div class="session"><b>A 一日班</b><span>場次確認中</span></div>
+            <div class="session"><b>B 任務班</b><span>場次確認中</span></div>
+            <div class="session"><b>C 網頁班</b><span>場次確認中</span></div>
+            <div class="session"><b>D LINE 班</b><span>場次確認中</span></div>
+            <div class="session"><b>E 作品方案</b><span>隨 C 或 D 場次開課</span></div>
+          </div>
+          <p class="signup-note">場次確定後會更新在這裡，並在 LINE 官方帳號通知；每梯次約在開課前一個月開放報名。</p>
           <a class="btn line block" href="#signup" data-line>加入 LINE 官方帳號，開始文字諮詢 →</a>
         </div>
       </section>
@@ -595,7 +611,7 @@
           <details><summary>我有自己的商品或服務，可以在 LINE 班直接做我的版本嗎？</summary><p>D 班全班先做完同一套共同系統，課後再依教材改成自己的業務。如果需要老師陪妳改成個人版本，可以選 E 方案的 LINE 路徑（E-D）。</p></details>
           <details><summary>LINE 班做出來的系統可以直接線上付款嗎？可以讓客人選時段嗎？</summary><p>不含線上金流串接，系統負責收單與管理，付款由經營者人工聯繫確認。LIFF 表單可以收集客人偏好的日期與時段，但不做即時空檔查詢、時段鎖定或自動排程。</p></details>
           <details><summary>NT$29,800 可以同時學網頁和 LINE 兩門嗎？</summary><p>不能。NT$29,800 是整套總價，內容為 C 網頁班或 D LINE 班其中一門，加上四週個人專題輔導。</p></details>
-          <details><summary>開課日期和場次什麼時候公布？怎麼付款？</summary><p>場次確認後會在 LINE 官方帳號公告，加入好友就能收到通知。付款方式在確認報名時說明。</p></details>
+          <details><summary>開課日期和場次什麼時候公布？怎麼付款？</summary><p>場次確認後會列在本頁「近期場次」，並在 LINE 官方帳號公告，加入好友就能收到通知。每梯次約在開課前一個月開放報名；付款方式在確認報名時說明。</p></details>
           <details><summary>上完課保證找到工作嗎？</summary><p>不保證。課程目標是做出可檢視、可說明的作品，並帶走課後可反覆使用的操作與修改資料；不保證就業、錄取、收入或接案。</p></details>
         </div>
       </section>
@@ -663,9 +679,15 @@
         { t: "完全沒碰過 AI，不知道從哪開始", to: ["A"], tag: "入門｜先做出第一批作品",
           d: "先別急著學最難的。A 一日班帶妳實際做出文案、圖片、簡報、短影音四類成果，做過一次就知道 AI 能幫妳什麼。",
           todo: "打開 ChatGPT，請它用三種不同語氣幫妳改寫一段自我介紹。" },
+        { t: "活動通知、海報、簡報每次都從零開始做，很花時間", to: ["A"], tag: "入門｜用 AI 加快日常產出",
+          d: "這類內容最適合先交給 AI 打草稿。A 一日班帶妳實際用 AI 做出文案、圖片和簡報初稿，並留下提示詞，下次換個主題就能再用。",
+          todo: "挑一份最近做過的通知或簡報，記下從開始到完成花了多久。" },
         { t: "AI 工具好多，文案、圖片、簡報不知道該用哪個", to: ["A"], tag: "入門｜工具怎麼選",
           d: "每個工具擅長的事不一樣。A 一日班一次比較 ChatGPT、NotebookLM、豆包或即夢，並規劃整理成選工具速查表。",
           todo: "列出妳最常需要做的 3 種內容，例如通知文案、活動海報、簡報。" },
+        { t: "想轉做跟 AI 有關的工作，卻不知道上班實際怎麼用 AI", to: ["B", "C", "D"], tag: "實作｜職場上的 AI 用法",
+          d: "職場上的 AI 不只是聊天：用 AI 處理交辦文件、把重複登記做成工具、讓 LINE 自動接單。B 班練交辦任務，C 班做網頁工具，D 班做 LINE 接單系統，挑最接近妳想做的工作那一門。",
+          todo: "打開 104，找 3 個寫到「AI」的職缺，圈出它們實際要求妳用 AI 做什麼。" },
         { t: "AI 生出來的東西，不知道能不能直接交給主管", to: ["B"], tag: "實作｜查核再交付",
           d: "AI 會生成內容，但主管要的是正確、完整、能用的成果。B 任務班練的就是人工查核和整理交付說明。",
           todo: "找一份 AI 幫妳寫的內容，逐句標出哪裡需要自己再確認。" },
@@ -684,8 +706,8 @@
         { t: "接服務或場地申請，要來回問好多次資料", to: ["D"], tag: "技能｜LIFF 申請表",
           d: "一問一答很耗時。D 班教妳用 LIFF 表單，讓客人一次填完日期、時段、聯絡方式和需求，再由妳人工確認。",
           todo: "列出接一筆服務申請時，妳一定要問的 5 個資料。" },
-        { t: "想要跟自己經歷有關的作品，面試能直接打開展示", to: ["E", "C", "D"], tag: "轉職｜個人化作品",
-          d: "C 或 D 先做出全班共同作品；E 方案再用四週，把它改成貼近妳經歷的個人專題，並整理作品介紹與履歷說法。",
+        { t: "轉職想拿出作品，卻不知道怎麼說明自己會做什麼", to: ["E", "C", "D"], tag: "轉職｜個人化作品集",
+          d: "履歷上寫「會用 AI」很難讓人相信，打開一個自己做的工具就清楚多了。C 或 D 先做出全班共同作品；E 方案再用四週，把它改成貼近妳經歷的個人專題，並整理成作品介紹，讓妳說得清楚這個作品解決了什麼問題。",
           todo: "寫下妳想應徵的職務，以及一個「如果有工具就好了」的工作情境。" }
       ];
 
@@ -766,21 +788,22 @@
         card.classList.add("flash");
       });
 
-      // Sticky CTA after the hero; one-time popup at ~45% scroll (once per session)
+      // Sticky CTA after the hero; popup at ~40% and ~80% scroll, at most twice per session.
+      // Clicking the LINE button inside it counts as done, so it never shows again.
       var sticky = document.getElementById("sticky-cta");
       var popup = document.getElementById("popup");
-      var seen = false;
-      try { seen = sessionStorage.getItem("popupSeen") === "1"; } catch (err) {}
-      function closePopup() {
-        popup.hidden = true;
-        try { sessionStorage.setItem("popupSeen", "1"); } catch (err) {}
-      }
+      var STOPS = [0.4, 0.8];
+      var shown = 0;
+      try { shown = parseInt(sessionStorage.getItem("popupShown") || "0", 10) || 0; } catch (err) {}
+      function remember() { try { sessionStorage.setItem("popupShown", String(shown)); } catch (err) {} }
+      function closePopup() { popup.hidden = true; remember(); }
       function onScroll() {
         var y = window.scrollY;
         sticky.classList.toggle("show", y > 500);
         var max = document.documentElement.scrollHeight - window.innerHeight;
-        if (!seen && max > 0 && y / max > 0.45) {
-          seen = true;
+        if (shown < STOPS.length && popup.hidden && max > 0 && y / max > STOPS[shown]) {
+          shown++;
+          remember();
           popup.hidden = false;
           document.getElementById("popup-close").focus();
         }
@@ -789,7 +812,7 @@
       document.getElementById("popup-close").addEventListener("click", closePopup);
       document.getElementById("popup-later").addEventListener("click", closePopup);
       popup.addEventListener("click", function (e) { if (e.target === popup) closePopup(); });
-      popup.querySelector("[data-line]").addEventListener("click", closePopup);
+      popup.querySelector("[data-line]").addEventListener("click", function () { shown = STOPS.length; closePopup(); });
       document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !popup.hidden) closePopup(); });
     })();
   </script>
