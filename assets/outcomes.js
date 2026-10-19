@@ -104,7 +104,8 @@
       '<p class="section-lead">先看想做的工作，再看哪一門能讓你累積作品。職務欄為<strong>可探索方向，並非保證錄取或就業</strong>。</p>' +
       '<div class="comparison-scroll" role="region" tabindex="0" aria-label="五門課程比較，可左右捲動"><table class="comparison-table"><thead><tr><th scope="col">課程</th><th scope="col">費用／時數</th><th scope="col">學完能做什麼</th><th scope="col">作品／SKILL 包</th><th scope="col">可探索的 AI 職務</th></tr></thead><tbody>' +
       courses.map(function(c){return '<tr><th scope="row"><a href="#'+c.id+'">'+escapeHTML(c.short)+'</a></th><td>'+escapeHTML(c.price)+'</td><td>'+escapeHTML(c.canDo)+'</td><td>'+escapeHTML(c.output)+'</td><td>'+escapeHTML(c.role)+'</td></tr>';}).join("") +
-      '</tbody></table></div><p class="small-note">手機可左右滑動比較表。SKILL 包為可編輯的教學模板，仍需依個人情境調整、檢查與驗收。</p>';
+      '</tbody></table></div><p class="small-note">手機可左右滑動比較表。SKILL 包為可編輯的教學模板，仍需依個人情境調整、檢查與驗收。</p>' +
+      '<div class="hero-actions"><a class="secondary-action" href="kits/README.md" download>下載工具包目錄 ↓</a><a class="secondary-action" href="PRD-作品規劃手冊.md" download>PRD 規劃手冊／架構圖 ↓</a><a class="secondary-action" href="kits/老師接單工具包/SKILL.md" download>老師接單範例工具包 ↓</a></div>';
     overview.insertAdjacentElement("afterend", compare);
 
     var coursesTitle = document.getElementById("courses-title");
@@ -153,7 +154,7 @@
         '<p>具有企業系統、API 與資料庫開發實務背景，投入 AI 協作、LINE 官方帳號整合與中小企業營運流程自動化。從真實工作問題出發，帶學員拆需求、改功能、查核結果，完成可以清楚展示的作品。</p>' +
         '<div class="instructor-tags"><span>企業系統整合</span><span>AI 協作與工作流程</span><span>LINE OA／資料流程</span><span>網頁工具應用</span></div></div>' +
         '<div class="company-card"><strong>專業團隊背景</strong><p>造雨人科技股份有限公司</p>' +
-        '<small>具備企業系統、API／資料庫、AI 工作流程整合相關實務；每梯次實際主辦與授課安排以招生公告為準。</small></div></div>';
+        '<small>具備企業系統、API／資料庫、AI 工作流程整合相關實務；每梯次實際主辦與授課安排以招生公告為準。</small><p class="small-note"><a class="kit-link" href="kits/講師工具包.md" download>下載講師教學工具包 ↓</a></p></div></div>';
       teaching.insertAdjacentElement("beforebegin",section);
       var principle=teaching.querySelector(".principles-content");
       if (principle) principle.textContent="以完成作品為目標：課堂提供標準案例、可編輯 SKILL 工作卡、PRD 範本、網頁／流程架構圖與驗收清單；學員練習修改、檢查和說明自己做出的成果。";
