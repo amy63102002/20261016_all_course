@@ -10,7 +10,7 @@
 
 - 負責人：吳政穎（四個政策頁、首頁與各頁頁尾）
 - 客服手機：0937-241-561（以文字呈現）
-- LINE 官方帳號：**尚未開通**。開通後把 `index.html` 的 `body[data-line-url]` 從 `https://lin.ee/REPLACE_WITH_LINE_OA` 換成加好友網址，首頁所有 LINE 按鈕會自動改指向；`business.html`「客服 LINE」一列同步改寫。
+- LINE 官方帳號：已提供加好友網址 `https://lin.ee/7j3Hi2Z`；首頁所有 `data-line` CTA 共用 `body[data-line-url]`，`business.html`「客服 LINE」列已更新為可點選的文字諮詢入口。
 
 ## 表單欄位對照
 
