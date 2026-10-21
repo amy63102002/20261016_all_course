@@ -329,8 +329,8 @@
     }
   </style>
 </head>
-<!-- LINE 官方帳號網址：上線前把 data-line-url 換成正式的加好友連結（例如 https://lin.ee/xxxxxxx）。未替換前，所有 LINE 按鈕會停在頁面的報名區塊。 -->
-<body data-line-url="https://lin.ee/REPLACE_WITH_LINE_OA">
+<!-- LINE 官方帳號正式加好友連結；首頁所有 data-line CTA 共用此設定。 -->
+<body data-line-url="https://lin.ee/7j3Hi2Z">
   <a href="#diagnose" class="skip-link">跳至主要內容</a>
 
   <header>
@@ -783,7 +783,7 @@
 
   <script>
     (function () {
-      // LINE link lives in one place (body[data-line-url]); while it is a placeholder, buttons stay on #signup
+      // LINE URL is configured once in body[data-line-url] and applied to every data-line CTA.
       var lineUrl = document.body.getAttribute("data-line-url") || "";
       if (lineUrl && lineUrl.indexOf("REPLACE") === -1) {
         document.querySelectorAll("[data-line]").forEach(function (a) {
