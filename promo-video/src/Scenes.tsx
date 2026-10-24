@@ -42,7 +42,7 @@ export const Hook: React.FC = () => {
 /* S2 三個入口 */
 const DOORS = [
   { n: "01", t: "課程首頁", s: "點你的狀況，告訴你從哪門開始", bg: C.pink, icon: "🗺️" },
-  { n: "02", t: "AI 職涯島", s: "3D 逛一圈，看狀況被搬到哪一區", bg: C.blue, icon: "🏝️" },
+  { n: "02", t: "AI 職涯島", s: "3D 逛一圈，3 題測驗幫你選起點", bg: C.blue, icon: "🏝️" },
   { n: "03", t: "90 天小遊戲", s: "抽三張牌，玩一輪看你的結局", bg: C.yellow, icon: "🎲" },
 ];
 

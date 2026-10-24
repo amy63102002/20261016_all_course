@@ -5,6 +5,8 @@ import { mkdirSync, renameSync, existsSync, rmSync } from "node:fs";
 import path from "node:path";
 
 const BASE = process.env.BASE || "http://localhost:8799";
+// 職涯島重製中時，可以指向另一個資料夾的伺服器錄製最新版
+const ISLAND_BASE = process.env.ISLAND_BASE || BASE;
 const OUT = path.resolve("public/rec");
 const SIZE = { width: 1920, height: 1080 };
 mkdirSync(OUT, { recursive: true });
@@ -81,25 +83,36 @@ const SHOTS = {
     await wait(2400);
   },
 
+  // 職涯島重製版：選課小測驗、15 個狀況、Q&A 告示牌、案例展
   async island(page) {
-    await page.goto(BASE + "/island.html", { waitUntil: "networkidle" });
+    await page.goto(ISLAND_BASE + "/island.html", { waitUntil: "networkidle" });
     await moveTo(page, 960, 700, 1);
     await page.waitForFunction(() => !document.getElementById("start").disabled, null, { timeout: 30000 });
     await wait(900);
     await clickEl(page, page.locator("#start"));
-    await wait(2200);
-    // 拖曳鏡頭繞島半圈
+    await wait(2000);
+    // 拖曳鏡頭繞島半圈，帶到案例展小島
     await moveTo(page, 700, 560);
     await page.mouse.down();
     await page.mouse.move(1350, 520, { steps: 90 });
     await page.mouse.up();
-    await wait(1600);
+    await wait(1400);
+    // 3 題選課小測驗：已經會用 AI → 想用 LINE 接單 → 要個人作品
+    await clickEl(page, page.locator("#quiz-open"));
+    await wait(1300);
+    for (const pick of [1, 3, 0]) {
+      const opts = page.locator("#detail .opt");
+      if (!(await opts.count())) break;
+      await clickEl(page, opts.nth(Math.min(pick, (await opts.count()) - 1)), 300);
+      await wait(1300);
+    }
+    await wait(2200);
     await clickEl(page, page.locator("#t-home"));
-    await wait(2600);
-    await clickEl(page, page.locator(".tag.sym").nth(2));
-    await wait(3200);
-    await clickEl(page, page.locator(".tag.course").first());
-    await wait(2600);
+    await wait(2200);
+    await clickEl(page, page.locator(".tag.sym:not(.extra)").nth(2));
+    await wait(2800);
+    await clickEl(page, page.locator(".tag.extra").first());
+    await wait(2800);
   },
 
   async game(page) {

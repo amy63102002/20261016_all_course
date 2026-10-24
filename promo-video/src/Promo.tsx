@@ -12,7 +12,7 @@ import { Cta, Doors, Hook, Plans } from "./Scenes";
 
 // 錄影切點（秒）：見 capture/record.mjs 的操作順序
 const INDEX: Clip[] = [{ from: 0.8, to: 24.5, rate: 1.5 }];
-const ISLAND: Clip[] = [{ from: 2.5, to: 24, rate: 1.4 }];
+const ISLAND: Clip[] = [{ from: 4.8, to: 42.5, rate: 1.65 }]; // 職涯島重製版（含選課小測驗）
 const GAME: Clip[] = [
   { from: 3, to: 10.5, rate: 1.3 }, // 抽牌、重抽
   { from: 10.5, to: 50.5, rate: 5 }, // 12 週快轉
@@ -35,10 +35,14 @@ const tr = (dir: "from-right" | "from-bottom" | null) => (
   />
 );
 
-// 女聲旁白（capture/tts.mjs 產生），at 是全片秒數
+// 段落 i 在全片的起始影格（扣掉轉場重疊）
+const sceneStart = (i: number) => SCENES.slice(0, i).reduce((a, b) => a + b, 0) - T * i;
+// 女聲旁白（capture/tts.mjs 產生）：時間跟著所屬段落走，段落長度改了不用手動重算
+const VO = narration.map((n) => ({ ...n, at: sceneStart(n.scene) / FPS + n.offset, dur: (durations as Record<string, number>)[n.id] }));
+
 const Narration: React.FC = () => (
   <>
-    {narration.map((n) => (
+    {VO.map((n) => (
       <Sequence key={n.id} from={Math.round(n.at * FPS)} layout="none">
         <Audio src={staticFile(`vo/${n.id}.wav`)} />
       </Sequence>
@@ -47,14 +51,14 @@ const Narration: React.FC = () => (
 );
 
 // 配樂：把 Suno 匯出的檔案放進 public/，再把檔名填在這裡；null = 不放配樂
-const BGM_FILE: string | null = null;
+const BGM_FILE: string | null = "bgm.mp3"; // Suno「重新上場 Restart BGM」v6-mini（免費方案）
 const BGM_LOUD = 0.32; // 沒有旁白時
 const BGM_DUCK = 0.1; // 旁白說話時壓低
 
 // 旁白期間（含前後 0.3 秒緩衝）壓低配樂，頭尾淡入淡出
 const bgmVolume = (f: number) => {
   const t = f / FPS;
-  const talking = narration.some((n) => t > n.at - 0.3 && t < n.at + (durations as Record<string, number>)[n.id] + 0.3);
+  const talking = VO.some((n) => t > n.at - 0.3 && t < n.at + n.dur + 0.3);
   const fadeIn = Math.min(1, t / 1.5);
   const fadeOut = Math.min(1, (PROMO_FRAMES / FPS - t) / 2.5);
   return (talking ? BGM_DUCK : BGM_LOUD) * Math.max(0, Math.min(fadeIn, fadeOut));
@@ -116,18 +120,20 @@ const Scenes: React.FC = () => (
         clips={ISLAND}
         cam={[
           { f: 0, s: 1.15, x: 50, y: 50 },
-          { f: 50, s: 1, x: 50, y: 50 },
-          { f: 130, s: 1.12, x: 45, y: 50 },
-          { f: 185, s: 1, x: 50, y: 50 },
-          { f: 260, s: 1.25, x: 25, y: 35 },
-          { f: 340, s: 1.05, x: 40, y: 45 },
-          { f: 461, s: 1.12, x: 45, y: 40 },
+          { f: 55, s: 1, x: 50, y: 50 },
+          { f: 140, s: 1.1, x: 45, y: 50 },
+          { f: 180, s: 1.42, x: 4, y: 18 },
+          { f: 400, s: 1.42, x: 4, y: 18 },
+          { f: 440, s: 1, x: 50, y: 50 },
+          { f: 520, s: 1.2, x: 40, y: 40 },
+          { f: 685, s: 1.12, x: 35, y: 35 },
         ]}
         captions={[
-          { f: 10, text: "3D 職涯島", sub: "島中央是阿茲的工作室，四周是 A–E 五個課程區", bg: C.blue },
-          { f: 120, text: "拖一下，整座島跟著轉", sub: "清晨、白天、黃昏、夜晚，島上的人都在忙", bg: C.yellow },
-          { f: 195, text: "11 個常見狀況", sub: "小人把它們搬到能解決的課程區", bg: C.mint },
-          { f: 265, text: "點一個狀況就知道", sub: "先上哪門課，加上今天就能做的一件小事", bg: C.pink },
+          { f: 10, text: "3D 職涯島", sub: "15 個常見狀況，被小人搬到能解決它的課程區", bg: C.blue },
+          { f: 85, text: "拖一下，整座島跟著轉", sub: "工作室旁有 Q&A 告示牌、報名信箱，左前方是阿茲的案例展", bg: C.yellow },
+          { f: 175, text: "🧭 3 題選課小測驗", sub: "回答 AI 程度和最想解決的事", bg: C.pink },
+          { f: 345, text: "直接給你一條路線", sub: "想用 LINE 接單＋要個人作品：D → E", bg: C.mint },
+          { f: 450, text: "點任何一個狀況或告示牌", sub: "先上哪門課、今天就能做的一件小事，都寫在這", bg: C.peach },
         ]}
       />
     </TransitionSeries.Sequence>
