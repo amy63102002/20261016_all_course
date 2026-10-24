@@ -190,6 +190,15 @@
     .codex .ec.live.got { background: var(--mint); } .codex .ec.stop.got { background: var(--peach); }
     .codex .ec:not(.got) { border-style: dashed; color: #6F6F6F; background: #F4F6F8; }
     .codex-sum { margin-top: 12px; font-weight: 900; }
+    .content-stats { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 22px; }
+    .content-stats span { border: 2.5px solid var(--ink); border-radius: 999px; padding: 2px 12px; background: #fff; font-weight: 700; font-size: .86rem; }
+    .content-stats b { font-family: var(--display); font-weight: 400; font-size: 1.1rem; margin-right: 3px; }
+    .badge-title { font-weight: 900; font-size: 1.05rem; margin: 18px 0 8px; }
+    .badges { display: flex; flex-wrap: wrap; gap: 8px; }
+    .badges.got-list { justify-content: center; max-width: 760px; margin: 18px auto 0; }
+    .badge { display: inline-flex; flex-direction: column; border: 2.5px dashed #9A9A9A; border-radius: 14px; padding: 4px 10px; font-weight: 900; font-size: .84rem; color: #6F6F6F; background: #F4F6F8; line-height: 1.4; }
+    .badge small { font-weight: 500; font-size: .72rem; }
+    .badge.got { border: 2.5px solid var(--ink); color: var(--ink); background: var(--yellow); box-shadow: 3px 3px 0 var(--ink); }
     .clear { margin-top: 12px; background: none; border: 0; font-weight: 700; text-decoration: underline; cursor: pointer; font-size: .86rem; }
 
     .notice { margin-top: 56px; padding: 16px 20px; border: 2.5px dashed var(--ink); border-radius: 20px; background: var(--cream); font-size: .88rem; font-weight: 500; }
@@ -256,11 +265,12 @@
       <p class="lead">起點你選不了：離開職場多久、家裡需要你多少、AI 會到哪裡。<br>但這 12 週<span class="hl">每一週怎麼過，是你選的</span>。</p>
       <div class="rules">
         <div class="rule"><b>抽三張起點牌</b>你的狀況、想去的方向、AI 程度。每張可以重抽一次。</div>
-        <div class="rule"><b>每三週選節奏</b>猛投履歷、專心做作品、邊學邊顧家，或先喘口氣。</div>
-        <div class="rule"><b>每週一件事</b>已讀不回、家人一句話、程式跑不動。很多人卡在這裡。</div>
-        <div class="rule"><b>第 12 週選出口</b>接下工作、開始接單、先兼職，或先停下來。</div>
-        <div class="rule"><b>五項一起算</b>收入、作品、自信、精力、家人。精力或家人見底，分數再高也不算贏。</div>
+        <div class="rule"><b>每三週選節奏</b>猛投履歷、專心做作品、找人一起讀、接零工撐收入，或先喘口氣。</div>
+        <div class="rule"><b>每週一件事</b>已讀不回、家人一句話、程式跑不動、五折說明會。有些事只會發生在你的起點。</div>
+        <div class="rule"><b>第 12 週選出口</b>接下工作、內部轉調、開始接單、先兼職、再拚 90 天，或先停下來。</div>
+        <div class="rule"><b>五項一起算</b>收入、作品、自信、精力、家人。精力、家人、自信或存款見底，這輪就提早結束。</div>
       </div>
+      <div class="content-stats" id="content-stats" aria-label="遊戲內容數量"></div>
       <p class="hero-meta">紀錄只存在你這台裝置，不用註冊，什麼都不上傳。</p>
       <div class="modes">
         <button class="btn big" type="button" data-go="setup">抽我的三張牌 →</button>
@@ -310,9 +320,11 @@
       </div>
       <div class="panel box" id="codex">
         <h2>結局圖鑑</h2>
-        <p>四種繼續走下去的方式，三種先停下來的方式。</p>
+        <p id="codex-intro"></p>
         <div class="codex" id="codex-list"></div>
         <p class="codex-sum" id="codex-sum"></p>
+        <h3 class="badge-title" id="badge-sum">徽章</h3>
+        <div class="badges" id="badge-list"></div>
       </div>
     </section>
 
@@ -354,68 +366,193 @@
       return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
     }
 
-    /* ---------- 起點牌 ---------- */
+    /* ---------- 起點牌；tag 讓特定事件只出現在某些起點 ---------- */
     const WHO = [
-      { id: "carer", name: "離開職場三年的照顧者", desc: "家裡一直需要你。時間零碎，但很會排事情。", hours: 10, energy: 80, family: 75, conf: 40 },
-      { id: "switch", name: "想換跑道的上班族", desc: "白天還要上班，能用的只有晚上和週末。", hours: 7, energy: 60, family: 60, conf: 60 },
-      { id: "grad", name: "畢業兩年還在找方向", desc: "時間很多，履歷很空，家人很常問。", hours: 20, energy: 85, family: 55, conf: 45 },
-      { id: "laidoff", name: "四十五歲剛被資遣", desc: "經驗很多，但面試官好像比較想要年輕人。", hours: 16, energy: 70, family: 65, conf: 35 },
-      { id: "side", name: "在家接小案的斜槓", desc: "接過幾個小案子，收入時有時無。", hours: 12, energy: 70, family: 65, conf: 55, works: 1 }
+      { id: "carer", tag: "parent", name: "離開職場三年的照顧者", desc: "家裡一直需要你。時間零碎，但很會排事情。", hours: 10, energy: 80, family: 75, conf: 40 },
+      { id: "switch", tag: "job", name: "想換跑道的上班族", desc: "白天還要上班，能用的只有晚上和週末。", hours: 7, energy: 60, family: 60, conf: 60 },
+      { id: "grad", tag: "young", name: "畢業兩年還在找方向", desc: "時間很多，履歷很空，家人很常問。", hours: 20, energy: 85, family: 55, conf: 45 },
+      { id: "laidoff", tag: "age", name: "四十五歲剛被資遣", desc: "經驗很多，但面試官好像比較想要年輕人。", hours: 16, energy: 70, family: 65, conf: 35 },
+      { id: "side", tag: "free", name: "在家接小案的斜槓", desc: "接過幾個小案子，收入時有時無。", hours: 12, energy: 70, family: 65, conf: 55, works: 1 },
+      { id: "retail", tag: "job", name: "做了十年門市的店長", desc: "排班、盤點、客訴都難不倒你，但很少坐在電腦前工作。", hours: 9, energy: 65, family: 60, conf: 50 },
+      { id: "school", tag: "parent", name: "孩子上小學了，想回辦公室", desc: "早上八點到下午三點是你的，其他時間屬於家裡。", hours: 14, energy: 75, family: 70, conf: 40 },
+      { id: "mover", tag: "new", name: "剛搬到新城市", desc: "人生地不熟，沒有舊同事、舊人脈可以靠。", hours: 15, energy: 75, family: 50, conf: 45 },
+      { id: "shop", tag: "shop", name: "經營小店的老闆", desc: "訂單都在 LINE 聊天紀錄裡，常常漏單、對不上帳。", hours: 8, energy: 60, family: 65, conf: 55, income: 3000 },
+      { id: "nurse", tag: "shift", name: "想離開輪班的護理人員", desc: "很會照顧人，但已經被大夜班磨到不想再輪。", hours: 9, energy: 50, family: 60, conf: 50 },
+      { id: "senior", tag: "age", name: "五十五歲，想找第二份事業", desc: "孩子大了、時間有了，只是不知道還來不來得及。", hours: 18, energy: 65, family: 75, conf: 35 },
+      { id: "temp", tag: "free", name: "做了好幾年兼職的人", desc: "什麼都做過一點，履歷上卻說不出專長。", hours: 13, energy: 70, family: 60, conf: 45 }
     ];
     const DIR = [
       { id: "admin", name: "行政／助理", desc: "職缺多、門檻不高，但大家都在投。", cost: 14, vis: 1.2, course: "B" },
+      { id: "cs", name: "客服／營運支援", desc: "回覆、整理常見問題，AI 最先派上用場的地方。", cost: 14, vis: 1.1, course: "B" },
+      { id: "pm", name: "專案行政助理", desc: "追進度、整理會議紀錄，讓每個人知道下一步。", cost: 18, vis: 1.0, course: "C" },
       { id: "ops", name: "數位營運助理", desc: "要會整理資料、做點小工具。", cost: 20, vis: 1.0, course: "C" },
+      { id: "content", name: "社群小編／內容製作", desc: "文案、圖片、短影音，每天都要有東西發。", cost: 12, vis: 0.9, course: "A" },
       { id: "studio", name: "自己的接單工作室", desc: "不用面試，但要有人願意下單。", cost: 26, vis: 0.7, course: "D" },
+      { id: "booking", name: "課程或場地預約服務", desc: "報名、預約、改期，現在都靠 LINE 一則一則回。", cost: 24, vis: 0.75, course: "D" },
       { id: "aiapp", name: "AI 應用助理", desc: "新職缺，大家都還在摸索要什麼人。", cost: 22, vis: 0.9, course: "E" }
     ];
     const LVL = [
       { id: "zero", name: "幾乎沒碰過 AI", desc: "聽過 ChatGPT，還沒真的用過。", mult: 1.5, conf: -5 },
+      { id: "photo", name: "手機上用過 AI 修圖", desc: "用過，但沒想過能拿來工作。", mult: 1.25, conf: -2 },
       { id: "chat", name: "會跟 ChatGPT 聊天", desc: "問過問題、改過文章，但沒拿來做作品。", mult: 1.0, conf: 0 },
-      { id: "tool", name: "表格和小工具都會一點", desc: "Excel 公式、表單都弄過。", mult: 0.75, conf: 5 }
+      { id: "tool", name: "表格和小工具都會一點", desc: "Excel 公式、Google 表單都弄過。", mult: 0.75, conf: 5 },
+      { id: "code", name: "以前寫過一點程式", desc: "很久沒碰了，但看到程式碼不會怕。", mult: 0.65, conf: 8 }
     ];
+    const isWho = (...tags) => tags.includes(setup.who.tag);
+    const isDir = (...ids) => ids.includes(setup.dir.id);
 
     /* ---------- 每三週選一次的節奏 ---------- */
     const PACE = [
-      { id: "sprint", name: "全力投履歷", note: "每週投很多，作品先放著。", applies: 6, build: 0.2, d: { energy: -12, family: -5 } },
-      { id: "build", name: "專心做作品", note: "少投一點，先做出拿得出手的東西。", applies: 1, build: 0.9, d: { energy: -7, family: -2 } },
-      { id: "balance", name: "邊學邊顧家", note: "慢，但每週都有一點進度。", applies: 2, build: 0.45, d: { energy: -3, family: 4 } },
+      { id: "sprint", name: "全力投履歷", note: "每週投很多，作品先放著。", applies: 6, build: 0.2, d: { energy: -10, family: -5 } },
+      { id: "build", name: "專心做作品", note: "少投一點，先做出拿得出手的東西。", applies: 1, build: 0.9, d: { energy: -5, family: -2 } },
+      { id: "balance", name: "邊學邊顧家", note: "慢，但每週都有一點進度。", applies: 2, build: 0.45, d: { energy: -1, family: 4 } },
+      { id: "group", name: "找人一起讀", note: "有夥伴比較撐得下去，但要配合別人的時間。", applies: 2, build: 0.6, d: { energy: -3, family: -1, conf: 3 } },
+      { id: "gig", name: "接零工撐收入", note: "先顧好荷包，進度慢一點。", applies: 1, build: 0.2, d: { energy: -6, income: 2500 } },
       { id: "rest", name: "先喘口氣", note: "這三週什麼都不衝。", applies: 0, build: 0, d: { energy: 12, family: 2, conf: -2 } }
     ];
 
-    /* ---------- 每週事件；fx 回傳寫進日誌的那一句 ---------- */
+    /* ---------- 每週事件；when 決定會不會出現，fx 回傳寫進日誌的那一句 ---------- */
     const EVENTS = [
       { id: "first", fixed: 1, title: "投出第一批履歷", text: "你把履歷整理好，投了出去。三天過去：已讀，沒有回。",
         choices: [
           { t: "再投一輪", s: "數量先衝上去再說", fx: (S) => { add(S, { applies: 4, energy: -5 }); return "又投了 4 封。至少不是什麼都沒做。"; } },
           { t: "回頭改履歷，把做過的事寫具體", s: "少投，先修", fx: (S) => { add(S, { conf: 6, energy: -3 }); S.vis += 0.1; return "你發現過去其實做過很多事，只是沒寫出來。"; } },
+          { t: "請 AI 幫你看履歷哪裡太空泛", s: "", fx: (S) => { add(S, { conf: 4, energy: -2 }); S.vis += 0.06; return "它挑出五個「負責相關業務」。你一個一個改成具體的事。"; } },
           { t: "關掉求職網站一天", s: "", fx: (S) => { add(S, { energy: 6 }); return "那天你好好吃了一頓飯。"; } }
         ] },
+
+      /* --- 家庭與身心 --- */
       { id: "family-talk", title: "家人的一句話", text: "晚餐時家人說：「都這個年紀了，何必這麼累？」",
         choices: [
           { t: "好好聊一次你的計畫", s: "會累，但值得", fx: (S) => { add(S, { family: 8, energy: -4 }); return "說完之後，家人問你需要什麼幫忙。"; } },
           { t: "先不吵，繼續做", s: "", fx: (S) => { add(S, { family: -7, conf: -2 }); return "這件事沒有消失，只是被放著。"; } },
           { t: "把一部分家務外包出去", s: "花錢買時間", fx: (S) => { add(S, { family: 3, income: -1500, energy: 4 }); S.hours += 1; return "每週多出一點時間，荷包少了一點。"; } }
         ] },
-      { id: "poster", title: "朋友找你幫忙", text: "朋友的店要辦活動，問你能不能幫忙做張海報，說會給一點車馬費。",
-        choices: [
-          { t: "接，用 AI 做三版給她挑", s: "也算一件作品", fx: (S) => { add(S, { works: 1, income: 1500, energy: -6, conf: 4 }); return "她挑了第二版，還問你能不能做菜單。"; } },
-          { t: "免費幫，當練習", s: "", fx: (S) => { add(S, { works: 1, energy: -5, conf: 3 }); return "沒賺錢，但你多了一件可以給人看的東西。"; } },
-          { t: "婉拒，專心求職", s: "", fx: (S) => { add(S, { applies: 2 }); return "你多投了兩封履歷。"; } }
-        ] },
-      { id: "sub", title: "AI 工具的帳單", text: "免費額度用完了。付費版一個月 NT$600 多，學費可沒包這個。",
-        choices: [
-          { t: "訂下去", s: "之後做東西會快一點", fx: (S) => { add(S, { income: -650 }); S.aiPaid = true; return "訂了。做作品的速度明顯變快。"; } },
-          { t: "先用免費版撐著", s: "", fx: (S) => { add(S, { conf: -2 }); return "常常跑到一半說額度用完，只好隔天再來。"; } }
-        ] },
       { id: "sick", title: "家裡有人病了", text: "這週家裡有人發燒，整個行程都亂了。",
         choices: [
           { t: "全心照顧，其他先停", s: "", fx: (S) => { add(S, { family: 10, energy: -8 }); S.skipBuild = true; return "這週沒有進度，但家人知道你在。"; } },
-          { t: "跟家人排班輪流", s: "", fx: (S) => { add(S, { family: -3, energy: -4 }); return "辛苦，但你還是保住了兩個晚上。"; } }
+          { t: "跟家人排班輪流", s: "", fx: (S) => { add(S, { family: -3, energy: -4 }); return "辛苦，但你還是保住了兩個晚上。"; } },
+          { t: "請保母或長照幫忙幾天", s: "花錢", fx: (S) => { add(S, { income: -3000, family: 2, energy: -2 }); return "幫手來了，你終於能坐下來喘口氣。"; } }
         ] },
+      { id: "kid", title: "週末的約定", text: "家裡的小朋友問你：「這週六可以去公園嗎？你上次說好的。」",
+        choices: [
+          { t: "去，整天不碰電腦", s: "", fx: (S) => { add(S, { family: 9, energy: 5 }); S.skipBuild = true; return "回家的路上她睡著了。你覺得這天很值得。"; } },
+          { t: "帶筆電去，邊看邊做", s: "", fx: (S) => { add(S, { family: -5, energy: -3 }); S.wp += 2; return "她玩了一下就跑回來問你在幹嘛。"; } },
+          { t: "改成下週，這週真的不行", s: "", fx: (S) => { add(S, { family: -3 }); S.wp += 3; return "她說好，但嘴巴嘟了一整個晚上。"; } }
+        ] },
+      { id: "helper", title: "家人主動幫忙", text: "家人說：「這週末我來顧，你去做你的東西。」",
+        choices: [
+          { t: "好，謝謝你", s: "", fx: (S) => { S.wp += 6; add(S, { family: 5, energy: -2 }); return "一整個下午沒人打擾，你做了好多。"; } },
+          { t: "不用啦，我自己來", s: "", fx: (S) => { add(S, { family: -2, energy: -4 }); return "其實你很需要，只是不好意思說。"; } }
+        ] },
+      { id: "sleep", title: "只睡了五個小時", text: "連續一週都弄到半夜，鏡子裡的人看起來好累。",
+        choices: [
+          { t: "硬撐，這週一定要做完", s: "", fx: (S) => { add(S, { energy: -12 }); S.wp += S.hours * 0.4; return "做完了一大段。也真的很累。"; } },
+          { t: "把待辦刪掉一半", s: "", fx: (S) => { add(S, { energy: 9, conf: 1 }); return "刪掉的那一半，後來發現其實也不急。"; } },
+          { t: "改成早上做，晚上準時睡", s: "", fx: (S) => { add(S, { energy: 5 }); S.wp += 1; return "早上的腦袋清楚多了。"; } }
+        ] },
+      { id: "holiday", title: "連假到了", text: "四天連假。家裡的人都在問要去哪。",
+        choices: [
+          { t: "全家出遊", s: "", fx: (S) => { add(S, { family: 10, energy: 8, income: -2000 }); S.skipBuild = true; return "照片拍了一堆，回來的路上你已經在想作品要怎麼改。"; } },
+          { t: "關在家趕作品", s: "", fx: (S) => { S.wp += S.hours * 0.8; add(S, { family: -6, energy: -4 }); return "四天做了平常兩週的量，家裡有點冷。"; } },
+          { t: "兩天出去、兩天做事", s: "", fx: (S) => { add(S, { family: 5, energy: 2 }); S.wp += 3; return "兩邊都顧到一點。"; } }
+        ] },
+      { id: "body", when: (S) => S.energy < 40, title: "身體在抗議", text: "肩膀硬到轉不動頭，醫生說你需要好好休息。",
+        choices: [
+          { t: "這週真的停下來", s: "", fx: (S) => { add(S, { energy: 14 }); S.skipBuild = true; return "睡了好幾個長覺，世界沒有因此毀滅。"; } },
+          { t: "每天去散步半小時", s: "", fx: (S) => { add(S, { energy: 7 }); S.hours = Math.max(3, S.hours - 1); return "走著走著，有幾個卡住的地方突然想通了。"; } },
+          { t: "吃顆止痛藥繼續", s: "", fx: (S) => { add(S, { energy: -6 }); S.wp += 2; return "痛是不痛了，累還在。"; } }
+        ] },
+      { id: "quiet", when: (S) => S.family < 40, title: "家裡變得很安靜", text: "已經好幾天，大家吃飯都沒什麼話。",
+        choices: [
+          { t: "約一頓只有你們的晚餐", s: "", fx: (S) => { add(S, { family: 12, income: -800 }); return "那頓飯吃了三個小時。"; } },
+          { t: "寫張紙條說最近辛苦了", s: "", fx: (S) => { add(S, { family: 6 }); return "隔天早上，紙條背面多了一句「加油」。"; } },
+          { t: "等忙完這陣子再說", s: "", fx: (S) => { add(S, { family: -6 }); return "「這陣子」好像一直沒有結束。"; } }
+        ] },
+      { id: "doubt", when: (S) => S.conf < 35, title: "我是不是不行", text: "你開始懷疑，是不是太晚了、是不是根本不適合。",
+        choices: [
+          { t: "把這幾週做過的事列出來", s: "", fx: (S) => { add(S, { conf: 8 }); return "寫完一看，比你以為的多很多。"; } },
+          { t: "打給一個老朋友", s: "", fx: (S) => { add(S, { conf: 5, energy: 2 }); return "她說：「你以前就是這樣，一開始都說不行。」"; } },
+          { t: "滑別人的成功故事", s: "", fx: (S) => { add(S, { conf: -5 }); return "別人都好快。你關掉手機，覺得更糟。"; } }
+        ] },
+
+      /* --- 求職路上 --- */
       { id: "fear", title: "滑到一篇文章", text: "標題寫：「AI 三年內將取代 80% 行政工作」。留言區一片哀號。",
         choices: [
           { t: "越看越焦慮，滑了兩小時", s: "", fx: (S) => { add(S, { conf: -8, energy: -3 }); return "看完什麼都沒變，只是更累。"; } },
           { t: "去看職缺到底寫了什麼", s: "", fx: (S) => { add(S, { conf: 5, energy: -2 }); S.vis += 0.05; return "很多職缺寫的是「會用 AI 工具者佳」，不是「不要人」。"; } }
+        ] },
+      { id: "flat", when: (S) => S.week >= 4 && S.interviews === 0, title: "數字一直沒動", text: "好幾週了，投遞數一直加，面試數一直是 0。",
+        choices: [
+          { t: "換一批職缺投", s: "", fx: (S) => { add(S, { applies: 4, energy: -4 }); S.vis += 0.1; return "你開始投一些以前覺得「我不夠格」的職缺。"; } },
+          { t: "把心力放回作品", s: "", fx: (S) => { S.wp += S.hours * 0.5; add(S, { energy: -4 }); return "履歷上能寫的東西變多了。"; } },
+          { t: "跟朋友抱怨一個晚上", s: "", fx: (S) => { add(S, { energy: 5, conf: 2 }); return "朋友說她當年也是投了五十封才有一個面試。"; } }
+        ] },
+      { id: "gap", title: "面試前的電話", text: "人資在電話裡問：「你履歷上有一段空白，那幾年在做什麼？」",
+        choices: [
+          { t: "照實說，再講這段時間學了什麼", s: "", fx: (S) => { add(S, { conf: 6 }); S.vis += 0.08; return "對方說：「這樣講很清楚。」"; } },
+          { t: "含糊帶過", s: "", fx: (S) => { add(S, { conf: -5 }); return "掛掉電話後你一直想，剛剛應該怎麼說。"; } }
+        ] },
+      { id: "reject", when: (S) => S.applies >= 5, title: "一封感謝函", text: "「很遺憾，這次未能進入下一階段。期待未來有機會合作。」",
+        choices: [
+          { t: "回信請教可以加強什麼", s: "", fx: (S) => {
+            add(S, { conf: 3 });
+            if (S.rng() < 0.5) { S.vis += 0.1; return "對方真的回了：「作品可以再具體一點。」"; }
+            return "沒有回音。但你知道自己問了。"; } },
+          { t: "刪掉，繼續投", s: "", fx: (S) => { add(S, { applies: 2, conf: -3 }); return "你又投了兩封，假裝沒事。"; } },
+          { t: "允許自己難過一個晚上", s: "", fx: (S) => { add(S, { energy: 3, conf: -2 }); return "哭完洗把臉，隔天再說。"; } }
+        ] },
+      { id: "lowpay", title: "薪水比以前少", text: "看到一個很適合的職缺，但開的薪水比你上一份工作少了快一萬。",
+        choices: [
+          { t: "去面試看看再說", s: "", fx: (S) => { add(S, { interviews: 1, conf: -1, energy: -3 }); return "談完覺得工作內容不錯，薪水的事你還在想。"; } },
+          { t: "跳過，繼續找", s: "", fx: (S) => { add(S, { conf: 1 }); return "你知道自己的底線在哪。"; } },
+          { t: "想清楚自己最在意的是什麼", s: "", fx: (S) => { add(S, { conf: 4 }); return "你寫下三件事：時間彈性、學得到東西、離家近。薪水排第四。"; } }
+        ] },
+      { id: "linkedin", title: "要不要經營個人檔案", text: "有人說轉職一定要經營 LinkedIn，每週發文才會被看見。",
+        choices: [
+          { t: "每週發一篇學習紀錄", s: "", fx: (S) => { add(S, { energy: -4, conf: 3 }); S.vis += 0.12; return "第三篇開始，有人來按讚、留言。"; } },
+          { t: "先把個人檔案寫完整就好", s: "", fx: (S) => { S.vis += 0.05; return "至少被搜到的時候，看起來是認真的。"; } },
+          { t: "不碰，專心做作品", s: "", fx: (S) => { S.wp += 2; return "你決定讓作品說話。"; } }
+        ] },
+      { id: "mentor", title: "前輩願意聊聊", text: "朋友介紹一位在做數位營運的前輩，願意跟你喝杯咖啡。",
+        choices: [
+          { t: "帶著問題清單去", s: "", fx: (S) => { add(S, { conf: 7, energy: -2 }); S.vis += 0.1; return "她說：「你問的問題，比很多來面試的人都具體。」"; } },
+          { t: "去了，就是聊天", s: "", fx: (S) => { add(S, { conf: 2, energy: 2 }); return "很愉快的下午，只是回家想不起來學到什麼。"; } },
+          { t: "太緊張，改天好了", s: "", fx: (S) => { add(S, { conf: -3 }); return "那個「改天」到最後都沒有發生。"; } }
+        ] },
+      { id: "cert", title: "要不要考證照", text: "有人說考一張 AI 證照，履歷會比較好看。",
+        choices: [
+          { t: "報名考試", s: "", fx: (S) => { add(S, { income: -2500, conf: 3, energy: -5 }); S.vis += 0.05; return "考過了。面試時倒是沒人問起。"; } },
+          { t: "把時間拿去做作品", s: "", fx: (S) => { S.wp += 4; return "你決定先做出能打開給人看的東西。"; } },
+          { t: "先查查公司到底看不看", s: "", fx: (S) => { add(S, { conf: 2 }); return "你翻了二十個職缺，只有一個寫到證照。"; } }
+        ] },
+      { id: "age", when: () => isWho("age"), title: "年齡這件事", text: "面試官笑著問：「你會不會不太習慣跟比較年輕的主管共事？」",
+        choices: [
+          { t: "講你最近怎麼跟 AI 學新東西", s: "", fx: (S) => { add(S, { conf: 6 }); if (S.works >= 1) S.goodInterviews++; return "對方點點頭：「你學得比我們部門很多人快。」"; } },
+          { t: "反問團隊平常怎麼合作", s: "", fx: (S) => { add(S, { conf: 3 }); return "聊開之後，氣氛輕鬆很多。"; } },
+          { t: "老實說會有點擔心", s: "", fx: (S) => { add(S, { conf: -3 }); return "說完你就後悔了，其實你一點也不擔心。"; } }
+        ] },
+      { id: "relatives", when: () => isWho("young"), title: "親戚聚會", text: "「有沒有在上班？」「現在薪水多少？」「隔壁誰誰誰已經當主管了。」",
+        choices: [
+          { t: "拿手機給阿姨看你的作品", s: "", fx: (S) => {
+            if (S.works >= 1) { add(S, { conf: 6, family: 3 }); return "阿姨看完說：「這可以幫我們里辦公處做一個嗎？」"; }
+            add(S, { conf: -3 }); return "你打開相簿，才發現還沒有作品可以給人看。"; } },
+          { t: "說你正在準備轉職", s: "", fx: (S) => { add(S, { conf: 2, family: -1 }); return "大家點點頭，話題很快換到別人身上。"; } },
+          { t: "笑笑帶過，躲進廚房", s: "", fx: (S) => { add(S, { conf: -2, energy: -2 }); return "洗了一整晚的碗。"; } }
+        ] },
+      { id: "newcity", when: () => isWho("new"), title: "在這裡沒有人脈", text: "在新城市投了十封履歷，連一個可以問的人都沒有。",
+        choices: [
+          { t: "參加在地的讀書會", s: "", fx: (S) => { add(S, { conf: 4, energy: -3 }); S.vis += 0.1; S.buddy = true; return "認識了三個人，其中一個在你想去的那種公司上班。"; } },
+          { t: "在線上社群找同路人", s: "", fx: (S) => { add(S, { conf: 3 }); return "原來很多人跟你一樣，從零開始。"; } },
+          { t: "一個人慢慢來", s: "", fx: (S) => { add(S, { energy: 2 }); return "安靜，但有點寂寞。"; } }
+        ] },
+
+      /* --- 做作品 --- */
+      { id: "sub", title: "AI 工具的帳單", text: "免費額度用完了。付費版一個月 NT$600 多，學費可沒包這個。",
+        choices: [
+          { t: "訂下去", s: "之後做東西會快一點", fx: (S) => { add(S, { income: -650 }); S.aiPaid = true; return "訂了。做作品的速度明顯變快。"; } },
+          { t: "先用免費版撐著", s: "", fx: (S) => { add(S, { conf: -2 }); return "常常跑到一半說額度用完，只好隔天再來。"; } },
+          { t: "跟朋友合訂一個方案", s: "", fx: (S) => { add(S, { income: -300 }); S.aiPaid = true; add(S, { family: -1 }); return "省了一半，只是常要喬誰先用。"; } }
         ] },
       { id: "bug", when: (S) => S.works >= 1 || S.wp > 3, title: "作品跑不動了", text: "做到一半，畫面一片白，跳出一串看不懂的紅字。",
         choices: [
@@ -423,17 +560,101 @@
           { t: "去社團發問", s: "", fx: (S) => { add(S, { conf: 2, energy: -3 }); S.wp += 2; return "有人回你，還順便教你怎麼問問題。"; } },
           { t: "先放著，改天再說", s: "", fx: (S) => { add(S, { conf: -5, energy: 3 }); return "那個檔案你一週都沒打開。"; } }
         ] },
+      { id: "notebook", title: "一疊資料要整理", text: "朋友丟來一份四十頁的活動企劃，問你能不能整理成五頁簡報。",
+        choices: [
+          { t: "丟進 NotebookLM 先抓重點", s: "", fx: (S) => { S.wp += 5; add(S, { conf: 5, energy: -4 }); return "二十分鐘就有初稿。你再花一小時把數字一個一個對過。"; } },
+          { t: "自己一頁一頁讀", s: "", fx: (S) => { S.wp += 3; add(S, { energy: -8 }); return "讀完了，眼睛也花了。"; } },
+          { t: "說這週太忙", s: "", fx: (S) => { add(S, { conf: -1 }); return "朋友說沒關係，找了別人。"; } }
+        ] },
+      { id: "privacy", title: "客戶資料要不要貼", text: "你想讓 AI 幫忙整理一份名單，裡面有電話和地址。",
+        choices: [
+          { t: "先把個資遮掉再貼", s: "", fx: (S) => { add(S, { conf: 5 }); S.careful = true; return "你養成一個面試官會很在意的習慣。"; } },
+          { t: "改用假資料練習", s: "", fx: (S) => { S.wp += 1; add(S, { conf: 3 }); S.careful = true; return "練熟了流程，真的資料一筆都沒外流。"; } },
+          { t: "直接貼，比較快", s: "", fx: (S) => { S.wp += 2; S.leak = true; return "快是快，但你心裡有點毛。"; } }
+        ] },
+      { id: "leaked", when: (S) => S.leak, title: "有人問起那份名單", text: "朋友問：「你那時候是不是把我們客人的電話丟給 AI？」",
+        choices: [
+          { t: "老實道歉，說之後會先遮掉", s: "", fx: (S) => { add(S, { conf: -3 }); S.careful = true; return "朋友說還好你有講，下次要注意。"; } },
+          { t: "說應該沒關係吧", s: "", fx: (S) => { add(S, { conf: -6, income: -1000 }); return "對方之後的案子都沒再找你了。"; } }
+        ] },
+      { id: "hallu", title: "AI 講錯了", text: "你用 AI 寫的報告裡，有一個數字是它自己編的，差點就交出去了。",
+        choices: [
+          { t: "從此每個數字都回頭查來源", s: "", fx: (S) => { add(S, { conf: 4, energy: -3 }); S.careful = true; return "多花半小時，換來交出去不心虛。"; } },
+          { t: "請 AI 附上出處再寫一次", s: "", fx: (S) => { add(S, { conf: 2 }); return "它附了出處，你點開來看，有一半是對的。"; } },
+          { t: "算了，下次注意", s: "", fx: (S) => { add(S, { conf: -3 }); return "你心裡記住了，但沒有改流程。"; } }
+        ] },
+      { id: "change", title: "需求又改了", text: "幫忙的案子做到一半，對方說：「其實我想要的是另一個樣子。」",
+        choices: [
+          { t: "先問清楚到底要什麼再動手", s: "", fx: (S) => { add(S, { conf: 6, energy: -3 }); return "問了三個問題，發現他要的只是換個排版。"; } },
+          { t: "照改，不多問", s: "", fx: (S) => { add(S, { energy: -8 }); S.wp += 1; return "改完第二版，他說：「嗯⋯⋯好像第一版比較好。」"; } },
+          { t: "說好，下一版要收費", s: "", fx: (S) => { add(S, { income: 1500, conf: 3, family: 0 }); return "對方愣了一下，然後說好。"; } }
+        ] },
+      { id: "update", title: "工具又改版了", text: "你剛學會的 AI 工具今天大改版，按鈕全換了位置。",
+        choices: [
+          { t: "花一晚重新摸熟", s: "", fx: (S) => { add(S, { conf: 3, energy: -3 }); return "新版其實比較好用。"; } },
+          { t: "只學你用得到的部分", s: "", fx: (S) => { add(S, { conf: 4 }); return "你發現自己只需要其中三個功能。"; } },
+          { t: "乾脆換一個工具", s: "", fx: (S) => { S.wp = Math.max(0, S.wp - 3); add(S, { conf: -1 }); return "又要從頭學一次，進度退了一點。"; } }
+        ] },
+      { id: "laptop", title: "電腦壞了", text: "用了七年的筆電，開機要五分鐘，昨天終於藍畫面。",
+        choices: [
+          { t: "買一台二手的", s: "NT$6,000", fx: (S) => { add(S, { income: -6000 }); S.hours += 1; return "新（舊）電腦開機只要二十秒，每週多出好多時間。"; } },
+          { t: "先跟家人借", s: "", fx: (S) => { add(S, { family: -3 }); return "家人的電腦桌面全是他的檔案，你小心翼翼不敢亂動。"; } },
+          { t: "去圖書館用電腦", s: "", fx: (S) => { add(S, { energy: -5 }); S.hours = Math.max(3, S.hours - 1); return "圖書館很安靜，但每次只能用兩小時。"; } }
+        ] },
+      { id: "showcase", when: (S) => S.works >= 2, title: "要不要公開作品", text: "你做了好幾個東西，都還躺在電腦裡。",
+        choices: [
+          { t: "整理成一頁作品集貼出去", s: "", fx: (S) => { add(S, { conf: 7, energy: -5 }); S.vis += 0.2; return "有兩個人私訊你，問這是怎麼做的。"; } },
+          { t: "還不夠好，再改改", s: "", fx: (S) => { S.wp += 2; add(S, { conf: -2 }); return "又改了一版。還是沒有人看到。"; } }
+        ] },
+      { id: "deploy", when: (S) => S.works >= 1 && isDir("ops", "pm", "aiapp", "studio", "booking"), title: "放上網", text: "作品在你電腦上跑得好好的。要怎麼讓別人也打得開？",
+        choices: [
+          { t: "跟著教學部署上線", s: "", fx: (S) => { add(S, { conf: 6, energy: -5 }); S.vis += 0.15; S.deployed = true; return "你有了第一個自己的網址，傳給家人看了三次。"; } },
+          { t: "先截圖放履歷", s: "", fx: (S) => { S.vis += 0.05; return "截圖很漂亮，只是沒辦法點。"; } },
+          { t: "等學會再說", s: "", fx: (S) => { add(S, { conf: -2 }); return "它繼續待在你的電腦裡。"; } }
+        ] },
+      { id: "webhook", when: () => isDir("studio", "booking") || isWho("shop"), title: "LINE 收不到訊息", text: "你照教學設好了 LINE 官方帳號，但傳訊息進去，系統一點反應都沒有。",
+        choices: [
+          { t: "一步一步檢查 Webhook 設定", s: "", fx: (S) => { S.wp += 4; add(S, { conf: 5, energy: -5 }); return "原來網址少了一個斜線。你笑了出來。"; } },
+          { t: "找會的朋友幫你看", s: "", fx: (S) => { S.wp += 2; add(S, { conf: 1 }); return "朋友三分鐘就找到問題，你在旁邊抄筆記。"; } },
+          { t: "改用 Google 表單收單", s: "", fx: (S) => { S.wp += 1; add(S, { conf: -2 }); return "能用，只是客人要多點一次連結。"; } }
+        ] },
+      { id: "posts", when: () => isDir("content"), title: "貼文沒人看", text: "你用 AI 做的貼文，發出去只有 7 個讚，其中 3 個是家人。",
+        choices: [
+          { t: "看數據，改標題再試", s: "", fx: (S) => { add(S, { conf: 4, energy: -3 }); S.vis += 0.1; return "換了標題那篇，觸及多了五倍。"; } },
+          { t: "一天發三篇，衝量", s: "", fx: (S) => { add(S, { works: 1, energy: -8 }); return "量出來了，你也快沒東西可以發了。"; } },
+          { t: "先停更一週", s: "", fx: (S) => { add(S, { energy: 5, conf: -2 }); return "停了一週，沒有人發現。這讓你有點難過。"; } }
+        ] },
+      { id: "canned", when: () => isDir("cs", "admin"), title: "像罐頭的回覆", text: "你練習用 AI 擬客服回覆，朋友看了說：「好像機器人在講話。」",
+        choices: [
+          { t: "自己再順一次語氣", s: "", fx: (S) => { S.wp += 2; add(S, { conf: 5 }); return "加了兩句人話，整封信就活過來了。"; } },
+          { t: "做一份常見問題回覆表", s: "", fx: (S) => { add(S, { works: 1, energy: -6 }); return "二十題常見問題，每題都有你改過的版本。"; } },
+          { t: "覺得 AI 不適合客服", s: "", fx: (S) => { add(S, { conf: -3 }); return "其實問題不在 AI，在你還沒教它怎麼說話。"; } }
+        ] },
+      { id: "meeting", when: () => isDir("pm", "admin"), title: "一小時的會議錄音", text: "朋友公司開了一個小時的會，問你能不能整理成會議紀錄和待辦清單。",
+        choices: [
+          { t: "請 AI 摘要，再自己對一次", s: "", fx: (S) => { add(S, { works: 1, conf: 5, energy: -4 }); return "待辦清單上每件事都有負責人和期限，朋友說主管很滿意。"; } },
+          { t: "全部交給 AI，直接給", s: "", fx: (S) => { add(S, { conf: -2, income: 500 }); return "其中一個人名寫錯了，朋友默默幫你改掉。"; } },
+          { t: "婉拒，這不是你想做的", s: "", fx: () => "你把時間留給自己的作品。" }
+        ] },
+      { id: "sheet", when: () => isDir("ops", "aiapp", "pm"), title: "亂成一團的表格", text: "朋友的辦公室用 Excel 登記報名，五個人一起改，每週都對不起來。",
+        choices: [
+          { t: "幫他們做一個網頁登記工具", s: "", fx: (S) => { S.wp += 6; add(S, { conf: 6, energy: -6 }); return "新增、查看、改狀態，三個功能就解決了大半的問題。"; } },
+          { t: "先教他們用共用試算表", s: "", fx: (S) => { add(S, { conf: 3, income: 1000 }); return "簡單的解法，常常就是最好的解法。"; } },
+          { t: "記下來當作品題目", s: "", fx: (S) => { S.wp += 2; return "一個真實的需求，比自己想的題目好用多了。"; } }
+        ] },
+
+      /* --- 機會上門 --- */
+      { id: "poster", title: "朋友找你幫忙", text: "朋友的店要辦活動，問你能不能幫忙做張海報，說會給一點車馬費。",
+        choices: [
+          { t: "接，用 AI 做三版給她挑", s: "也算一件作品", fx: (S) => { add(S, { works: 1, income: 1500, energy: -6, conf: 4 }); return "她挑了第二版，還問你能不能做菜單。"; } },
+          { t: "免費幫，當練習", s: "", fx: (S) => { add(S, { works: 1, energy: -5, conf: 3 }); return "沒賺錢，但你多了一件可以給人看的東西。"; } },
+          { t: "婉拒，專心求職", s: "", fx: (S) => { add(S, { applies: 2 }); return "你多投了兩封履歷。"; } }
+        ] },
       { id: "oldboss", title: "舊同事傳訊息", text: "「我們這邊缺人，要不要回來做兼職？一週兩天。」",
         choices: [
-          { t: "答應，先有收入", s: "", fx: (S) => { add(S, { income: 8000, energy: -9, conf: 4 }); S.hours -= 2; return "有收入了。能做作品的時間少了。"; } },
-          { t: "問能不能遠端，順便用 AI 幫他們整理資料", s: "", fx: (S) => { add(S, { income: 5000, conf: 7, energy: -6, works: 1 }); return "對方很驚訝你會這個。這份工作變成你的第一個實際案例。"; } },
+          { t: "答應，先有收入", s: "", fx: (S) => { add(S, { income: 8000, energy: -9, conf: 4 }); S.hours = Math.max(3, S.hours - 2); S.oldjob = true; return "有收入了。能做作品的時間少了。"; } },
+          { t: "問能不能遠端，順便用 AI 幫他們整理資料", s: "", fx: (S) => { add(S, { income: 5000, conf: 7, energy: -6, works: 1 }); S.oldjob = true; return "對方很驚訝你會這個。這份工作變成你的第一個實際案例。"; } },
           { t: "謝謝，先婉拒", s: "", fx: (S) => { add(S, { conf: 2 }); return "你想先試試自己的方向。"; } }
-        ] },
-      { id: "flat", when: (S) => S.week >= 4 && S.interviews === 0, title: "數字一直沒動", text: "好幾週了，投遞數一直加，面試數一直是 0。",
-        choices: [
-          { t: "換一批職缺投", s: "", fx: (S) => { add(S, { applies: 4, energy: -4 }); S.vis += 0.1; return "你開始投一些以前覺得「我不夠格」的職缺。"; } },
-          { t: "把心力放回作品", s: "", fx: (S) => { S.wp += S.hours * 0.5; add(S, { energy: -4 }); return "履歷上能寫的東西變多了。"; } },
-          { t: "跟朋友抱怨一個晚上", s: "", fx: (S) => { add(S, { energy: 5, conf: 2 }); return "朋友說她當年也是投了五十封才有一個面試。"; } }
         ] },
       { id: "askline", title: "社團裡有人問", text: "「有沒有人會做 LINE 接單？我們的團購訂單快亂成一團了。」",
         choices: [
@@ -442,35 +663,83 @@
             add(S, { conf: -6, energy: -6 }); return "對方問你有沒有做過的例子，你一時拿不出來。"; } },
           { t: "默默收藏，回去研究", s: "", fx: (S) => { S.wp += 3; add(S, { conf: 2 }); return "你把這個需求記下來，當成作品的題目。"; } }
         ] },
-      { id: "gap", title: "面試前的電話", text: "人資在電話裡問：「你履歷上有一段空白，那幾年在做什麼？」",
+      { id: "whale", title: "旺季超賣", text: "朋友經營的賞鯨船又超賣了，線上名單跟碼頭現場對不上，客人在岸邊吵。",
         choices: [
-          { t: "照實說，再講這段時間學了什麼", s: "", fx: (S) => { add(S, { conf: 6 }); S.vis += 0.08; return "對方說：「這樣講很清楚。」"; } },
-          { t: "含糊帶過", s: "", fx: (S) => { add(S, { conf: -5 }); return "掛掉電話後你一直想，剛剛應該怎麼說。"; } }
+          { t: "先用表單＋試算表幫他救火", s: "", fx: (S) => { add(S, { works: 1, income: 2000, energy: -7 }); return "週末前名單終於對齊了。他說明年要找你做正式的預約系統。"; } },
+          { t: "陪他把整個流程畫出來", s: "", fx: (S) => { S.wp += 4; add(S, { conf: 4, energy: -3 }); return "畫完才發現，問題出在三個地方各記各的。"; } },
+          { t: "建議他找專業的廠商", s: "", fx: (S) => { add(S, { conf: 1 }); return "你知道自己現在還接不住，這也是一種判斷。"; } }
         ] },
-      { id: "sleep", title: "只睡了五個小時", text: "連續一週都弄到半夜，鏡子裡的人看起來好累。",
+      { id: "groupbuy", title: "團購主的訊息爆了", text: "鄰居團購主說，每天回訊息、對訂單回到半夜一點。",
         choices: [
-          { t: "硬撐，這週一定要做完", s: "", fx: (S) => { add(S, { energy: -12 }); S.wp += S.hours * 0.4; return "做完了一大段。也真的很累。"; } },
-          { t: "把待辦刪掉一半", s: "", fx: (S) => { add(S, { energy: 9, conf: 1 }); return "刪掉的那一半，後來發現其實也不急。"; } }
+          { t: "幫她整理一份商品和訂單表", s: "", fx: (S) => { add(S, { works: 1, energy: -6, conf: 4 }); return "她說這是她這個月睡最好的一週。"; } },
+          { t: "教她用 AI 回覆常見問題", s: "", fx: (S) => { add(S, { income: 1000, conf: 5, energy: -3 }); return "她送你一箱水果當謝禮，還幫你介紹了另一個團購主。"; } },
+          { t: "最近真的沒空", s: "", fx: (S) => { add(S, { energy: 2 }); return "你在電梯裡遇到她，有點不好意思。"; } }
         ] },
-      { id: "helper", title: "家人主動幫忙", text: "家人說：「這週末我來顧，你去做你的東西。」",
+      { id: "referral", when: (S) => S.works >= 3, title: "有人介紹案子來", text: "之前幫過的人，把你介紹給他朋友，對方想做一個預約表單。",
         choices: [
-          { t: "好，謝謝你", s: "", fx: (S) => { S.wp += 6; add(S, { family: 5, energy: -2 }); return "一整個下午沒人打擾，你做了好多。"; } },
-          { t: "不用啦，我自己來", s: "", fx: (S) => { add(S, { family: -2, energy: -4 }); return "其實你很需要，只是不好意思說。"; } }
+          { t: "接，照朋友價", s: "", fx: (S) => { add(S, { income: 5000, energy: -7, conf: 6 }); S.client = true; return "做完對方很滿意，問你下一個案子怎麼收。"; } },
+          { t: "報一個合理的價格", s: "可能談不成", fx: (S) => {
+            if (S.rng() < 0.6) { add(S, { income: 9000, energy: -7, conf: 9 }); S.client = true; return "對方說好。你第一次照自己的價值開價。"; }
+            add(S, { conf: -2 }); return "對方說預算不夠。你有點失落，但不後悔。"; } },
+          { t: "太忙，推掉", s: "", fx: (S) => { add(S, { energy: 2 }); return "你把案子轉給一起學的夥伴。"; } }
         ] },
+      { id: "buddy", title: "有人揪讀書會", text: "社團有人揪線上讀書會，每週三晚上，一起做作品、互相看進度。",
+        choices: [
+          { t: "加入", s: "", fx: (S) => { add(S, { conf: 4, energy: -2 }); S.wp += 2; S.buddy = true; return "第一次聚會就有人幫你解決卡了一週的問題。"; } },
+          { t: "旁聽就好", s: "", fx: (S) => { add(S, { conf: 2 }); return "聽別人講卡在哪裡，你發現自己沒那麼落後。"; } },
+          { t: "不用了，一個人比較快", s: "", fx: () => "你繼續一個人走。" }
+        ] },
+
+      /* --- 陷阱 --- */
       { id: "scam", title: "免費講座的廣告", text: "「三天學會 AI，月入十萬不是夢！」限時名額，現在報名送教材。",
         choices: [
-          { t: "報名看看", s: "", fx: (S) => { add(S, { income: -3000, conf: -6, energy: -4 }); return "三天後你買了一套課，但還是不知道自己能做出什麼。"; } },
+          { t: "報名看看", s: "", fx: (S) => { add(S, { income: -3000, conf: -6, energy: -4 }); S.scams++; return "三天後你買了一套課，但還是不知道自己能做出什麼。"; } },
+          { t: "問對方：學完能做出什麼？", s: "", fx: (S) => { add(S, { conf: 3 }); return "對方講了二十分鐘，沒有一句是你能做出來的東西。"; } },
           { t: "滑過去", s: "", fx: (S) => { add(S, { conf: 2 }); return "能教會你的課，會先說清楚你學完能做出什麼。"; } }
         ] },
-      { id: "showcase", when: (S) => S.works >= 2, title: "要不要公開作品", text: "你做了好幾個東西，都還躺在電腦裡。",
+      { id: "scam2", title: "說明會的最後十分鐘", text: "說明會講了兩小時，最後十分鐘在推一套 NT$60,000 的「AI 副業包」，今天報名打五折。",
         choices: [
-          { t: "整理成一頁作品集貼出去", s: "", fx: (S) => { add(S, { conf: 7, energy: -5 }); S.vis += 0.2; return "有兩個人私訊你，問這是怎麼做的。"; } },
-          { t: "還不夠好，再改改", s: "", fx: (S) => { S.wp += 2; add(S, { conf: -2 }); return "又改了一版。還是沒有人看到。"; } }
+          { t: "刷卡，怕錯過", s: "", fx: (S) => { add(S, { income: -30000, conf: -4 }); S.scams++; return "回家打開教材，是一堆你在網路上都找得到的影片。"; } },
+          { t: "回家想三天再說", s: "", fx: (S) => { add(S, { conf: 3 }); return "三天後，五折還在。原來每天都是最後一天。"; } },
+          { t: "問有沒有退費和不保證的條款", s: "", fx: (S) => { add(S, { conf: 5 }); return "對方支支吾吾。你把外套穿上，先走了。"; } }
         ] },
-      { id: "kid", title: "週末的約定", text: "家裡的小朋友問你：「這週六可以去公園嗎？你上次說好的。」",
+
+      /* --- 只在某些起點出現 --- */
+      { id: "school-day", when: () => isWho("parent"), title: "學校通知", text: "明天下午是家長日，剛好跟你約好的線上課撞在一起。",
         choices: [
-          { t: "去，整天不碰電腦", s: "", fx: (S) => { add(S, { family: 9, energy: 5 }); S.skipBuild = true; return "回家的路上她睡著了。你覺得這天很值得。"; } },
-          { t: "帶筆電去，邊看邊做", s: "", fx: (S) => { add(S, { family: -5, energy: -3 }); S.wp += 2; return "她玩了一下就跑回來問你在幹嘛。"; } }
+          { t: "去家長日", s: "", fx: (S) => { add(S, { family: 8 }); return "老師說孩子在作文裡寫：「我的家人最近在學做網頁。」"; } },
+          { t: "上課，請家人代去", s: "", fx: (S) => { add(S, { family: -2, conf: 3 }); S.wp += 3; return "課上得很好，家人拍了照片傳給你。"; } },
+          { t: "上課，跟孩子說對不起", s: "", fx: (S) => { add(S, { family: -6, conf: 3 }); S.wp += 3; return "晚上你抱著她講了很久的話。"; } }
+        ] },
+      { id: "boss", when: () => isWho("job"), title: "主管注意到了", text: "主管看到你用 AI 做的週報，問你能不能教部門的人。",
+        choices: [
+          { t: "好，辦一場內部分享", s: "", fx: (S) => { add(S, { conf: 10, energy: -5 }); S.internal = true; return "分享完，有三個同事來問你能不能幫他們的流程也弄一下。"; } },
+          { t: "趁機跟主管談調職", s: "", fx: (S) => { add(S, { conf: 6, energy: -3 }); S.internal = true; S.vis += 0.05; return "主管說：「下一季有個新專案，你要不要試試？」"; } },
+          { t: "低調一點，說只是剛好", s: "", fx: (S) => { add(S, { conf: -1 }); return "你把功勞推給 AI。主管也就沒再問。"; } }
+        ] },
+      { id: "shift", when: () => isWho("shift"), title: "下個月的班表", text: "班表出來了：三個大夜，兩個小夜。",
+        choices: [
+          { t: "申請調白班", s: "收入會少一點", fx: (S) => { add(S, { energy: 8, income: -2000 }); S.hours += 2; return "白天上班，晚上終於有完整的時間。"; } },
+          { t: "撐著，利用夜班空檔讀書", s: "", fx: (S) => { add(S, { energy: -10 }); S.wp += 3; return "凌晨三點的護理站，你在手機上看完了一整章。"; } },
+          { t: "遞辭呈，專心轉職", s: "", fx: (S) => { add(S, { income: -5000, conf: 4, energy: 6 }); S.hours += 8; return "說出口的那一刻，你覺得肩膀輕了一半。"; } }
+        ] },
+      { id: "orders", when: () => isWho("shop") || isDir("booking"), title: "又漏了一張單", text: "客人在 LINE 說三天前就訂了，你翻遍聊天紀錄都找不到。",
+        choices: [
+          { t: "今晚就開始做接單表", s: "", fx: (S) => { S.wp += 5; add(S, { energy: -5, conf: 3 }); return "你決定，這種事不要再發生第二次。"; } },
+          { t: "先道歉，送個小禮物", s: "", fx: (S) => { add(S, { income: -500 }); return "客人原諒你了。下一張單呢？"; } },
+          { t: "忙完這陣子再說", s: "", fx: (S) => { add(S, { conf: -4 }); return "隔週，又漏了一張。"; } }
+        ] },
+      { id: "retail-skill", when: () => isWho("job") && setup.who.id === "retail", title: "門市的經驗有用嗎", text: "你寫履歷時猶豫：十年的門市經驗，算不算辦公室能用的能力？",
+        choices: [
+          { t: "寫成排班、盤點、客訴處理的具體成果", s: "", fx: (S) => { add(S, { conf: 7 }); S.vis += 0.1; return "寫完你才發現，這些都是很多辦公室缺的能力。"; } },
+          { t: "請 AI 把門市經驗翻成職場用語", s: "", fx: (S) => { add(S, { conf: 4 }); S.vis += 0.06; return "「處理客訴」變成「第一線客戶關係管理」。你笑了一下，但留下來了。"; } },
+          { t: "乾脆不寫", s: "", fx: (S) => { add(S, { conf: -4 }); return "履歷上空了一大塊。"; } }
+        ] },
+      { id: "freelance-price", when: () => isWho("free"), title: "該怎麼收費", text: "有人問你做一個活動報名頁要多少錢。你腦袋一片空白。",
+        choices: [
+          { t: "照花的時間算一個價", s: "", fx: (S) => { add(S, { conf: 5, income: 3000 }); S.client = true; return "對方說可以。原來把時間算清楚，開口就不難。"; } },
+          { t: "問對方預算多少", s: "", fx: (S) => { add(S, { income: 1500 }); S.client = true; return "對方說了一個很低的數字，你接了，有點後悔。"; } },
+          { t: "說免費，當作品", s: "", fx: (S) => { add(S, { works: 1, energy: -4 }); return "作品多了一件，但你知道不能一直這樣。"; } }
         ] }
     ];
     const INTERVIEW = { id: "interview", title: "收到面試邀請！", text: "對方約你下週二下午聊聊。職缺最後一行寫著：「熟悉 AI 工具者佳」。",
@@ -479,20 +748,52 @@
           if (S.works >= 1) { add(S, { conf: 10, energy: -5 }); S.goodInterviews++; return "對方看了你的作品，問了很多問題。這是好事。"; }
           add(S, { conf: -6, energy: -5 }); return "你想打開作品，才想起還沒有作品可以打開。"; } },
         { t: "熬兩晚準備常見問題", s: "", fx: (S) => { add(S, { conf: 5, energy: -9 }); if (S.conf >= 60) S.goodInterviews++; return "問題都有準備到。只是一直打呵欠。"; } },
+        { t: "反問：你們現在最想用 AI 解決什麼？", s: "", fx: (S) => { add(S, { conf: 6, energy: -4 }); if (S.conf >= 50 || S.careful) S.goodInterviews++; return "對方想了一下，講了十分鐘。面試變成一場討論。"; } },
         { t: "臨時說有事，改期", s: "", fx: (S) => { S.interviews--; add(S, { conf: -5, energy: 3 }); return "改期之後，對方就沒再聯絡了。"; } }
+      ] };
+    const ROUND2 = { id: "round2", title: "第二關：實作題", text: "對方給你三十分鐘，用 AI 把一份雜亂的資料整理成主管看得懂的報表。",
+      choices: [
+        { t: "邊做邊說明每一步在幹嘛", s: "", fx: (S) => {
+          if (S.works >= 2 || ["tool", "code"].includes(setup.lvl.id)) { S.goodInterviews++; add(S, { conf: 8, energy: -5 }); return "做完時，面試官說：「你是第一個講得出為什麼這樣做的人。」"; }
+          add(S, { conf: -4, energy: -5 }); return "講到一半卡住，時間就到了。"; } },
+        { t: "先求做完，再檢查一次數字", s: "", fx: (S) => { add(S, { energy: -5 }); if (S.careful || S.rng() < 0.5) { S.goodInterviews++; add(S, { conf: 5 }); return "你抓到資料裡一個重複的欄位。對方點點頭。"; } return "做完了，但有一個數字跟原始資料對不上。"; } },
+        { t: "說需要帶回家做", s: "", fx: (S) => { add(S, { conf: -3 }); return "對方說：「我們想看的就是你現場怎麼做。」"; } }
       ] };
 
     /* ---------- 結局 ---------- */
     const ENDINGS = {
       restart: { live: true, name: "重新上場", text: "你拿到一份工作。不是夢幻職缺，但第一天上班，你知道自己是帶著東西進去的。" },
+      internal: { live: true, name: "在原公司換了位子", text: "不用換公司，主管把你調到新專案。你成了部門裡最會用 AI 的人。" },
       studio: { live: true, name: "小小工作室開張", text: "第一張訂單從 LINE 進來。你不用等誰錄取，但要自己找下一張單。" },
+      fullhouse: { live: true, name: "案子接不完", text: "口碑傳開了，下個月的檔期已經排滿。你開始煩惱要不要找夥伴。" },
       slow: { live: true, name: "慢慢來也算數", text: "你先接了兼職，一邊有收入，一邊把作品慢慢做好。速度不快，但沒有停。" },
       portfolio: { live: true, name: "作品先替你說話", text: "還沒有 offer，但你手上的作品已經能打開給人看。下一輪面試，你會不一樣。" },
+      back: { live: true, name: "回到熟悉的地方", text: "你回到原本的工作，但帶著新的工具回去。同一份工作，做起來不一樣了。" },
+      again: { live: true, name: "再給自己 90 天", text: "這一輪沒有到終點，但你知道下一輪第一週要做什麼。這次會快一點。" },
       burnout: { live: false, name: "燒完了", text: "你太用力了。精力見底的時候，就算面試機會來了，也接不住。" },
       redlight: { live: false, name: "家裡亮紅燈", text: "你衝得很快，回頭才發現家裡的人好久沒跟你好好說話。" },
+      lost: { live: false, name: "自信歸零", text: "一次次的已讀不回，把你說服了。其實你沒有比別人差，只是太早相信那些沉默。" },
+      broke: { live: false, name: "錢先用完了", text: "電腦、課程、訂閱，一筆一筆加起來，存款比進度先見底。" },
+      scammed: { live: false, name: "繳了學費，沒帶走東西", text: "花了好幾萬，打開教材還是不知道自己能做出什麼。下次先問：學完能做出什麼？" },
       pause: { live: false, name: "先下場休息", text: "這 90 天你沒有找到出口。先停下來不丟臉，想清楚了再上場。" }
     };
-    const ORDER = ["restart", "studio", "slow", "portfolio", "burnout", "redlight", "pause"];
+    const ORDER = Object.keys(ENDINGS);
+
+    /* ---------- 徽章：結局之外，這一輪做到的事 ---------- */
+    const BADGES = [
+      { id: "firstwork", name: "第一份作品", how: "完成至少 1 份作品", test: (S) => S.works >= 1 },
+      { id: "fivework", name: "作品五連發", how: "手上有 5 份作品", test: (S) => S.works >= 5 },
+      { id: "apply20", name: "投出二十封", how: "累積投遞 20 封", test: (S) => S.applies >= 20 },
+      { id: "interview3", name: "面試常客", how: "面試 3 次以上", test: (S) => S.interviews >= 3 },
+      { id: "client", name: "第一個付費客人", how: "有人付錢請你做東西", test: (S) => S.client },
+      { id: "deployed", name: "有自己的網址", how: "把作品部署上線", test: (S) => S.deployed },
+      { id: "careful", name: "資料守門員", how: "遮個資、查來源", test: (S) => S.careful && !S.leak },
+      { id: "buddy", name: "不是一個人", how: "加入讀書會或找到夥伴", test: (S) => S.buddy },
+      { id: "family90", name: "顧家冠軍", how: "結束時家人 90 以上", test: (S) => S.family >= 90 },
+      { id: "steady", name: "沒有休息也撐住", how: "12 週都沒選「先喘口氣」，精力還有 40", test: (S) => S.week >= 12 && !S.paces.includes("rest") && S.energy >= 40 },
+      { id: "frugal", name: "一毛都沒花", how: "走完 12 週沒有任何支出", test: (S) => S.week >= 12 && S.spent === 0 },
+      { id: "noscam", name: "識破話術", how: "遇到推銷，沒有掏錢", test: (S) => S.sawScam && S.scams === 0 }
+    ];
 
     const COURSES = {
       A: { name: "A｜AI 職場實用工具一日班", price: "NT$8,800", why: "先用一天做出文案、圖片、簡報、短影音四類作品，做過一次就知道 AI 能幫你什麼。" },
@@ -510,6 +811,7 @@
     function add(S, d) {
       for (const k in d) {
         if (k === "energy" || k === "family" || k === "conf") S[k] = clamp(S[k] + d[k]);
+        else if (k === "income") { S.income += d[k]; if (d[k] < 0) S.spent -= d[k]; }
         else S[k] = Math.max(0, S[k] + d[k]);
       }
     }
@@ -568,8 +870,10 @@
         rng: mulberry32(setup.seed + 7), week: 0, pace: null,
         energy: w.energy, family: w.family, conf: clamp(w.conf + setup.lvl.conf),
         hours: w.hours, works: w.works || 0, wp: 0, vis: setup.dir.vis,
-        applies: 0, interviews: 0, goodInterviews: 0, income: 0,
-        aiPaid: false, client: false, skipBuild: false, used: [], log: []
+        applies: 0, interviews: 0, goodInterviews: 0, income: w.income || 0, spent: 0,
+        aiPaid: false, client: false, skipBuild: false, used: [], log: [], paces: [],
+        internal: false, oldjob: false, careful: false, leak: false, deployed: false, buddy: false,
+        scams: 0, sawScam: false, round2Done: false
       };
       log("起點：" + w.name + "，想往「" + setup.dir.name + "」走，AI 程度是「" + setup.lvl.name + "」。", "");
       show("game");
@@ -604,6 +908,7 @@
       S.week++;
       const p = S.pace;
       add(S, p.d);
+      add(S, { energy: 2 }); // 週末多少會回一點血
       add(S, { applies: p.applies });
       if (!S.skipBuild) S.wp += S.hours * p.build * (S.aiPaid ? 1.3 : 1);
       S.skipBuild = false;
@@ -618,12 +923,14 @@
       renderHud();
       let ev;
       if (gotInterview) ev = INTERVIEW;
+      else if (S.goodInterviews >= 1 && !S.round2Done) { ev = ROUND2; S.round2Done = true; }
       else ev = EVENTS.find((e) => e.fixed === S.week);
       if (!ev) {
         const pool = EVENTS.filter((e) => !e.fixed && !S.used.includes(e.id) && (!e.when || e.when(S)));
         ev = pool[Math.floor(S.rng() * pool.length)];
       }
       if (ev.id !== "interview") S.used.push(ev.id);
+      if (ev.id.startsWith("scam")) S.sawScam = true;
       S.current = ev;
       $("#stage").innerHTML = '<span class="pill">第 ' + S.week + " 週</span><h2>" + esc(ev.title) + '</h2><p class="ev-text">' + esc(ev.text) + '</p><div class="choices">' +
         ev.choices.map((c, i) => '<button class="choice" type="button" data-choice="' + i + '"><b>' + esc(c.t) + "</b>" + (c.s ? "<small>" + esc(c.s) + "</small>" : "") + "</button>").join("") + "</div>";
@@ -634,10 +941,13 @@
       renderHud();
       const exits = [
         ["job", "接下一份工作", "需要面試累積和一點把握"],
+        S.internal && ["internal", "在原公司轉到新職務", "主管已經注意到你了"],
         ["studio", "開始自己接單", "需要拿得出手的作品"],
         ["part", "先兼職，邊做邊學", "穩一點，慢一點"],
+        (S.oldjob || isWho("job", "shift")) && ["back", "回到原本熟悉的工作", "帶著新工具回去"],
+        ["again", "再給自己 90 天", "需要還有一點自信撐著"],
         ["pause", "先停下來", "這也是一個選擇"]
-      ];
+      ].filter(Boolean);
       $("#stage").innerHTML = '<span class="pill">第 12 週・最後一個決定</span><h2>90 天到了。接下來你要怎麼走？</h2><p class="ev-text">你手上有 ' + S.works + " 份作品、" + S.interviews + ' 次面試。</p><div class="choices">' +
         exits.map(([id, t, s]) => '<button class="choice" type="button" data-exit="' + id + '"><b>' + t + "</b><small>" + s + "</small></button>").join("") + "</div>";
       focusStage();
@@ -654,6 +964,7 @@
       if (!b) return;
       if (b.dataset.pace) {
         S.pace = PACE[Number(b.dataset.pace)];
+        S.paces.push(S.pace.id);
         log("接下來三週：" + S.pace.name + "。", "");
         nextWeek();
       } else if (b.dataset.choice) {
@@ -673,6 +984,9 @@
     function checkFail() {
       if (S.energy <= 0) { finish("burnout"); return true; }
       if (S.family <= 0) { finish("redlight"); return true; }
+      if (S.conf <= 0) { finish("lost"); return true; }
+      if (S.scams >= 2) { finish("scammed"); return true; }
+      if (S.income <= -15000) { finish("broke"); return true; }
       return false;
     }
 
@@ -682,10 +996,17 @@
       if (exit === "job") {
         const hired = (S.interviews >= 2 && (S.goodInterviews >= 1 || S.works >= 2)) || S.interviews >= 4;
         end = hired ? "restart" : S.works >= 3 ? "portfolio" : "pause";
+      } else if (exit === "internal") {
+        end = S.conf >= 55 || S.works >= 2 ? "internal" : "back";
       } else if (exit === "studio") {
-        end = (S.works >= 3 && S.conf >= 50) || S.client ? "studio" : S.works >= 2 ? "portfolio" : "pause";
+        if (S.works >= 4 && S.client && S.income >= 10000) end = "fullhouse";
+        else end = (S.works >= 3 && S.conf >= 50) || S.client ? "studio" : S.works >= 2 ? "portfolio" : "pause";
       } else if (exit === "part") {
         end = "slow";
+      } else if (exit === "back") {
+        end = "back";
+      } else if (exit === "again") {
+        end = S.conf >= 40 ? "again" : "pause";
       } else {
         end = "pause";
       }
@@ -696,7 +1017,7 @@
 
     function scoreOf() {
       const dims = [
-        ["收入", Math.min(20, Math.round(S.income / 1000))],
+        ["收入", Math.max(0, Math.min(20, Math.round(S.income / 1000)))],
         ["作品", Math.min(20, S.works * 5)],
         ["自信", Math.round(S.conf / 5)],
         ["精力", Math.round(S.energy / 5)],
@@ -717,7 +1038,8 @@
       const code = courseFor(endId);
       const C = COURSES[code];
       const vetoed = !E.live && sc.total >= 60;
-      saveRecord(endId, sc.total);
+      const earned = BADGES.filter((b) => b.test(S));
+      saveRecord(endId, sc.total, earned.map((b) => b.id));
       const share = "我在《重新上場的 90 天》走到第 " + S.week + " 週，結局是「" + E.name + "」，" + sc.total + " 分。起點：" + setup.who.name + "／" + setup.dir.name + (setup.daily ? "（今日挑戰 " + todayKey() + "）" : "") + "。你也來抽三張牌：" + location.href.split("#")[0];
       $("#result-box").innerHTML =
         '<span class="pill ' + (E.live ? "live" : "stop") + '">' + (E.live ? "繼續走下去" : "先停下來") + "・第 " + S.week + " 週</span>" +
@@ -725,6 +1047,7 @@
         '<div class="score">' + sc.total + "<small>/100</small></div>" +
         (vetoed ? '<p class="veto">分數不低，但精力或家人見底，這輪不算贏。</p>' : "") +
         '<div class="dims">' + sc.dims.map(([n, v]) => '<div class="dim"><span>' + n + "</span><b>" + v + '</b><i style="--w:' + v * 5 + '%"></i></div>').join("") + "</div>" +
+        (earned.length ? '<div class="badges got-list" aria-label="這一輪拿到的徽章">' + earned.map((b) => '<span class="badge got">' + b.name + "</span>").join("") + "</div>" : "") +
         '<div class="rec"><div class="code">' + code + "</div><div><h3>如果是真的，建議從 " + C.name + " 開始</h3><p>" + C.why + "（" + C.price + '）</p><div class="acts"><a class="btn line" href="' + LINE + '" target="_blank" rel="noopener">加 LINE 問適不適合 →</a><a class="btn light" href="index.html#course-' + code.toLowerCase() + '">看 ' + code + " 方案內容</a></div></div></div>" +
         '<div class="result-acts"><button class="btn" type="button" id="again">再玩一輪</button><button class="btn light" type="button" id="share">複製分享文字</button></div><p class="copied" id="copied" aria-live="polite"></p>';
       $("#again").addEventListener("click", () => newSetup(false));
@@ -749,27 +1072,50 @@
 
     /* ---------- 紀錄與圖鑑：只存在這台裝置 ---------- */
     const KEY = "career90.records";
+    const CODEX_KEY = "career90.codex";
     function loadRecords() { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { return []; } }
-    function saveRecord(end, score) {
+    function saveRecord(end, score, badges) {
       const recs = loadRecords();
-      recs.unshift({ at: todayKey(), daily: setup.daily, end, score, who: setup.who.name, dir: setup.dir.name, works: S.works, week: S.week });
-      try { localStorage.setItem(KEY, JSON.stringify(recs.slice(0, 50))); } catch (e) { /* 無痕模式存不了就算了 */ }
+      recs.unshift({ at: todayKey(), daily: setup.daily, end, score, badges, who: setup.who.name, dir: setup.dir.name, works: S.works, week: S.week });
+      // 圖鑑另外存，不會因為紀錄只留 50 筆而消失
+      const cx = loadCodex();
+      const ends = new Set(cx.ends).add(end);
+      const bs = new Set(cx.badges);
+      badges.forEach((b) => bs.add(b));
+      try {
+        localStorage.setItem(KEY, JSON.stringify(recs.slice(0, 50)));
+        localStorage.setItem(CODEX_KEY, JSON.stringify({ ends: [...ends], badges: [...bs] }));
+      } catch (e) { /* 無痕模式存不了就算了 */ }
+    }
+    function loadCodex() {
+      try { const c = JSON.parse(localStorage.getItem(CODEX_KEY)) || {}; return { ends: c.ends || [], badges: c.badges || [] }; } catch (e) { return { ends: [], badges: [] }; }
     }
     function renderRecords() {
       const recs = loadRecords();
       $("#recs").innerHTML = recs.length
         ? recs.map((r) => '<li><b class="s">' + Number(r.score) + "</b><div><b>" + esc(ENDINGS[r.end] ? ENDINGS[r.end].name : r.end) + "</b>" + (r.daily ? "・今日挑戰" : "") + "<br>" + esc(r.at) + "・" + esc(r.who) + "／" + esc(r.dir) + "・作品 " + Number(r.works) + "</div></li>").join("")
         : '<li class="empty">還沒有紀錄。玩完一輪就會出現在這裡。</li>';
-      const got = new Set(recs.map((r) => r.end));
+      const cx = loadCodex();
+      const got = new Set(cx.ends);
       $("#codex-list").innerHTML = ORDER.map((id) => {
         const E = ENDINGS[id];
         return '<div class="ec ' + (E.live ? "live" : "stop") + (got.has(id) ? " got" : "") + '"><b>' + (got.has(id) ? E.name : "？？？") + "</b>" + (E.live ? "繼續走下去" : "先停下來") + "</div>";
       }).join("");
       const n = ORDER.filter((id) => got.has(id)).length;
-      $("#codex-sum").textContent = n === ORDER.length ? "七種結局全部收集完成！" : "已收集 " + n + "／" + ORDER.length + " 種結局";
+      $("#codex-sum").textContent = n === ORDER.length ? "全部 " + ORDER.length + " 種結局收集完成！" : "已收集 " + n + "／" + ORDER.length + " 種結局";
+      const gotB = new Set(cx.badges);
+      $("#badge-list").innerHTML = BADGES.map((b) => '<span class="badge' + (gotB.has(b.id) ? " got" : "") + '" title="' + esc(b.how) + '">' + (gotB.has(b.id) ? b.name : "？？？") + "<small>" + esc(b.how) + "</small></span>").join("");
+      $("#badge-sum").textContent = "徽章 " + BADGES.filter((b) => gotB.has(b.id)).length + "／" + BADGES.length;
     }
+
+    const live = ORDER.filter((id) => ENDINGS[id].live).length;
+    $("#codex-intro").textContent = live + " 種繼續走下去的方式，" + (ORDER.length - live) + " 種先停下來的方式。";
+    $("#content-stats").innerHTML = [
+      [WHO.length, "種起點"], [DIR.length, "個方向"], [LVL.length, "種 AI 程度"], [PACE.length, "種節奏"],
+      [EVENTS.length + 2, "個事件"], [ORDER.length, "種結局"], [BADGES.length, "枚徽章"]
+    ].map(([n, t]) => "<span><b>" + n + "</b>" + t + "</span>").join("");
     $("#clear-recs").addEventListener("click", () => {
-      try { localStorage.removeItem(KEY); } catch (e) { /* ignore */ }
+      try { localStorage.removeItem(KEY); localStorage.removeItem(CODEX_KEY); } catch (e) { /* ignore */ }
       renderRecords();
     });
 
