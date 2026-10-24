@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <script>document.documentElement.classList.add("js");</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>90 天重新上場｜職涯重啟模擬遊戲</title>
+  <meta name="description" content="抽三張起點牌，用 12 週決定怎麼過。投履歷、做作品、顧家人，最後看你怎麼重新上場。AI 數位職涯培育 × 阿茲的小遊戲。">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="90 天重新上場｜職涯重啟模擬遊戲">
+  <meta property="og:description" content="起點你選不了，但每一週怎麼過，是你選的。8 分鐘玩一輪，看看你的結局。">
+  <meta property="og:locale" content="zh_TW">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    /* 色票、線條、字體沿用 index.html，兩頁要一起改 */
+    :root {
+      --ink: #141414;
+      --paper: #FFFDF7;
+      --yellow: #FFD43B;
+      --pink: #F7AFC6;
+      --blue: #93CBEA;
+      --green: #5BB592;
+      --mint: #CFEBDD;
+      --orange: #FF6B3D;
+      --peach: #FFB79E;
+      --cream: #FFF4D6;
+      --line-green: #06C755;
+      --line: 3px solid var(--ink);
+      --display: "Lilita One", "Noto Sans TC", sans-serif;
+      --sans: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+    body {
+      font-family: var(--sans); color: var(--ink); line-height: 1.75; font-size: 16px;
+      background:
+        radial-gradient(ellipse 30% 8% at 20% 6%, rgba(255,255,255,.9), transparent 70%),
+        radial-gradient(ellipse 25% 6% at 75% 12%, rgba(255,255,255,.8), transparent 70%),
+        radial-gradient(ellipse 35% 7% at 55% 3%, rgba(255,255,255,.7), transparent 70%),
+        linear-gradient(180deg, #3E8FD6 0, #7DB9E8 600px, #BFE0F5 1100px, #BFE0F5 100%);
+    }
+    a { color: inherit; }
+    button { font-family: var(--sans); color: var(--ink); }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+    .skip-link { position: absolute; left: -9999px; top: 0; background: var(--yellow); padding: 8px 14px; border: var(--line); z-index: 100; }
+    .skip-link:focus { left: 8px; top: 8px; }
+    :focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
+    [hidden] { display: none !important; }
+
+    .panel { background: var(--paper); border: var(--line); border-radius: 26px; box-shadow: 8px 8px 0 var(--ink); }
+    .pill { display: inline-flex; align-items: center; gap: 6px; border: 2.5px solid var(--ink); border-radius: 999px; padding: 4px 14px; font-weight: 700; font-size: .85rem; background: #fff; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: var(--ink); color: #fff; text-decoration: none; font-weight: 900; border-radius: 999px; padding: 10px 20px; border: 2.5px solid var(--ink); font-size: .92rem; cursor: pointer; transition: transform .15s, box-shadow .15s; }
+    .btn:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--orange); }
+    .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn.light { background: #fff; color: var(--ink); }
+    .btn.line { background: var(--line-green); color: #fff; }
+    .btn.big { padding: 14px 28px; font-size: 1.05rem; }
+    .kicker { font-family: var(--display); letter-spacing: .14em; font-size: .85rem; text-transform: uppercase; }
+    .big-title { font-family: var(--display); font-size: clamp(2.4rem, 6vw, 3.8rem); line-height: 1; letter-spacing: .01em; }
+    .hl { background: linear-gradient(transparent 55%, var(--yellow) 55%); font-weight: 900; }
+
+    /* Header */
+    header { position: sticky; top: 0; z-index: 40; padding: 12px 0; }
+    .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--paper); border: var(--line); border-radius: 999px; padding: 8px 10px 8px 20px; box-shadow: 4px 4px 0 var(--ink); flex-wrap: wrap; }
+    .brand { font-weight: 900; text-decoration: none; }
+    .brand b { background: var(--yellow); border: 2px solid var(--ink); border-radius: 8px; padding: 0 6px; margin-right: 4px; }
+    header nav { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+    header nav a, header nav button { text-decoration: none; font-weight: 700; font-size: .88rem; padding: 6px 12px; border-radius: 999px; background: none; border: 0; cursor: pointer; }
+    header nav a:hover, header nav button:hover { background: var(--yellow); }
+    header nav a.nav-cta { background: var(--line-green); color: #fff; border: 2px solid var(--ink); }
+
+    /* Hero */
+    .hero { margin-top: 28px; padding: 48px 40px 40px; text-align: center; }
+    .hero .pill { background: var(--yellow); margin-bottom: 14px; }
+    .hero-num { font-family: var(--display); font-size: clamp(6rem, 22vw, 11rem); line-height: .9; color: var(--orange); -webkit-text-stroke: 3px var(--ink); text-shadow: 6px 6px 0 var(--ink); }
+    .hero-num small { font-size: .32em; color: var(--ink); -webkit-text-stroke: 0; text-shadow: none; margin-left: 6px; }
+    .hero h1 { font-weight: 900; font-size: clamp(1.8rem, 4.6vw, 2.8rem); line-height: 1.3; margin-top: 10px; }
+    .hero p.lead { max-width: 640px; margin: 14px auto 0; font-size: 1.05rem; }
+    .rules { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 30px; text-align: left; counter-reset: r; }
+    .rule { border: var(--line); border-radius: 18px; padding: 12px 14px; box-shadow: 4px 4px 0 var(--ink); font-size: .86rem; }
+    .rule::before { counter-increment: r; content: "0" counter(r); display: block; font-family: var(--display); font-size: 1.3rem; line-height: 1.1; }
+    .rule b { display: block; font-weight: 900; font-size: .95rem; margin: 2px 0; }
+    .rule:nth-child(1) { background: var(--pink); } .rule:nth-child(2) { background: var(--blue); } .rule:nth-child(3) { background: var(--yellow); } .rule:nth-child(4) { background: var(--mint); } .rule:nth-child(5) { background: var(--peach); }
+    .hero-meta { margin-top: 20px; font-weight: 700; font-size: .92rem; }
+    .modes { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+    .nojs { margin-top: 18px; font-weight: 700; }
+    html.js .nojs { display: none; }
+
+    section.block { padding-top: 56px; }
+    .sec-head { text-align: center; margin-bottom: 24px; }
+    .sec-head p { max-width: 640px; margin: 8px auto 0; font-weight: 500; }
+
+    /* Setup: three cards */
+    .draw { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .dcard { border: var(--line); border-radius: 24px; box-shadow: 8px 8px 0 var(--ink); overflow: hidden; background: #fff; display: flex; flex-direction: column; }
+    .dcard.pop { animation: pop .45s ease; }
+    @keyframes pop { 0% { transform: rotateY(90deg) scale(.9); } 100% { transform: none; } }
+    .dcard .d-head { padding: 12px 18px; border-bottom: var(--line); display: flex; justify-content: space-between; align-items: center; font-weight: 900; }
+    .dcard:nth-child(1) .d-head { background: var(--pink); } .dcard:nth-child(2) .d-head { background: var(--blue); } .dcard:nth-child(3) .d-head { background: var(--yellow); }
+    .dcard .d-head span { font-family: var(--display); font-weight: 400; letter-spacing: .08em; font-size: .85rem; }
+    .dcard .d-body { padding: 16px 18px 18px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+    .dcard h3 { font-weight: 900; font-size: 1.25rem; line-height: 1.4; }
+    .dcard p { font-size: .9rem; }
+    .dcard .fx { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 6px; }
+    .dcard .fx span { border: 2px solid var(--ink); border-radius: 999px; padding: 0 10px; font-size: .78rem; font-weight: 700; background: var(--paper); }
+    .redraw { align-self: flex-start; margin-top: 8px; border: 2.5px solid var(--ink); border-radius: 999px; padding: 3px 12px; background: var(--cream); font-weight: 900; font-size: .82rem; cursor: pointer; box-shadow: 3px 3px 0 var(--ink); }
+    .redraw:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; }
+    .start-sum { margin-top: 24px; padding: 20px 24px; display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; background: var(--yellow); }
+    .start-sum ul { list-style: none; display: flex; flex-wrap: wrap; gap: 8px 18px; font-weight: 700; }
+    .start-sum li b { font-family: var(--display); font-weight: 400; font-size: 1.2rem; margin-left: 4px; }
+    .daily-tag { background: var(--orange); color: #fff; margin-bottom: 12px; }
+
+    /* Game */
+    .game { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 22px; align-items: start; }
+    .hud { padding: 18px 20px; margin-bottom: 20px; }
+    .hud-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+    .hud-top .when { font-weight: 900; font-size: 1.15rem; }
+    .hud-top .when b { font-family: var(--display); font-weight: 400; font-size: 1.6rem; margin: 0 2px; }
+    .weeks { display: flex; gap: 4px; }
+    .weeks i { width: 16px; height: 16px; border: 2px solid var(--ink); border-radius: 50%; background: #fff; }
+    .weeks i.done { background: var(--ink); }
+    .weeks i.now { background: var(--orange); }
+    .meters { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .meter b { display: flex; justify-content: space-between; font-weight: 900; font-size: .88rem; }
+    .meter .track { height: 16px; border: 2.5px solid var(--ink); border-radius: 999px; background: #fff; overflow: hidden; margin-top: 4px; }
+    .meter .fill { height: 100%; transition: width .4s; border-right: 2.5px solid var(--ink); }
+    .meter.energy .fill { background: var(--pink); } .meter.family .fill { background: var(--green); } .meter.conf .fill { background: var(--yellow); }
+    .meter.low .track { box-shadow: 0 0 0 3px var(--orange); }
+    .counts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 14px; }
+    .count { border: 2.5px solid var(--ink); border-radius: 14px; padding: 6px 10px; background: var(--cream); text-align: center; }
+    .count span { display: block; font-size: .78rem; font-weight: 700; }
+    .count b { font-family: var(--display); font-weight: 400; font-size: 1.5rem; line-height: 1.1; }
+    .progress { margin-top: 10px; font-size: .82rem; font-weight: 700; }
+
+    .stage { padding: 26px 26px 24px; }
+    .stage .pill { background: var(--pink); margin-bottom: 10px; }
+    .stage h2 { font-weight: 900; font-size: 1.5rem; line-height: 1.4; }
+    .stage .ev-text { margin: 10px 0 18px; font-size: 1.02rem; }
+    .choices { display: grid; gap: 12px; }
+    .choice { text-align: left; background: #fff; border: var(--line); border-radius: 18px; padding: 12px 16px; cursor: pointer; box-shadow: 4px 4px 0 var(--ink); transition: transform .15s, box-shadow .15s, background .15s; font-size: .98rem; }
+    .choice:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); background: var(--cream); }
+    .choice b { display: block; font-weight: 900; }
+    .choice small { display: block; font-size: .82rem; font-weight: 500; margin-top: 2px; }
+    .result-note { margin-top: 16px; border: 2.5px dashed var(--ink); border-radius: 16px; padding: 12px 16px; background: var(--cream); font-weight: 700; }
+
+    .log { padding: 18px 18px 14px; position: sticky; top: 92px; max-height: calc(100vh - 110px); display: flex; flex-direction: column; }
+    .log h3 { font-weight: 900; font-size: 1.1rem; margin-bottom: 8px; }
+    .log ol { list-style: none; overflow: auto; display: grid; gap: 8px; font-size: .86rem; padding-right: 4px; }
+    .log li { border-left: 4px solid var(--ink); padding: 2px 0 2px 10px; line-height: 1.55; }
+    .log li .wk { font-weight: 900; margin-right: 4px; }
+    .log li.good { border-color: var(--green); } .log li.bad { border-color: var(--orange); }
+
+    /* Result */
+    .result { padding: 30px; text-align: center; }
+    .result .pill { margin-bottom: 12px; }
+    .result .pill.live { background: var(--mint); } .result .pill.stop { background: var(--peach); }
+    .result h2 { font-weight: 900; font-size: clamp(1.8rem, 4.5vw, 2.6rem); line-height: 1.3; }
+    .result .end-text { max-width: 620px; margin: 12px auto 0; font-size: 1.02rem; }
+    .score { font-family: var(--display); font-size: 4.4rem; line-height: 1; margin-top: 18px; }
+    .score small { font-size: .35em; margin-left: 4px; }
+    .veto { display: inline-block; margin-top: 8px; background: #FFF0EA; border: 2.5px solid var(--orange); border-radius: 12px; padding: 6px 12px; font-weight: 700; font-size: .9rem; }
+    .dims { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 22px auto 0; max-width: 760px; }
+    .dim { border: 2.5px solid var(--ink); border-radius: 14px; padding: 8px 10px; background: #fff; }
+    .dim span { display: block; font-size: .8rem; font-weight: 700; }
+    .dim b { font-family: var(--display); font-weight: 400; font-size: 1.5rem; }
+    .dim i { display: block; height: 8px; border: 2px solid var(--ink); border-radius: 999px; overflow: hidden; background: var(--paper); margin-top: 4px; }
+    .dim i::after { content: ""; display: block; height: 100%; width: var(--w); background: var(--yellow); }
+    .rec { max-width: 760px; margin: 26px auto 0; text-align: left; display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: center; border: var(--line); border-radius: 20px; padding: 18px 20px; background: var(--yellow); box-shadow: 6px 6px 0 var(--ink); }
+    .rec .code { font-family: var(--display); font-size: 3rem; line-height: 1; width: 72px; height: 72px; display: grid; place-items: center; border: var(--line); border-radius: 50%; background: #fff; }
+    .rec h3 { font-weight: 900; font-size: 1.15rem; line-height: 1.45; }
+    .rec p { font-size: .92rem; margin-top: 2px; }
+    .rec .acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .result-acts { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+    .copied { font-weight: 700; margin-top: 10px; min-height: 1.75em; }
+
+    /* Records + codex */
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; }
+    .box { padding: 22px 24px; }
+    .box h2 { font-weight: 900; font-size: 1.35rem; margin-bottom: 4px; }
+    .box > p { font-size: .88rem; font-weight: 500; margin-bottom: 12px; }
+    .recs { list-style: none; display: grid; gap: 8px; max-height: 360px; overflow: auto; }
+    .recs li { display: grid; grid-template-columns: 52px 1fr; gap: 10px; align-items: center; border: 2.5px solid var(--ink); border-radius: 14px; padding: 8px 12px; background: #fff; font-size: .86rem; line-height: 1.5; }
+    .recs li b.s { font-family: var(--display); font-weight: 400; font-size: 1.5rem; text-align: center; }
+    .recs .empty { display: block; border-style: dashed; text-align: center; font-weight: 700; background: var(--cream); }
+    .codex { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .codex .ec { border: 2.5px solid var(--ink); border-radius: 14px; padding: 10px 12px; font-size: .84rem; line-height: 1.5; background: #fff; }
+    .codex .ec b { display: block; font-weight: 900; font-size: .95rem; }
+    .codex .ec.live.got { background: var(--mint); } .codex .ec.stop.got { background: var(--peach); }
+    .codex .ec:not(.got) { border-style: dashed; color: #6F6F6F; background: #F4F6F8; }
+    .codex-sum { margin-top: 12px; font-weight: 900; }
+    .clear { margin-top: 12px; background: none; border: 0; font-weight: 700; text-decoration: underline; cursor: pointer; font-size: .86rem; }
+
+    .notice { margin-top: 56px; padding: 16px 20px; border: 2.5px dashed var(--ink); border-radius: 20px; background: var(--cream); font-size: .88rem; font-weight: 500; }
+    footer { margin-top: 56px; background: var(--ink); color: #fff; padding: 32px 0; text-align: center; font-size: .9rem; }
+    footer nav { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin: 10px 0; }
+    footer .small { opacity: .7; font-size: .82rem; }
+
+    @media (max-width: 980px) {
+      .game { grid-template-columns: 1fr; }
+      .log { position: static; max-height: 320px; }
+      .rules { grid-template-columns: repeat(3, 1fr); }
+      .two { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      .draw { grid-template-columns: 1fr; }
+      .start-sum { grid-template-columns: 1fr; }
+      .dims { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 640px) {
+      header { position: static; }
+      header nav a:not(.nav-cta), header nav button { display: none; }
+      .bar { border-radius: 22px; }
+      .wrap { padding: 0 16px; }
+      .hero { padding: 36px 18px 30px; }
+      .rules { grid-template-columns: 1fr 1fr; }
+      .stage, .result, .box { padding: 20px 18px; }
+      .meters { grid-template-columns: 1fr; gap: 8px; }
+      .counts { grid-template-columns: 1fr 1fr; }
+      .weeks i { width: 12px; height: 12px; }
+      .rec { grid-template-columns: 1fr; }
+      .codex { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .dcard.pop { animation: none; }
+      * { transition: none !important; }
+    }
+  </style>
+</head>
+<!-- LINE 官方帳號加好友連結，與 index.html 相同 -->
+<body data-line-url="https://lin.ee/7j3Hi2Z">
+  <a class="skip-link" href="#main-content">跳至主要內容</a>
+  <header>
+    <div class="wrap">
+      <div class="bar">
+        <a class="brand" href="index.html"><b>AI</b>數位職涯培育 × 阿茲</a>
+        <nav aria-label="遊戲導覽">
+          <button type="button" data-go="setup">抽三張牌</button>
+          <button type="button" data-go="daily">今日挑戰</button>
+          <a href="#records">我的紀錄</a>
+          <a href="#codex">結局圖鑑</a>
+          <a class="nav-cta" href="https://lin.ee/7j3Hi2Z" data-line>LINE 諮詢</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="wrap">
+    <!-- Intro -->
+    <section class="panel hero" id="intro" aria-labelledby="hero-title">
+      <span class="pill">職涯重啟模擬・8 分鐘一輪</span>
+      <div class="hero-num" aria-hidden="true">90<small>天</small></div>
+      <h1 id="hero-title">重新上場的 90 天</h1>
+      <p class="lead">起點你選不了：離開職場多久、家裡需要你多少、AI 會到哪裡。<br>但這 12 週<span class="hl">每一週怎麼過，是你選的</span>。</p>
+      <div class="rules">
+        <div class="rule"><b>抽三張起點牌</b>你的狀況、想去的方向、AI 程度。每張可以重抽一次。</div>
+        <div class="rule"><b>每三週選節奏</b>猛投履歷、專心做作品、邊學邊顧家，或先喘口氣。</div>
+        <div class="rule"><b>每週一件事</b>已讀不回、家人一句話、程式跑不動。很多人卡在這裡。</div>
+        <div class="rule"><b>第 12 週選出口</b>接下工作、開始接單、先兼職，或先停下來。</div>
+        <div class="rule"><b>五項一起算</b>收入、作品、自信、精力、家人。精力或家人見底，分數再高也不算贏。</div>
+      </div>
+      <p class="hero-meta">紀錄只存在你這台裝置，不用註冊，什麼都不上傳。</p>
+      <div class="modes">
+        <button class="btn big" type="button" data-go="setup">抽我的三張牌 →</button>
+        <button class="btn big light" type="button" data-go="daily">今日挑戰</button>
+      </div>
+      <p class="nojs">這個遊戲需要開啟 JavaScript 才能玩。</p>
+    </section>
+
+    <!-- Setup -->
+    <section class="block" id="setup" aria-labelledby="setup-title" hidden>
+      <div class="sec-head">
+        <span class="kicker">01 · Your Start</span>
+        <h2 class="big-title" id="setup-title">你的起點</h2>
+        <p id="setup-sub">三張牌決定你每週有多少時間、做一份作品要多久、履歷被看見的機會。</p>
+      </div>
+      <div class="draw" id="draw"></div>
+      <div class="panel start-sum">
+        <ul id="start-stats"></ul>
+        <button class="btn big" type="button" id="start-run">就這樣，開始 →</button>
+      </div>
+    </section>
+
+    <!-- Game -->
+    <section class="block" id="game" aria-label="遊戲進行中" hidden>
+      <div class="panel hud" id="hud"></div>
+      <div class="game">
+        <div class="panel stage" id="stage" aria-live="polite"></div>
+        <aside class="panel log" aria-labelledby="log-title">
+          <h3 id="log-title">重啟日誌</h3>
+          <ol id="log"></ol>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Result -->
+    <section class="block" id="result" aria-label="結局" hidden>
+      <div class="panel result" id="result-box"></div>
+    </section>
+
+    <!-- Records + Codex -->
+    <section class="block two" aria-label="紀錄與圖鑑">
+      <div class="panel box" id="records">
+        <h2>我的紀錄</h2>
+        <p>每一輪的結局和分數，只存在這台裝置的瀏覽器。</p>
+        <ol class="recs" id="recs"></ol>
+        <button class="clear" type="button" id="clear-recs">清除全部紀錄</button>
+      </div>
+      <div class="panel box" id="codex">
+        <h2>結局圖鑑</h2>
+        <p>四種繼續走下去的方式，三種先停下來的方式。</p>
+        <div class="codex" id="codex-list"></div>
+        <p class="codex-sum" id="codex-sum"></p>
+      </div>
+    </section>
+
+    <p class="notice">這是模擬遊戲：事件和機率是為了好玩設計的，不代表真實的求職、錄取或接案機率。課程本身也不保證就業或收入，重點是做出看得見、說得清楚的作品。</p>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p>重新上場的 90 天｜AI 數位職涯培育 × 阿茲</p>
+      <nav aria-label="頁尾導覽">
+        <a href="index.html">回課程首頁</a>
+        <a href="index.html#diagnose">對症找課</a>
+        <a href="index.html#cards">方案詳情</a>
+        <a href="https://lin.ee/7j3Hi2Z" data-line>LINE 文字諮詢</a>
+      </nav>
+      <p class="small">遊戲概念參考「開公司的人生」與「自媒體人生」模擬遊戲。</p>
+    </div>
+  </footer>
+
+  <script>
+  (function () {
+    "use strict";
+    const LINE = document.body.dataset.lineUrl;
+    const $ = (s) => document.querySelector(s);
+    const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    document.querySelectorAll("[data-line]").forEach((a) => { a.href = LINE; a.target = "_blank"; a.rel = "noopener"; });
+
+    /* ---------- 亂數：今日挑戰用日期當種子，大家抽到一樣的牌和事件 ---------- */
+    function mulberry32(a) {
+      return function () {
+        a |= 0; a = (a + 0x6D2B79F5) | 0;
+        let t = Math.imul(a ^ (a >>> 15), 1 | a);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+    function todayKey() {
+      const d = new Date();
+      return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    }
+
+    /* ---------- 起點牌 ---------- */
+    const WHO = [
+      { id: "carer", name: "離開職場三年的照顧者", desc: "家裡一直需要你。時間零碎，但很會排事情。", hours: 10, energy: 80, family: 75, conf: 40 },
+      { id: "switch", name: "想換跑道的上班族", desc: "白天還要上班，能用的只有晚上和週末。", hours: 7, energy: 60, family: 60, conf: 60 },
+      { id: "grad", name: "畢業兩年還在找方向", desc: "時間很多，履歷很空，家人很常問。", hours: 20, energy: 85, family: 55, conf: 45 },
+      { id: "laidoff", name: "四十五歲剛被資遣", desc: "經驗很多，但面試官好像比較想要年輕人。", hours: 16, energy: 70, family: 65, conf: 35 },
+      { id: "side", name: "在家接小案的斜槓", desc: "接過幾個小案子，收入時有時無。", hours: 12, energy: 70, family: 65, conf: 55, works: 1 }
+    ];
+    const DIR = [
+      { id: "admin", name: "行政／助理", desc: "職缺多、門檻不高，但大家都在投。", cost: 14, vis: 1.2, course: "B" },
+      { id: "ops", name: "數位營運助理", desc: "要會整理資料、做點小工具。", cost: 20, vis: 1.0, course: "C" },
+      { id: "studio", name: "自己的接單工作室", desc: "不用面試，但要有人願意下單。", cost: 26, vis: 0.7, course: "D" },
+      { id: "aiapp", name: "AI 應用助理", desc: "新職缺，大家都還在摸索要什麼人。", cost: 22, vis: 0.9, course: "E" }
+    ];
+    const LVL = [
+      { id: "zero", name: "幾乎沒碰過 AI", desc: "聽過 ChatGPT，還沒真的用過。", mult: 1.5, conf: -5 },
+      { id: "chat", name: "會跟 ChatGPT 聊天", desc: "問過問題、改過文章，但沒拿來做作品。", mult: 1.0, conf: 0 },
+      { id: "tool", name: "表格和小工具都會一點", desc: "Excel 公式、表單都弄過。", mult: 0.75, conf: 5 }
+    ];
+
+    /* ---------- 每三週選一次的節奏 ---------- */
+    const PACE = [
+      { id: "sprint", name: "全力投履歷", note: "每週投很多，作品先放著。", applies: 6, build: 0.2, d: { energy: -12, family: -5 } },
+      { id: "build", name: "專心做作品", note: "少投一點，先做出拿得出手的東西。", applies: 1, build: 0.9, d: { energy: -7, family: -2 } },
+      { id: "balance", name: "邊學邊顧家", note: "慢，但每週都有一點進度。", applies: 2, build: 0.45, d: { energy: -3, family: 4 } },
+      { id: "rest", name: "先喘口氣", note: "這三週什麼都不衝。", applies: 0, build: 0, d: { energy: 12, family: 2, conf: -2 } }
+    ];
+
+    /* ---------- 每週事件；fx 回傳寫進日誌的那一句 ---------- */
+    const EVENTS = [
+      { id: "first", fixed: 1, title: "投出第一批履歷", text: "你把履歷整理好，投了出去。三天過去：已讀，沒有回。",
+        choices: [
+          { t: "再投一輪", s: "數量先衝上去再說", fx: (S) => { add(S, { applies: 4, energy: -5 }); return "又投了 4 封。至少不是什麼都沒做。"; } },
+          { t: "回頭改履歷，把做過的事寫具體", s: "少投，先修", fx: (S) => { add(S, { conf: 6, energy: -3 }); S.vis += 0.1; return "你發現過去其實做過很多事，只是沒寫出來。"; } },
+          { t: "關掉求職網站一天", s: "", fx: (S) => { add(S, { energy: 6 }); return "那天你好好吃了一頓飯。"; } }
+        ] },
+      { id: "family-talk", title: "家人的一句話", text: "晚餐時家人說：「都這個年紀了，何必這麼累？」",
+        choices: [
+          { t: "好好聊一次你的計畫", s: "會累，但值得", fx: (S) => { add(S, { family: 8, energy: -4 }); return "說完之後，家人問你需要什麼幫忙。"; } },
+          { t: "先不吵，繼續做", s: "", fx: (S) => { add(S, { family: -7, conf: -2 }); return "這件事沒有消失，只是被放著。"; } },
+          { t: "把一部分家務外包出去", s: "花錢買時間", fx: (S) => { add(S, { family: 3, income: -1500, energy: 4 }); S.hours += 1; return "每週多出一點時間，荷包少了一點。"; } }
+        ] },
+      { id: "poster", title: "朋友找你幫忙", text: "朋友的店要辦活動，問你能不能幫忙做張海報，說會給一點車馬費。",
+        choices: [
+          { t: "接，用 AI 做三版給她挑", s: "也算一件作品", fx: (S) => { add(S, { works: 1, income: 1500, energy: -6, conf: 4 }); return "她挑了第二版，還問你能不能做菜單。"; } },
+          { t: "免費幫，當練習", s: "", fx: (S) => { add(S, { works: 1, energy: -5, conf: 3 }); return "沒賺錢，但你多了一件可以給人看的東西。"; } },
+          { t: "婉拒，專心求職", s: "", fx: (S) => { add(S, { applies: 2 }); return "你多投了兩封履歷。"; } }
+        ] },
+      { id: "sub", title: "AI 工具的帳單", text: "免費額度用完了。付費版一個月 NT$600 多，學費可沒包這個。",
+        choices: [
+          { t: "訂下去", s: "之後做東西會快一點", fx: (S) => { add(S, { income: -650 }); S.aiPaid = true; return "訂了。做作品的速度明顯變快。"; } },
+          { t: "先用免費版撐著", s: "", fx: (S) => { add(S, { conf: -2 }); return "常常跑到一半說額度用完，只好隔天再來。"; } }
+        ] },
+      { id: "sick", title: "家裡有人病了", text: "這週家裡有人發燒，整個行程都亂了。",
+        choices: [
+          { t: "全心照顧，其他先停", s: "", fx: (S) => { add(S, { family: 10, energy: -8 }); S.skipBuild = true; return "這週沒有進度，但家人知道你在。"; } },
+          { t: "跟家人排班輪流", s: "", fx: (S) => { add(S, { family: -3, energy: -4 }); return "辛苦，但你還是保住了兩個晚上。"; } }
+        ] },
+      { id: "fear", title: "滑到一篇文章", text: "標題寫：「AI 三年內將取代 80% 行政工作」。留言區一片哀號。",
+        choices: [
+          { t: "越看越焦慮，滑了兩小時", s: "", fx: (S) => { add(S, { conf: -8, energy: -3 }); return "看完什麼都沒變，只是更累。"; } },
+          { t: "去看職缺到底寫了什麼", s: "", fx: (S) => { add(S, { conf: 5, energy: -2 }); S.vis += 0.05; return "很多職缺寫的是「會用 AI 工具者佳」，不是「不要人」。"; } }
+        ] },
+      { id: "bug", when: (S) => S.works >= 1 || S.wp > 3, title: "作品跑不動了", text: "做到一半，畫面一片白，跳出一串看不懂的紅字。",
+        choices: [
+          { t: "把錯誤訊息貼給 AI，一步步問", s: "", fx: (S) => { add(S, { conf: 6, energy: -6 }); S.wp += 4; return "問了七次，修好了。你好像有點懂它在說什麼了。"; } },
+          { t: "去社團發問", s: "", fx: (S) => { add(S, { conf: 2, energy: -3 }); S.wp += 2; return "有人回你，還順便教你怎麼問問題。"; } },
+          { t: "先放著，改天再說", s: "", fx: (S) => { add(S, { conf: -5, energy: 3 }); return "那個檔案你一週都沒打開。"; } }
+        ] },
+      { id: "oldboss", title: "舊同事傳訊息", text: "「我們這邊缺人，要不要回來做兼職？一週兩天。」",
+        choices: [
+          { t: "答應，先有收入", s: "", fx: (S) => { add(S, { income: 8000, energy: -9, conf: 4 }); S.hours -= 2; return "有收入了。能做作品的時間少了。"; } },
+          { t: "問能不能遠端，順便用 AI 幫他們整理資料", s: "", fx: (S) => { add(S, { income: 5000, conf: 7, energy: -6, works: 1 }); return "對方很驚訝你會這個。這份工作變成你的第一個實際案例。"; } },
+          { t: "謝謝，先婉拒", s: "", fx: (S) => { add(S, { conf: 2 }); return "你想先試試自己的方向。"; } }
+        ] },
+      { id: "flat", when: (S) => S.week >= 4 && S.interviews === 0, title: "數字一直沒動", text: "好幾週了，投遞數一直加，面試數一直是 0。",
+        choices: [
+          { t: "換一批職缺投", s: "", fx: (S) => { add(S, { applies: 4, energy: -4 }); S.vis += 0.1; return "你開始投一些以前覺得「我不夠格」的職缺。"; } },
+          { t: "把心力放回作品", s: "", fx: (S) => { S.wp += S.hours * 0.5; add(S, { energy: -4 }); return "履歷上能寫的東西變多了。"; } },
+          { t: "跟朋友抱怨一個晚上", s: "", fx: (S) => { add(S, { energy: 5, conf: 2 }); return "朋友說她當年也是投了五十封才有一個面試。"; } }
+        ] },
+      { id: "askline", title: "社團裡有人問", text: "「有沒有人會做 LINE 接單？我們的團購訂單快亂成一團了。」",
+        choices: [
+          { t: "舉手說：我可以試試", s: "需要一點作品撐腰", fx: (S) => {
+            if (S.works >= 2) { add(S, { income: 6000, conf: 10, energy: -8, works: 1 }); S.client = true; return "你拿出之前的作品，對方當場說好。第一個付費案子。"; }
+            add(S, { conf: -6, energy: -6 }); return "對方問你有沒有做過的例子，你一時拿不出來。"; } },
+          { t: "默默收藏，回去研究", s: "", fx: (S) => { S.wp += 3; add(S, { conf: 2 }); return "你把這個需求記下來，當成作品的題目。"; } }
+        ] },
+      { id: "gap", title: "面試前的電話", text: "人資在電話裡問：「你履歷上有一段空白，那幾年在做什麼？」",
+        choices: [
+          { t: "照實說，再講這段時間學了什麼", s: "", fx: (S) => { add(S, { conf: 6 }); S.vis += 0.08; return "對方說：「這樣講很清楚。」"; } },
+          { t: "含糊帶過", s: "", fx: (S) => { add(S, { conf: -5 }); return "掛掉電話後你一直想，剛剛應該怎麼說。"; } }
+        ] },
+      { id: "sleep", title: "只睡了五個小時", text: "連續一週都弄到半夜，鏡子裡的人看起來好累。",
+        choices: [
+          { t: "硬撐，這週一定要做完", s: "", fx: (S) => { add(S, { energy: -12 }); S.wp += S.hours * 0.4; return "做完了一大段。也真的很累。"; } },
+          { t: "把待辦刪掉一半", s: "", fx: (S) => { add(S, { energy: 9, conf: 1 }); return "刪掉的那一半，後來發現其實也不急。"; } }
+        ] },
+      { id: "helper", title: "家人主動幫忙", text: "家人說：「這週末我來顧，你去做你的東西。」",
+        choices: [
+          { t: "好，謝謝你", s: "", fx: (S) => { S.wp += 6; add(S, { family: 5, energy: -2 }); return "一整個下午沒人打擾，你做了好多。"; } },
+          { t: "不用啦，我自己來", s: "", fx: (S) => { add(S, { family: -2, energy: -4 }); return "其實你很需要，只是不好意思說。"; } }
+        ] },
+      { id: "scam", title: "免費講座的廣告", text: "「三天學會 AI，月入十萬不是夢！」限時名額，現在報名送教材。",
+        choices: [
+          { t: "報名看看", s: "", fx: (S) => { add(S, { income: -3000, conf: -6, energy: -4 }); return "三天後你買了一套課，但還是不知道自己能做出什麼。"; } },
+          { t: "滑過去", s: "", fx: (S) => { add(S, { conf: 2 }); return "能教會你的課，會先說清楚你學完能做出什麼。"; } }
+        ] },
+      { id: "showcase", when: (S) => S.works >= 2, title: "要不要公開作品", text: "你做了好幾個東西，都還躺在電腦裡。",
+        choices: [
+          { t: "整理成一頁作品集貼出去", s: "", fx: (S) => { add(S, { conf: 7, energy: -5 }); S.vis += 0.2; return "有兩個人私訊你，問這是怎麼做的。"; } },
+          { t: "還不夠好，再改改", s: "", fx: (S) => { S.wp += 2; add(S, { conf: -2 }); return "又改了一版。還是沒有人看到。"; } }
+        ] },
+      { id: "kid", title: "週末的約定", text: "家裡的小朋友問你：「這週六可以去公園嗎？你上次說好的。」",
+        choices: [
+          { t: "去，整天不碰電腦", s: "", fx: (S) => { add(S, { family: 9, energy: 5 }); S.skipBuild = true; return "回家的路上她睡著了。你覺得這天很值得。"; } },
+          { t: "帶筆電去，邊看邊做", s: "", fx: (S) => { add(S, { family: -5, energy: -3 }); S.wp += 2; return "她玩了一下就跑回來問你在幹嘛。"; } }
+        ] }
+    ];
+    const INTERVIEW = { id: "interview", title: "收到面試邀請！", text: "對方約你下週二下午聊聊。職缺最後一行寫著：「熟悉 AI 工具者佳」。",
+      choices: [
+        { t: "帶著作品去，當場打開給對方看", s: "", fx: (S) => {
+          if (S.works >= 1) { add(S, { conf: 10, energy: -5 }); S.goodInterviews++; return "對方看了你的作品，問了很多問題。這是好事。"; }
+          add(S, { conf: -6, energy: -5 }); return "你想打開作品，才想起還沒有作品可以打開。"; } },
+        { t: "熬兩晚準備常見問題", s: "", fx: (S) => { add(S, { conf: 5, energy: -9 }); if (S.conf >= 60) S.goodInterviews++; return "問題都有準備到。只是一直打呵欠。"; } },
+        { t: "臨時說有事，改期", s: "", fx: (S) => { S.interviews--; add(S, { conf: -5, energy: 3 }); return "改期之後，對方就沒再聯絡了。"; } }
+      ] };
+
+    /* ---------- 結局 ---------- */
+    const ENDINGS = {
+      restart: { live: true, name: "重新上場", text: "你拿到一份工作。不是夢幻職缺，但第一天上班，你知道自己是帶著東西進去的。" },
+      studio: { live: true, name: "小小工作室開張", text: "第一張訂單從 LINE 進來。你不用等誰錄取，但要自己找下一張單。" },
+      slow: { live: true, name: "慢慢來也算數", text: "你先接了兼職，一邊有收入，一邊把作品慢慢做好。速度不快，但沒有停。" },
+      portfolio: { live: true, name: "作品先替你說話", text: "還沒有 offer，但你手上的作品已經能打開給人看。下一輪面試，你會不一樣。" },
+      burnout: { live: false, name: "燒完了", text: "你太用力了。精力見底的時候，就算面試機會來了，也接不住。" },
+      redlight: { live: false, name: "家裡亮紅燈", text: "你衝得很快，回頭才發現家裡的人好久沒跟你好好說話。" },
+      pause: { live: false, name: "先下場休息", text: "這 90 天你沒有找到出口。先停下來不丟臉，想清楚了再上場。" }
+    };
+    const ORDER = ["restart", "studio", "slow", "portfolio", "burnout", "redlight", "pause"];
+
+    const COURSES = {
+      A: { name: "A｜AI 職場實用工具一日班", price: "NT$8,800", why: "先用一天做出文案、圖片、簡報、短影音四類作品，做過一次就知道 AI 能幫你什麼。" },
+      B: { name: "B｜AI 工作任務實作班", price: "NT$14,800", why: "練習把一件辦公室工作從接任務做到放心交付，面試時講得出你怎麼用 AI 做事。" },
+      C: { name: "C｜AI 協作程式設計與網頁工具實作班", price: "NT$20,000", why: "把工作上的表格登記做成能操作的網頁工具，帶走原始碼和展示網址。" },
+      D: { name: "D｜LINE OA × AI 工作流進階班", price: "NT$20,000", why: "讓 LINE 能接單、後台能管理，工作室的第一套接單系統自己做。" },
+      E: { name: "E｜AI 數位轉職作品強化方案", price: "NT$29,800", why: "C 或 D 擇一，加四週把共同作品改成貼近你經歷的個人專題，轉職時拿得出來。" }
+    };
+
+    /* ---------- 狀態 ---------- */
+    let S = null;
+    let setup = null;
+
+    function clamp(v) { return Math.max(0, Math.min(100, Math.round(v))); }
+    function add(S, d) {
+      for (const k in d) {
+        if (k === "energy" || k === "family" || k === "conf") S[k] = clamp(S[k] + d[k]);
+        else S[k] = Math.max(0, S[k] + d[k]);
+      }
+    }
+    function workCost() { return Math.round(setup.dir.cost * setup.lvl.mult); }
+
+    function drawOne(list, rng, notId) {
+      const pool = list.filter((x) => x.id !== notId);
+      return pool[Math.floor(rng() * pool.length)];
+    }
+
+    function newSetup(daily) {
+      const seed = daily ? Number(todayKey().replace(/-/g, "")) : Math.floor(Math.random() * 2 ** 31);
+      const rng = mulberry32(seed);
+      setup = { daily, seed, rng, who: drawOne(WHO, rng), dir: drawOne(DIR, rng), lvl: drawOne(LVL, rng), redrawn: { who: daily, dir: daily, lvl: daily } };
+      renderSetup();
+      show("setup");
+    }
+
+    function renderSetup() {
+      const slots = [["who", "你的狀況", "WHO", WHO], ["dir", "想去的方向", "GOAL", DIR], ["lvl", "AI 程度", "AI", LVL]];
+      $("#setup-sub").innerHTML = setup.daily
+        ? '<span class="pill daily-tag">今日挑戰 ' + todayKey() + '</span><br>今天每個人抽到的牌和遇到的事件都一樣，不能重抽，只有你的決定不同。'
+        : "三張牌決定你每週有多少時間、做一份作品要多久、履歷被看見的機會。每張可以重抽一次。";
+      $("#draw").innerHTML = slots.map(([k, label, en]) => {
+        const c = setup[k];
+        let fx = [];
+        if (k === "who") fx = ["每週 " + c.hours + " 小時", "精力 " + c.energy, "家人 " + c.family, "自信 " + c.conf];
+        if (k === "dir") fx = ["被看見 ×" + c.vis, "作品基本 " + c.cost + " 小時"];
+        if (k === "lvl") fx = ["作品耗時 ×" + c.mult, c.conf ? "自信 " + (c.conf > 0 ? "+" : "") + c.conf : "自信不變"];
+        return '<article class="dcard" data-slot="' + k + '"><div class="d-head">' + label + '<span>' + en + '</span></div><div class="d-body">' +
+          '<h3>' + esc(c.name) + '</h3><p>' + esc(c.desc) + '</p><div class="fx">' + fx.map((f) => "<span>" + f + "</span>").join("") + '</div>' +
+          (setup.daily ? "" : '<button class="redraw" type="button" data-redraw="' + k + '"' + (setup.redrawn[k] ? " disabled" : "") + '>' + (setup.redrawn[k] ? "已重抽" : "重抽這張") + '</button>') +
+          '</div></article>';
+      }).join("");
+      const conf = clamp(setup.who.conf + setup.lvl.conf);
+      $("#start-stats").innerHTML =
+        "<li>每週時間<b>" + setup.who.hours + "h</b></li><li>一份作品約<b>" + workCost() + "h</b></li><li>被看見<b>×" + setup.dir.vis + "</b></li><li>起始自信<b>" + conf + "</b></li>";
+    }
+
+    $("#draw").addEventListener("click", (e) => {
+      const b = e.target.closest("[data-redraw]");
+      if (!b || b.disabled) return;
+      const k = b.dataset.redraw;
+      const list = { who: WHO, dir: DIR, lvl: LVL }[k];
+      setup[k] = drawOne(list, Math.random, setup[k].id);
+      setup.redrawn[k] = true;
+      renderSetup();
+      const card = document.querySelector('.dcard[data-slot="' + k + '"]');
+      card.classList.add("pop");
+      card.querySelector(".redraw").focus();
+    });
+
+    $("#start-run").addEventListener("click", () => {
+      const w = setup.who;
+      S = {
+        rng: mulberry32(setup.seed + 7), week: 0, pace: null,
+        energy: w.energy, family: w.family, conf: clamp(w.conf + setup.lvl.conf),
+        hours: w.hours, works: w.works || 0, wp: 0, vis: setup.dir.vis,
+        applies: 0, interviews: 0, goodInterviews: 0, income: 0,
+        aiPaid: false, client: false, skipBuild: false, used: [], log: []
+      };
+      log("起點：" + w.name + "，想往「" + setup.dir.name + "」走，AI 程度是「" + setup.lvl.name + "」。", "");
+      show("game");
+      renderPace();
+    });
+
+    function log(text, cls) {
+      S.log.unshift({ wk: S.week, text, cls });
+      $("#log").innerHTML = S.log.map((l) => '<li class="' + (l.cls || "") + '">' + (l.wk ? '<span class="wk">W' + l.wk + "</span>" : "") + esc(l.text) + "</li>").join("");
+    }
+
+    function renderHud() {
+      const m = (cls, label, v) => '<div class="meter ' + cls + (v < 25 ? " low" : "") + '"><b><span>' + label + "</span><span>" + v + '</span></b><div class="track" role="meter" aria-label="' + label + '" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + v + '"><div class="fill" style="width:' + v + '%"></div></div></div>';
+      const dots = Array.from({ length: 12 }, (_, i) => "<i class='" + (i + 1 < S.week ? "done" : i + 1 === S.week ? "now" : "") + "'></i>").join("");
+      const pct = Math.min(100, Math.round((S.wp / workCost()) * 100));
+      $("#hud").innerHTML =
+        '<div class="hud-top"><div class="when">第<b>' + Math.max(1, S.week) + "</b>週／12" + (S.pace ? "・" + S.pace.name : "") + '</div><div class="weeks" aria-hidden="true">' + dots + "</div></div>" +
+        '<div class="meters">' + m("energy", "精力", S.energy) + m("family", "家人", S.family) + m("conf", "自信", S.conf) + "</div>" +
+        '<div class="counts"><div class="count"><span>作品</span><b>' + S.works + '</b></div><div class="count"><span>投遞</span><b>' + S.applies + '</b></div><div class="count"><span>面試</span><b>' + S.interviews + '</b></div><div class="count"><span>收入 NT$</span><b>' + S.income.toLocaleString() + "</b></div></div>" +
+        '<p class="progress">下一份作品進度：' + pct + "%" + (S.aiPaid ? "（付費 AI 加速中）" : "") + "</p>";
+    }
+
+    function renderPace() {
+      renderHud();
+      const phase = Math.floor(S.week / 3) + 1;
+      $("#stage").innerHTML = '<span class="pill">第 ' + phase + " 段・第 " + (S.week + 1) + "–" + (S.week + 3) + ' 週</span><h2>接下來三週，你打算怎麼過？</h2><p class="ev-text">選了就會跟著你三週，每一種都有代價。</p><div class="choices">' +
+        PACE.map((p, i) => '<button class="choice" type="button" data-pace="' + i + '"><b>' + p.name + "</b><small>" + p.note + "</small></button>").join("") + "</div>";
+      focusStage();
+    }
+
+    function nextWeek() {
+      S.week++;
+      const p = S.pace;
+      add(S, p.d);
+      add(S, { applies: p.applies });
+      if (!S.skipBuild) S.wp += S.hours * p.build * (S.aiPaid ? 1.3 : 1);
+      S.skipBuild = false;
+      while (S.wp >= workCost()) { S.wp -= workCost(); S.works++; log("完成一份作品！現在手上有 " + S.works + " 份。", "good"); }
+
+      // 這週的投遞換算成面試機會：作品越多、自信越高，越容易被約
+      const chance = Math.min(0.7, p.applies * 0.035 * S.vis * (1 + 0.35 * S.works) * (0.5 + S.conf / 100));
+      const gotInterview = p.applies > 0 && S.rng() < chance;
+      if (gotInterview) S.interviews++;
+
+      if (checkFail()) return;
+      renderHud();
+      let ev;
+      if (gotInterview) ev = INTERVIEW;
+      else ev = EVENTS.find((e) => e.fixed === S.week);
+      if (!ev) {
+        const pool = EVENTS.filter((e) => !e.fixed && !S.used.includes(e.id) && (!e.when || e.when(S)));
+        ev = pool[Math.floor(S.rng() * pool.length)];
+      }
+      if (ev.id !== "interview") S.used.push(ev.id);
+      S.current = ev;
+      $("#stage").innerHTML = '<span class="pill">第 ' + S.week + " 週</span><h2>" + esc(ev.title) + '</h2><p class="ev-text">' + esc(ev.text) + '</p><div class="choices">' +
+        ev.choices.map((c, i) => '<button class="choice" type="button" data-choice="' + i + '"><b>' + esc(c.t) + "</b>" + (c.s ? "<small>" + esc(c.s) + "</small>" : "") + "</button>").join("") + "</div>";
+      focusStage();
+    }
+
+    function renderExit() {
+      renderHud();
+      const exits = [
+        ["job", "接下一份工作", "需要面試累積和一點把握"],
+        ["studio", "開始自己接單", "需要拿得出手的作品"],
+        ["part", "先兼職，邊做邊學", "穩一點，慢一點"],
+        ["pause", "先停下來", "這也是一個選擇"]
+      ];
+      $("#stage").innerHTML = '<span class="pill">第 12 週・最後一個決定</span><h2>90 天到了。接下來你要怎麼走？</h2><p class="ev-text">你手上有 ' + S.works + " 份作品、" + S.interviews + ' 次面試。</p><div class="choices">' +
+        exits.map(([id, t, s]) => '<button class="choice" type="button" data-exit="' + id + '"><b>' + t + "</b><small>" + s + "</small></button>").join("") + "</div>";
+      focusStage();
+    }
+
+    function focusStage() {
+      const first = $("#stage .choice");
+      if (first) first.focus({ preventScroll: true });
+      $("#stage").scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }
+
+    $("#stage").addEventListener("click", (e) => {
+      const b = e.target.closest("button");
+      if (!b) return;
+      if (b.dataset.pace) {
+        S.pace = PACE[Number(b.dataset.pace)];
+        log("接下來三週：" + S.pace.name + "。", "");
+        nextWeek();
+      } else if (b.dataset.choice) {
+        const c = S.current.choices[Number(b.dataset.choice)];
+        const before = S.energy + S.family + S.conf;
+        const note = c.fx(S);
+        log(c.t + "。" + note, S.energy + S.family + S.conf >= before ? "good" : "bad");
+        if (checkFail()) return;
+        if (S.week >= 12) renderExit();
+        else if (S.week % 3 === 0) renderPace();
+        else nextWeek();
+      } else if (b.dataset.exit) {
+        finish(pickEnding(b.dataset.exit));
+      }
+    });
+
+    function checkFail() {
+      if (S.energy <= 0) { finish("burnout"); return true; }
+      if (S.family <= 0) { finish("redlight"); return true; }
+      return false;
+    }
+
+    /* 第 12 週的出口 + 目前狀態 → 結局 */
+    function pickEnding(exit) {
+      let end;
+      if (exit === "job") {
+        const hired = (S.interviews >= 2 && (S.goodInterviews >= 1 || S.works >= 2)) || S.interviews >= 4;
+        end = hired ? "restart" : S.works >= 3 ? "portfolio" : "pause";
+      } else if (exit === "studio") {
+        end = (S.works >= 3 && S.conf >= 50) || S.client ? "studio" : S.works >= 2 ? "portfolio" : "pause";
+      } else if (exit === "part") {
+        end = "slow";
+      } else {
+        end = "pause";
+      }
+      // 紅燈否決：活下來的結局，精力或家人太低就不算
+      if (ENDINGS[end].live && (S.energy < 15 || S.family < 15)) end = S.energy <= S.family ? "burnout" : "redlight";
+      return end;
+    }
+
+    function scoreOf() {
+      const dims = [
+        ["收入", Math.min(20, Math.round(S.income / 1000))],
+        ["作品", Math.min(20, S.works * 5)],
+        ["自信", Math.round(S.conf / 5)],
+        ["精力", Math.round(S.energy / 5)],
+        ["家人", Math.round(S.family / 5)]
+      ];
+      return { dims, total: dims.reduce((a, d) => a + d[1], 0) };
+    }
+
+    function courseFor(end) {
+      if (S.works === 0 || setup.lvl.id === "zero") return "A";
+      if (end === "studio" || setup.dir.id === "studio") return "D";
+      return setup.dir.course;
+    }
+
+    function finish(endId) {
+      const E = ENDINGS[endId];
+      const sc = scoreOf();
+      const code = courseFor(endId);
+      const C = COURSES[code];
+      const vetoed = !E.live && sc.total >= 60;
+      saveRecord(endId, sc.total);
+      const share = "我在《重新上場的 90 天》走到第 " + S.week + " 週，結局是「" + E.name + "」，" + sc.total + " 分。起點：" + setup.who.name + "／" + setup.dir.name + (setup.daily ? "（今日挑戰 " + todayKey() + "）" : "") + "。你也來抽三張牌：" + location.href.split("#")[0];
+      $("#result-box").innerHTML =
+        '<span class="pill ' + (E.live ? "live" : "stop") + '">' + (E.live ? "繼續走下去" : "先停下來") + "・第 " + S.week + " 週</span>" +
+        "<h2>" + E.name + '</h2><p class="end-text">' + E.text + "</p>" +
+        '<div class="score">' + sc.total + "<small>/100</small></div>" +
+        (vetoed ? '<p class="veto">分數不低，但精力或家人見底，這輪不算贏。</p>' : "") +
+        '<div class="dims">' + sc.dims.map(([n, v]) => '<div class="dim"><span>' + n + "</span><b>" + v + '</b><i style="--w:' + v * 5 + '%"></i></div>').join("") + "</div>" +
+        '<div class="rec"><div class="code">' + code + "</div><div><h3>如果是真的，建議從 " + C.name + " 開始</h3><p>" + C.why + "（" + C.price + '）</p><div class="acts"><a class="btn line" href="' + LINE + '" target="_blank" rel="noopener">加 LINE 問適不適合 →</a><a class="btn light" href="index.html#course-' + code.toLowerCase() + '">看 ' + code + " 方案內容</a></div></div></div>" +
+        '<div class="result-acts"><button class="btn" type="button" id="again">再玩一輪</button><button class="btn light" type="button" id="share">複製分享文字</button></div><p class="copied" id="copied" aria-live="polite"></p>';
+      $("#again").addEventListener("click", () => newSetup(false));
+      $("#share").addEventListener("click", () => copyText(share));
+      renderHud();
+      show("result", true);
+      renderRecords();
+    }
+
+    function copyText(t) {
+      const done = () => { $("#copied").textContent = "已複製，貼到 LINE 或社群給朋友吧。"; };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(t).then(done, () => fallback(t, done));
+      } else fallback(t, done);
+    }
+    function fallback(t, done) {
+      const ta = document.createElement("textarea");
+      ta.value = t; document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); done(); } catch (e) { $("#copied").textContent = t; }
+      ta.remove();
+    }
+
+    /* ---------- 紀錄與圖鑑：只存在這台裝置 ---------- */
+    const KEY = "career90.records";
+    function loadRecords() { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { return []; } }
+    function saveRecord(end, score) {
+      const recs = loadRecords();
+      recs.unshift({ at: todayKey(), daily: setup.daily, end, score, who: setup.who.name, dir: setup.dir.name, works: S.works, week: S.week });
+      try { localStorage.setItem(KEY, JSON.stringify(recs.slice(0, 50))); } catch (e) { /* 無痕模式存不了就算了 */ }
+    }
+    function renderRecords() {
+      const recs = loadRecords();
+      $("#recs").innerHTML = recs.length
+        ? recs.map((r) => '<li><b class="s">' + Number(r.score) + "</b><div><b>" + esc(ENDINGS[r.end] ? ENDINGS[r.end].name : r.end) + "</b>" + (r.daily ? "・今日挑戰" : "") + "<br>" + esc(r.at) + "・" + esc(r.who) + "／" + esc(r.dir) + "・作品 " + Number(r.works) + "</div></li>").join("")
+        : '<li class="empty">還沒有紀錄。玩完一輪就會出現在這裡。</li>';
+      const got = new Set(recs.map((r) => r.end));
+      $("#codex-list").innerHTML = ORDER.map((id) => {
+        const E = ENDINGS[id];
+        return '<div class="ec ' + (E.live ? "live" : "stop") + (got.has(id) ? " got" : "") + '"><b>' + (got.has(id) ? E.name : "？？？") + "</b>" + (E.live ? "繼續走下去" : "先停下來") + "</div>";
+      }).join("");
+      const n = ORDER.filter((id) => got.has(id)).length;
+      $("#codex-sum").textContent = n === ORDER.length ? "七種結局全部收集完成！" : "已收集 " + n + "／" + ORDER.length + " 種結局";
+    }
+    $("#clear-recs").addEventListener("click", () => {
+      try { localStorage.removeItem(KEY); } catch (e) { /* ignore */ }
+      renderRecords();
+    });
+
+    /* ---------- 畫面切換 ---------- */
+    function show(id, scroll) {
+      ["setup", "game", "result"].forEach((s) => { $("#" + s).hidden = s !== id && !(id === "result" && s === "game"); });
+      if (id === "result") $("#stage").innerHTML = '<span class="pill">本輪結束</span><h2>結局在下面 ↓</h2>';
+      const el = $("#" + id);
+      if (scroll !== false) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    document.querySelectorAll("[data-go]").forEach((b) => b.addEventListener("click", () => newSetup(b.dataset.go === "daily")));
+
+    renderRecords();
+  })();
+  </script>
+</body>
+</html>
