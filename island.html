@@ -1,0 +1,1892 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>女力 AI 職涯島</title>
+  <meta name="description" content="用 3D 島嶼地圖找到妳的起點：11 個常見狀況，連到 A 一日班、B 任務班、C 網頁班、D LINE 班、E 作品方案。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #2A2724;
+      --muted: #7A7268;
+      --paper: #FFFCF6;
+      --sand: #F4EEE3;
+      --line-soft: rgba(42, 39, 36, .12);
+      --shadow: 0 10px 30px rgba(60, 45, 25, .14), 0 2px 6px rgba(60, 45, 25, .08);
+      --orange: #E8743B;
+      --yellow: #F2C14E;
+      --green: #4FA87A;
+      --line-green: #06C755;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      overflow: hidden;
+      background: var(--sand);
+      color: var(--ink);
+      font-family: "Noto Sans TC", system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    button { font: inherit; color: inherit; }
+    a { color: inherit; }
+    #scene { position: fixed; inset: 0; display: block; width: 100%; height: 100%; touch-action: none; }
+    #labels { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+
+    /* 名牌 */
+    .tag {
+      position: absolute; left: 0; top: 0;
+      pointer-events: auto; cursor: pointer;
+      border: 0; background: rgba(255, 252, 246, .96);
+      border-radius: 999px; box-shadow: 0 3px 10px rgba(60, 45, 25, .18);
+      font-weight: 700; font-size: 13px; line-height: 1; white-space: nowrap;
+      padding: 5px 11px 5px 5px; transition: opacity .25s, transform .1s;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .tag .n {
+      display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 5px;
+      border-radius: 999px; background: var(--c, var(--ink)); color: #fff; font-size: 11px; font-weight: 900;
+    }
+    .tag.course small { font-weight: 500; font-size: 11px; color: var(--muted); }
+    .tag.sym { padding: 3px; font-size: 12px; }
+    .tag.sym .n { min-width: 20px; height: 20px; font-size: 10.5px; }
+    .tag.sym span:not(.n) { display: none; max-width: 230px; overflow: hidden; text-overflow: ellipsis; padding-right: 7px; }
+    .tag.sym:hover span:not(.n), .tag.sym.open span:not(.n) { display: inline; }
+    .tag.sym.done .n { background: var(--green); }
+    .tag.studio .n { background: var(--orange); }
+    .tag.extra { font-size: 12px; padding: 3px 9px 3px 3px; }
+    .tag.sym.extra { padding: 3px; }
+    .tag.sym.extra .n { font-size: 11px; }
+    /* 細節卡分頁、時程、測驗 */
+    .ctabs { display: flex; gap: 4px; margin: 14px 0 4px; border-bottom: 1px solid var(--line-soft); }
+    .ctabs button { border: 0; background: none; padding: 7px 9px; font-size: 13px; font-weight: 700; color: var(--muted); cursor: pointer; border-bottom: 2.5px solid transparent; margin-bottom: -1px; }
+    .ctabs button.on { color: var(--ink); border-color: var(--c, var(--orange)); }
+    .steps { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; font-size: 12.5px; font-weight: 700; }
+    .steps span { background: #F6EFE3; border-radius: 8px; padding: 4px 8px; }
+    .steps i { font-style: normal; color: var(--muted); }
+    .day { border: 1px solid var(--line-soft); border-radius: 12px; padding: 10px 12px; margin-top: 8px; background: #fff; }
+    .day h4 { margin: 0 0 6px; font-size: 13.5px; }
+    .day ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; font-size: 13px; line-height: 1.55; }
+    .day ol li { display: grid; grid-template-columns: 74px 1fr; gap: 6px; }
+    .day ol li span { color: var(--muted); font-weight: 700; font-size: 12px; }
+    .day .out { margin: 8px 0 0; font-size: 12.5px; font-weight: 700; color: var(--c, var(--orange)); }
+    .soon { display: inline-block; margin-left: 6px; font-size: 11px; font-weight: 700; color: var(--orange); }
+    .case-card, .faq-item { border: 1px solid var(--line-soft); border-radius: 12px; background: #fff; padding: 10px 12px; margin-top: 8px; font-size: 13px; line-height: 1.65; }
+    .case-card b { display: block; margin-bottom: 2px; }
+    .faq-item summary { font-weight: 700; cursor: pointer; }
+    .faq-item p { margin: 8px 0 0 !important; font-size: 13px !important; }
+    .opt { display: block; width: 100%; text-align: left; margin-top: 8px; padding: 11px 13px; font-size: 14px; }
+    .quiz-dots { display: flex; gap: 5px; margin-top: 4px; }
+    .quiz-dots i { width: 22px; height: 4px; border-radius: 3px; background: #E7DFD2; }
+    .quiz-dots i.on { background: var(--orange); }
+    .path { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+    .path b { display: inline-grid; place-items: center; min-width: 34px; height: 34px; border-radius: 10px; color: #fff; font-size: 15px; }
+    .path i { font-style: normal; color: var(--muted); font-weight: 900; }
+    .brand .quiz-btn { margin-top: 6px; }
+    .row.extra .n { font-size: 12px; }
+    .tag.lit { box-shadow: 0 0 0 2.5px var(--orange), 0 3px 10px rgba(60, 45, 25, .2); }
+    .tag.sel { box-shadow: 0 0 0 3px var(--ink), 0 3px 10px rgba(60, 45, 25, .2); }
+    .tag.dim { opacity: .35; }
+    .tag.off { display: none; }
+    .say {
+      position: absolute; left: 0; top: 0; pointer-events: none;
+      background: var(--paper); border-radius: 14px; box-shadow: var(--shadow);
+      padding: 7px 11px; font-size: 12.5px; font-weight: 700; white-space: nowrap;
+      opacity: 0; transition: opacity .3s;
+    }
+    .say b { color: var(--orange); }
+    .say.show { opacity: 1; }
+
+    /* 共用面板 */
+    .panel {
+      background: rgba(255, 252, 246, .94); border: 1px solid var(--line-soft); border-radius: 18px;
+      box-shadow: var(--shadow); backdrop-filter: blur(6px);
+    }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      border: 1px solid var(--line-soft); background: #fff; border-radius: 12px;
+      padding: 7px 13px; font-weight: 700; font-size: 14px; cursor: pointer;
+      text-decoration: none; transition: background .15s, transform .1s;
+    }
+    .btn:hover { background: #F6EFE3; }
+    .btn:active { transform: translateY(1px); }
+    .btn:focus-visible, .tag:focus-visible, .row:focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
+    .btn.on, .btn.ink { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .btn.line { background: var(--line-green); color: #fff; border-color: var(--line-green); }
+    .btn.done { background: var(--green); color: #fff; border-color: var(--green); }
+    .pill {
+      display: inline-block; border-radius: 999px; background: #F6E7C4;
+      padding: 3px 10px; font-size: 12px; font-weight: 700;
+    }
+    .kicker { font-size: 11px; font-weight: 900; letter-spacing: .14em; color: var(--muted); text-transform: uppercase; }
+
+    /* 頂欄 */
+    .brand { position: fixed; top: 14px; left: 16px; z-index: 5; padding: 14px 16px; max-width: 250px; }
+    .brand h1 { margin: 2px 0 4px; font-size: 21px; font-weight: 900; }
+    .brand p { margin: 0 0 10px; font-size: 12.5px; color: var(--muted); }
+    .brand .btn { font-size: 13px; padding: 7px 12px; }
+    .brand .back { display: block; margin-top: 8px; font-size: 12px; color: var(--muted); }
+
+    /* 右側面板 */
+    .dock {
+      position: fixed; z-index: 4; right: 16px; top: 14px; width: 320px;
+      max-height: calc(100dvh - 120px); display: flex; flex-direction: column; overflow: hidden;
+    }
+    .tabs { display: flex; gap: 6px; padding: 12px 12px 0; flex-wrap: wrap; }
+    .tabs .btn { padding: 6px 10px; font-size: 12.5px; }
+    .dock-body { padding: 12px 14px 16px; overflow: auto; }
+    .dock-body h2 { margin: 4px 0 6px; font-size: 18px; font-weight: 900; }
+    .dock-body p { margin: 0 0 10px; font-size: 13.5px; line-height: 1.7; }
+    .hl { background: linear-gradient(transparent 60%, #F6E0A8 60%); }
+    .search { width: 100%; border: 1px solid var(--line-soft); border-radius: 12px; padding: 9px 12px; font: inherit; font-size: 14px; background: #fff; margin-bottom: 10px; }
+    .list { display: grid; gap: 6px; }
+    .row {
+      display: flex; gap: 10px; align-items: flex-start; text-align: left; width: 100%;
+      background: #fff; border: 1px solid var(--line-soft); border-radius: 12px; padding: 9px 11px;
+      cursor: pointer; font-size: 13.5px; font-weight: 700; line-height: 1.45;
+    }
+    .row:hover { background: #FBF5EA; }
+    .row.on { background: var(--ink); color: #fff; }
+    .row .n { flex: none; display: inline-grid; place-items: center; min-width: 22px; height: 22px; border-radius: 999px; background: var(--c, var(--ink)); color: #fff; font-size: 11px; font-weight: 900; }
+    .row small { display: block; font-weight: 500; opacity: .7; font-size: 12px; }
+    .empty { font-size: 13px; opacity: .8; }
+    .legend { display: grid; gap: 6px; font-size: 12.5px; margin: 8px 0 0; padding: 0; list-style: none; }
+    .legend i { display: inline-block; width: 24px; height: 4px; border-radius: 3px; vertical-align: middle; margin-right: 8px; }
+    .progress { border-radius: 12px; background: #E3F1E8; padding: 8px 12px; font-size: 12.5px; font-weight: 700; margin: 10px 0; }
+    .live { display: inline-block; background: var(--orange); color: #fff; border-radius: 5px; font-size: 9.5px; font-weight: 900; padding: 1px 5px; margin-left: 4px; vertical-align: 1px; }
+    .log { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 12.5px; line-height: 1.55; }
+    .log li { background: #fff; border: 1px solid var(--line-soft); border-radius: 10px; padding: 7px 10px; }
+    .log time { font-weight: 900; color: var(--orange); margin-right: 8px; }
+
+    /* 細節浮動視窗 */
+    .detail {
+      position: fixed; z-index: 6; left: 16px; top: 14px; width: 360px;
+      max-height: calc(100dvh - 120px); overflow: auto; padding: 18px 18px 20px;
+    }
+    .detail[hidden] { display: none; }
+    .detail .x { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; padding: 0; border-radius: 50%; }
+    .detail h2 { margin: 6px 40px 8px 0; font-size: 20px; font-weight: 900; line-height: 1.4; }
+    .detail p { font-size: 14px; line-height: 1.75; margin: 10px 0; }
+    .detail .price strong { font-size: 26px; font-weight: 900; }
+    .detail .fmt { font-size: 13px; font-weight: 700; color: var(--muted); }
+    .detail .lab { margin: 14px 0 6px; font-size: 12.5px; font-weight: 900; color: var(--muted); }
+    .detail ul { margin: 0; padding-left: 0; list-style: none; display: grid; gap: 4px; font-size: 14px; }
+    .detail ul li::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--c, var(--orange)); margin-right: 8px; vertical-align: 1px; }
+    .warn { border-left: 4px solid var(--orange); border-radius: 8px; padding: 9px 11px; font-size: 13px; line-height: 1.65; margin-top: 12px; background: #FCEEE6; }
+    .warn b { color: var(--orange); margin-right: 6px; }
+    .todo { border: 1.5px dashed #C9B48F; border-radius: 14px; background: #FBF3DF; padding: 12px; margin-top: 12px; }
+    .todo p { margin: 8px 0 0; font-weight: 700; }
+    .chipset { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chipset .btn { font-size: 12.5px; padding: 6px 10px; text-align: left; }
+    .acts { display: grid; gap: 8px; margin-top: 16px; }
+    .navrow { display: flex; justify-content: space-between; gap: 8px; margin-top: 14px; }
+    .navrow .btn { font-size: 13px; padding: 6px 12px; }
+    .copy-note { font-size: 12.5px; line-height: 1.6; margin: 8px 2px 0; color: var(--muted); }
+    .copy-note button { border: 0; background: none; padding: 0; text-decoration: underline; cursor: pointer; font-weight: 700; color: var(--ink); }
+
+    /* 底部時間與工具列 */
+    .bar {
+      position: fixed; z-index: 5; bottom: 14px; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: center; gap: 4px; padding: 6px 8px; max-width: calc(100% - 20px);
+    }
+    .bar .time { padding: 0 10px 0 6px; min-width: 132px; }
+    .bar time { display: block; font-family: "Lilita One", sans-serif; font-size: 22px; line-height: 1; }
+    .bar .time small { display: block; font-size: 11px; color: var(--muted); margin-top: 3px; }
+    .bar .sep { width: 1px; align-self: stretch; background: var(--line-soft); margin: 4px 4px; }
+    .ib {
+      display: grid; justify-items: center; gap: 2px; border: 0; background: none; border-radius: 10px;
+      padding: 5px 7px; font-size: 11px; font-weight: 700; cursor: pointer; min-width: 44px;
+    }
+    .ib span { font-size: 17px; line-height: 1; }
+    .ib:hover { background: #F3EBDD; }
+    .ib.on { background: var(--ink); color: #fff; }
+
+    /* 載入畫面 */
+    .loading {
+      position: fixed; inset: 0; z-index: 20; display: grid; place-items: center;
+      background: var(--sand); padding: 16px; transition: opacity .5s;
+    }
+    .loading.gone { opacity: 0; pointer-events: none; }
+    .loading .panel { padding: 26px; max-width: 400px; text-align: center; }
+    .loading h2 { font-size: 24px; font-weight: 900; margin: 8px 0; }
+    .loading p { line-height: 1.7; margin: 0 0 16px; color: var(--muted); }
+
+    @media (max-width: 760px) {
+      .brand { top: 10px; left: 10px; padding: 10px 12px; max-width: 200px; }
+      .brand h1 { font-size: 17px; }
+      .brand p, .brand .back { display: none; }
+      .brand .btn { font-size: 12px; padding: 6px 10px; }
+      .dock, .detail { left: 10px; right: 10px; width: auto; top: auto; bottom: 84px; max-height: 46dvh; }
+      .dock.collapsed .dock-body { display: none; }
+      .dock.collapsed .tabs { padding-bottom: 12px; }
+      body.has-detail .dock { display: none; }
+      .bar { bottom: 10px; gap: 0; padding: 4px; overflow-x: auto; justify-content: flex-start; scrollbar-width: none; }
+      .bar::-webkit-scrollbar { display: none; }
+      .bar .time { min-width: 0; flex: none; padding: 0 6px 0 4px; }
+      .tag.sym { padding: 2px; }
+      .tag.sym .n { min-width: 17px; height: 17px; font-size: 9.5px; padding: 0 3px; }
+      .tag.extra { font-size: 11px; }
+      .bar time { font-size: 17px; }
+      .bar .time small { display: none; }
+      .ib { min-width: 38px; padding: 4px 4px; font-size: 10px; }
+      .ib span { font-size: 15px; }
+      .tag { font-size: 12px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; }
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<!-- LINE 官方帳號正式加好友連結，與 index.html 共用同一個網址。 -->
+<body data-line-url="https://lin.ee/7j3Hi2Z">
+  <canvas id="scene" aria-label="女力 AI 職涯島 3D 地圖：中央工作室、五個課程區與十一個常見狀況"></canvas>
+  <div id="labels"></div>
+
+  <header class="brand panel">
+    <div class="kicker">女力 AI 數位職涯培育</div>
+    <h1>AI 職涯島</h1>
+    <p>找到妳卡住的那一格，先走一小步。</p>
+    <a class="btn line" href="index.html#signup" data-line>加 LINE 問適合哪門課 →</a>
+    <button class="btn ink quiz-btn" type="button" id="quiz-open">🧭 3 題幫我選起點</button>
+    <a class="back" href="index.html">← 回課程首頁</a>
+  </header>
+
+  <nav class="dock panel" id="dock" aria-label="地圖面板">
+    <div class="tabs" role="tablist">
+      <button class="btn on" type="button" role="tab" data-tab="overview" aria-selected="true">全景</button>
+      <button class="btn" type="button" role="tab" data-tab="symptoms" aria-selected="false">島與狀況</button>
+      <button class="btn" type="button" role="tab" data-tab="courses" aria-selected="false">清單</button>
+      <button class="btn" type="button" role="tab" data-tab="carry" aria-selected="false">小人在搬什麼</button>
+      <button class="btn" type="button" role="tab" data-tab="log" aria-selected="false">日誌<span class="live">LIVE</span></button>
+    </div>
+    <div class="dock-body">
+      <section data-pane="overview">
+        <h2>怎麼逛這座島</h2>
+        <p>島的中央是<b>阿茲的工作室</b>，四周是<span class="hl">五個課程區</span>（A–E）。每一區擺著幾個小模型，每個模型就是一個<span class="hl">常見狀況</span>（共 15 個），點下去看看該從哪一門開始。</p>
+        <p>工作室旁有 <b>Q&amp;A 告示牌</b>和<b>報名信箱</b>；左前方的小島是<b>阿茲的案例展</b>，放著四個真實做過的案子。</p>
+        <p>穿橘衣的阿茲會從工作室出發巡島，到每一區就站上肥皂箱說說這區在教什麼；頭頂黃箱子的小人，正把狀況搬到能解決它的課程區。</p>
+        <ul class="legend">
+          <li><i style="background:#E8743B"></i>課程進階路線（A → B／C／D → E）</li>
+          <li><i style="background:#E2B33C"></i>狀況連到課程（點狀況才會出現）</li>
+        </ul>
+        <div class="progress" id="progress"></div>
+        <button class="btn ink" type="button" data-quiz-open style="width:100%;margin-bottom:10px">🧭 不知道從哪開始？做 3 題選課小測驗</button>
+        <p><b>AI 新手</b> 請從 A 一日班開始：先親手做出第一批 AI 作品，再依目標往 B、C 或 D 走。</p>
+      </section>
+      <section data-pane="symptoms" hidden>
+        <input class="search" id="q" type="search" placeholder="搜尋狀況、Q&A、案例，例如：LINE、付款、程式" aria-label="搜尋狀況、Q&A 與案例">
+        <div class="list" id="sym-list"></div>
+      </section>
+      <section data-pane="courses" hidden>
+        <div class="list" id="course-list">
+          <button class="row" type="button" data-id="studio" style="--c:#E8743B"><span class="n">★</span><span>阿茲的工作室<small>對不到狀況？從這裡傳 LINE 問我們</small></span></button>
+          <button class="row" type="button" data-id="A" style="--c:#D9779B"><span class="n">A</span><span>AI 工具一日班<small>NT$8,800・一日實體課，暫定 8 小時</small></span></button>
+          <button class="row" type="button" data-id="B" style="--c:#4E8FBF"><span class="n">B</span><span>工作任務實作班<small>NT$14,800・兩天實作課，暫定 10 小時</small></span></button>
+          <button class="row" type="button" data-id="C" style="--c:#CE9B25"><span class="n">C</span><span>網頁工具實作班<small>NT$20,000・兩天實體課，暫定 12 小時</small></span></button>
+          <button class="row" type="button" data-id="D" style="--c:#3E9C6E"><span class="n">D</span><span>LINE 接單進階班<small>NT$20,000・兩天實體課，暫定 12 小時</small></span></button>
+          <button class="row" type="button" data-id="E" style="--c:#E07B4F"><span class="n">E</span><span>轉職作品強化方案<small>NT$29,800・C 或 D 擇一門兩天實體課 ＋ 四週線上個人專題輔導</small></span></button>
+          <button class="row extra" type="button" data-id="faq" style="--c:#E8743B"><span class="n">Q</span><span>Q&amp;A 告示牌<small>報名前常被問的 8 題</small></span></button>
+          <button class="row extra" type="button" data-id="signup" style="--c:#06C755"><span class="n">📮</span><span>報名信箱<small>四步驟報名流程與近期場次</small></span></button>
+          <button class="row extra" type="button" data-id="case0" style="--c:#8A7F72"><span class="n">🏛</span><span>阿茲的案例展<small>四個真實做過的服務案例</small></span></button>
+        </div>
+      </section>
+      <section data-pane="carry" hidden>
+        <p>每個小人頭上的黃箱子裝著一個狀況，正要搬到能解決它的課程區。點一列就能看那個狀況。</p>
+        <div class="list" id="carry-list"></div>
+      </section>
+      <section data-pane="log" hidden>
+        <p>島上剛剛發生的事。</p>
+        <ul class="log" id="log-list"></ul>
+      </section>
+    </div>
+  </nav>
+
+  <aside class="detail panel" id="detail" aria-live="polite" hidden></aside>
+
+  <div class="bar panel" role="toolbar" aria-label="時間與地圖工具">
+    <div class="time"><time id="clock-time">10:00</time><small id="clock-note">上午・島上開始忙起來</small></div>
+    <button class="ib" type="button" data-h="6.5"><span aria-hidden="true">🌅</span>清晨</button>
+    <button class="ib" type="button" data-h="12"><span aria-hidden="true">☀️</span>白天</button>
+    <button class="ib" type="button" data-h="18"><span aria-hidden="true">🌇</span>黃昏</button>
+    <button class="ib" type="button" data-h="21.5"><span aria-hidden="true">🌙</span>夜晚</button>
+    <button class="ib on" type="button" id="auto" aria-pressed="true"><span aria-hidden="true">🔁</span>自動</button>
+    <i class="sep" aria-hidden="true"></i>
+    <button class="ib on" type="button" id="t-labels" aria-pressed="true"><span aria-hidden="true">🏷️</span>名牌</button>
+    <button class="ib on" type="button" id="t-carry" aria-pressed="true"><span aria-hidden="true">📦</span>搬運</button>
+    <button class="ib on" type="button" id="t-routes" aria-pressed="true"><span aria-hidden="true">〰️</span>路線</button>
+    <button class="ib on" type="button" id="t-walk" aria-pressed="true"><span aria-hidden="true">🚶</span>阿茲</button>
+    <button class="ib" type="button" id="t-home"><span aria-hidden="true">🛰️</span>鳥瞰</button>
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="panel">
+      <div class="kicker">Hello, Career Island</div>
+      <h2 id="load-title">正在組合職涯島…</h2>
+      <p id="load-text">工作室、五個課程區和十一個常見狀況，馬上就好。</p>
+      <button class="btn ink" type="button" id="start" disabled>開始逛</button>
+    </div>
+  </div>
+
+  <noscript><p style="position:fixed;inset:auto 16px 16px;background:#fff;padding:12px;border-radius:12px">這張 3D 地圖需要 JavaScript。<a href="index.html#diagnose">改看課程首頁的對症地圖</a>。</p></noscript>
+
+  <script type="module">
+    import * as THREE from "three";
+    import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+    import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
+    import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
+
+    // ---------- 資料：文案與 index.html 的方案卡、SYMPTOMS 逐字一致 ----------
+    // slot：課程區在中央工作室周圍的位置（0 = 正前方，順時針）
+    var COURSES = {
+      A: { name: "A 一日班", full: "女力 AI 職場實用工具一日班", stage: "A｜入門", price: "NT$8,800", unit: "／人",
+        format: "一日實體課，暫定 8 小時", color: "#D9779B", ground: "#F5E6E4", tex: "dots", card: "course-a", slot: 5, mark: "school",
+        lead: "從文字、圖片到簡報與短影片，帶妳把 AI 工具變成看得見的第一批作品。",
+        take: ["文案初稿＋提示詞", "AI 圖片＋提示詞", "簡報初稿＋資料來源", "短影音體驗＋分鏡"],
+        warn: "短影片長度與能否生成，視各平台帳號與地區限制而定；工具受限時以事先準備的示範案例替代。本課是多工具體驗，不是行政工作流程訓練。",
+        say: "先做出第一批 AI 作品" },
+      B: { name: "B 任務班", full: "女力 AI 工作任務實作班（暫名）", stage: "B｜實作", price: "NT$14,800", unit: "／人",
+        format: "兩天實作課，暫定 10 小時", color: "#4E8FBF", ground: "#E6EBEF", tex: "tile", card: "course-b", slot: 4, mark: "office",
+        lead: "練習把一件真正的辦公室工作，從接任務做到可以放心交付。",
+        take: ["一份共同職場情境的任務成果包", "從需求確認到人工查核的完整交付"],
+        warn: "全班使用同一個老師設定的辦公情境，不是每人不同專題；具體情境與文件清單開課前公告。",
+        say: "從接任務做到放心交付" },
+      C: { name: "C 網頁班", full: "女力 AI 協作程式設計與網頁工具實作班", stage: "C｜技能・網頁", price: "NT$20,000", unit: "／人",
+        format: "兩天實體課，暫定 12 小時", color: "#CE9B25", ground: "#F3EDDC", tex: "brick", card: "course-c", slot: 2, mark: "billboard",
+        lead: "把工作上最想改善的一件事，做成能實際操作的網頁工具。",
+        take: ["可操作的網頁工作管理工具", "原始碼＋展示網址", "使用與修改指引"],
+        warn: "",
+        say: "做出能操作的網頁工具" },
+      D: { name: "D LINE 班", full: "女力 LINE OA × AI 工作流進階班", stage: "D｜技能・LINE", price: "NT$20,000", unit: "／人",
+        format: "兩天實體課，暫定 12 小時", color: "#3E9C6E", ground: "#E4EFE5", tex: "plank", card: "course-d", slot: 1, mark: "lineTower",
+        lead: "讓 LINE 可以接單、後台可以管理；學會用 AI 做出自己的商品與服務接單工具。",
+        take: ["LINE 官方帳號接單入口", "商品／服務後台：新增、修改、上下架", "訂單查看與狀態管理", "LIFF 多欄位服務申請示範"],
+        warn: "全班先做同一套系統，回家再依教材改成自己的業務。不含線上金流（付款由經營者人工聯繫）、即時空檔查詢與自動排程；商品圖片上傳為延伸示範，非必完成項目。",
+        say: "讓 LINE 可以接單" },
+      E: { name: "E 作品方案", full: "女力 AI 數位轉職作品強化方案", stage: "E｜轉職作品", price: "NT$29,800", unit: "／人・整套總價",
+        format: "C 或 D 擇一門兩天實體課 ＋ 四週線上個人專題輔導", color: "#E07B4F", ground: "#F6E8DE", tex: "speckle", card: "course-e", slot: 0, mark: "stage",
+        lead: "先完成一套能操作的工具，再用四週把共同作品改成貼近妳工作經驗的個人專題，轉職時有一份能打開展示、說得清楚的作品。",
+        take: ["C 或 D 擇一的共同作品", "改成貼近自身經歷的個人專題", "作品介紹與履歷技能敘述初稿"],
+        warn: "NT$29,800 只含 C 或 D 其中一門，不含兩門；個人專題有範圍限制，不含線上金流、複雜排程或無限次客製開發。以作品與轉職準備為目標，不保證就業。",
+        say: "改成自己的作品集" }
+    };
+
+    // 各課詳細內容：與 index.html 方案卡、「帶走什麼」比較表逐字一致
+    var DETAILS = {
+      A: { who: "剛開始接觸 AI，想弄懂各種工具差別、需要快速產出不同內容的妳。",
+        steps: ["認識 AI 能做什麼", "文案", "圖片", "NotebookLM 簡報", "分鏡＋短影片", "保存成果"],
+        tools: "ChatGPT、NotebookLM、豆包或即夢",
+        schedTitle: "當天時程（一日 8 小時）",
+        days: [
+          { h: "上午", items: [["第 1 小時", "認識 AI 能做什麼：工具怎麼選、怎麼把需求說清楚、資料安全"], ["第 2 小時", "文案：活動通知、貼文、Email 初稿，留下自己的提示詞"], ["第 3 小時", "AI 圖片：活動海報、宣傳圖，學會調整風格與修改"], ["第 4 小時", "NotebookLM：把資料整理成重點，產出簡報初稿"]] },
+          { h: "下午", items: [["第 5 小時", "短影音分鏡：把一個主題拆成腳本與畫面"], ["第 6 小時", "短影片生成體驗（豆包或即夢），平台受限時用示範案例"], ["第 7 小時", "綜合練習：同一場活動，一次做出文案、海報、簡報"], ["第 8 小時", "整理與保存成果、提示詞卡用法，回家怎麼自己再做一次"]], out: "帶走：四類作品＋各自的提示詞" }
+        ],
+        kit: ["四類提示詞卡", "選工具速查表", "成果保存步驟"] },
+      B: { who: "想回到行政、客服、助理工作，知道 AI 是什麼，但不熟悉主管交辦與驗收流程的妳。",
+        steps: ["接收交辦", "提出待確認問題", "拆分工作", "AI 協作產出", "人工查核", "整理交付"],
+        schedTitle: "兩天時程（Day 1 六小時＋Day 2 四小時）",
+        days: [
+          { h: "Day 1｜把交辦做對", items: [["第 1 小時", "共同辦公情境介紹，認識六步驟工作法"], ["第 2 小時", "接收交辦：整理成需求確認表，列出要先問的問題"], ["第 3 小時", "拆分工作：任務拆解表、先後順序與期限"], ["第 4 小時", "AI 協作產出①：會議紀錄摘要、通知與報告初稿"], ["第 5 小時", "AI 協作產出②：表格資料整理與核對"], ["第 6 小時", "人工查核：來源、數字、語氣檢查，完成第一輪交付"]], out: "Day 1 成果：第一版任務成果包" },
+          { h: "Day 2｜需求變了也能接住", items: [["第 1 小時", "主管臨時改需求：重新確認、修正成果"], ["第 2 小時", "客服回覆與常見問題整理"], ["第 3 小時", "整理交付：成果包彙整、用交付查核表自我檢查"], ["第 4 小時", "成果分享與回饋，工具包回家怎麼用"]], out: "Day 2 成果：完整任務成果包" }
+        ],
+        kit: ["需求確認表、追問範本", "任務拆解表、AI 協作指令", "交付查核表"] },
+      C: { who: "工作常靠表格和訊息反覆登記，想把流程做成數位工具，對 AI 協作寫程式有興趣的新手。",
+        steps: ["拆需求", "欄位設計", "AI 協作產生工具", "資料儲存", "部署", "測試與修改"],
+        core: ["新增、查看、編輯與更新狀態、資料保存", "搜尋、篩選、匯出等延伸功能依課堂進度分級"],
+        career: "數位營運助理、AI 應用助理、專案行政助理",
+        schedTitle: "兩天時程（每天 6 小時）",
+        days: [
+          { h: "Day 1｜做出工具初版", items: [["第 1 小時", "AI 協作寫程式是什麼，看一次完成品長什麼樣"], ["第 2 小時", "拆需求：把工作上的表格登記，改寫成功能清單"], ["第 3 小時", "欄位設計：整理資料欄位表與畫面架構"], ["第 4–5 小時", "AI 協作產生網頁介面，邊做邊看懂每一塊"], ["第 6 小時", "新增、查看、編輯與更新狀態功能"]], out: "Day 1 成果：網頁工作管理工具初版" },
+          { h: "Day 2｜存得住、放上網、改得動", items: [["第 1 小時", "資料儲存：關掉網頁再打開，資料還在"], ["第 2 小時", "搜尋、篩選、匯出（依課堂進度分級）"], ["第 3 小時", "部署上線，取得自己的展示網址"], ["第 4 小時", "AI 協作除錯：看懂錯誤訊息、修好它"], ["第 5 小時", "依指定需求修改並測試，整理修改指引"], ["第 6 小時", "成果展示：說清楚這個工具解決了什麼"]], out: "Day 2 成果：可操作的工具＋原始碼＋展示網址" }
+        ],
+        kit: ["資料欄位表、架構圖", "AI 修改指令", "部署、修改、測試 SOP"] },
+      D: { who: "有商品銷售、個人工作室、教學或服務接單需求，訂單常散落在聊天紀錄裡的妳。",
+        scenes: [["賣商品", "顧客在 LINE 選品項送出訂單，後台查看並更新狀態"], ["服務／場地申請", "用 LIFF 表單一次填完日期、時段、聯絡方式與需求，經營者人工確認"]],
+        steps: ["LINE OA 與圖文選單", "Webhook", "Cloudflare 與資料庫", "後台管理", "LIFF 表單", "完整測試"],
+        schedTitle: "兩天時程（每天 6 小時）",
+        days: [
+          { h: "Day 1｜讓 LINE 收得到單", items: [["第 1 小時", "LINE 接單流程總覽：賣商品、服務申請兩種情境"], ["第 2 小時", "LINE 官方帳號設定"], ["第 3 小時", "圖文選單：設計顧客點得到的入口"], ["第 4 小時", "Webhook：讓系統收到 LINE 訊息"], ["第 5–6 小時", "Cloudflare 與資料庫：商品資料與訂單存起來"]], out: "Day 1 成果：顧客能在 LINE 下單，訂單存得進去" },
+          { h: "Day 2｜後台管得動", items: [["第 1–2 小時", "商品／服務後台：新增、修改、上下架"], ["第 3 小時", "訂單查看與狀態管理"], ["第 4 小時", "LIFF 表單：一次填完日期、時段、聯絡方式與需求"], ["第 5 小時", "完整測試：照測試表從下單走到處理完成"], ["第 6 小時", "回家怎麼改成自己的業務，成果展示"]], out: "Day 2 成果：LINE 接單入口＋後台＋訂單管理" }
+        ],
+        kit: ["流程圖、設定步驟", "後台操作卡、測試表", "AI 修改指南"] },
+      E: { who: "",
+        tracks: [["E-C 網頁路徑", "把工作管理工具改成課程名單、售後追蹤或行政待辦"], ["E-D LINE 路徑", "把接單系統改成商品預訂、課程報名或場地申請"]],
+        twoDays: "依妳選的主軌，跟 C 網頁班或 D LINE 班同一套兩天時程。",
+        weeks: [["W1", "確認需求、限縮題目、訂驗收條件"], ["W2", "在共同作品上做第一輪 AI 協作修改"], ["W3", "測試、排錯、補修改紀錄"], ["W4", "作品展示，整理作品介紹與履歷上的技能說明"]],
+        kit: ["個人需求模板", "測試紀錄表", "作品集介紹卡"] }
+    };
+
+    // 阿茲做過的服務案例（index.html 講師區原文）
+    var CASES = [
+      { icon: "💬", course: "D", title: "LINE 官方帳號自動化客服助理", model: "caseLine",
+        d: "傳產企業的客服每天手動整理詢問、建表格、回覆重複問題。改成 LINE 收到訊息就自動建檔、同步到試算表，再由 AI 先做初步回覆。" },
+      { icon: "🛒", course: "D", title: "團購 LINE 群小助手", model: "caseGroup",
+        d: "團購主每天手動回訊、整理商品和訂單。把商品上架、收單、訂單列表和商品統計串成同一條流程，不用再一筆筆整理。" },
+      { icon: "🐋", course: "C", title: "賞鯨預約與現場核銷系統", model: "caseWhale",
+        d: "旅遊業者旺季常超賣、線上名單和現場對不上。做成預約與後台名單同步，現場掃 QR code 就能核銷。" },
+      { icon: "📷", course: "", title: "CASIO 台灣官網與維修預約系統", model: "caseCasio",
+        d: "官網改版、會員資料串接，以及相機、電子琴的維修預約服務，多年持續合作維護。" }
+    ];
+    var COACH = "20 年工程師經驗，擅長把「我想要有個東西可以幫我⋯⋯」這種模糊的需求，拆成能一步步做出來的工具。課堂上不只教名詞，而是帶妳親手做完，再把修改方法交給妳帶回家。";
+
+    // Q&A（index.html 原文）；at：這題放在哪幾個課程區的細節卡
+    var FAQS = [
+      { q: "完全沒碰過 AI，要從哪一門開始？", at: ["A"],
+        a: "請從 A｜NT$8,800 一日班開始，先親手做出文案、圖片、簡報、短影音四類成果，再依目標選擇 B、C 或 D。不確定的話，可以先加 LINE 用文字詢問。" },
+      { q: "不會寫程式，可以上網頁班（C）或 LINE 班（D）嗎？", at: ["C", "D"],
+        a: "兩門課都以 AI 協作與全班共同範例引導，不需要先會寫程式。電腦與帳號準備清單會在課前公告；不保證適合所有零基礎程度，報名前可先透過 LINE 文字諮詢確認。" },
+      { q: "我有自己的商品或服務，可以在 LINE 班直接做我的版本嗎？", at: ["D", "E"],
+        a: "D 班全班先做完同一套共同系統，課後再依教材改成自己的業務。如果需要老師陪妳改成個人版本，可以選 E 方案的 LINE 路徑（E-D）。" },
+      { q: "LINE 班做出來的系統可以直接線上付款嗎？可以讓客人選時段嗎？", at: ["D"],
+        a: "不含線上金流串接，系統負責收單與管理，付款由經營者人工聯繫確認。LIFF 表單可以收集客人偏好的日期與時段，但不做即時空檔查詢、時段鎖定或自動排程。" },
+      { q: "NT$29,800 可以同時學網頁和 LINE 兩門嗎？", at: ["E"],
+        a: "不能。NT$29,800 是整套總價，內容為 C 網頁班或 D LINE 班其中一門，加上四週個人專題輔導。" },
+      { q: "開課日期和場次什麼時候公布？怎麼付款？", at: [],
+        a: "場次確認後會列在本頁「近期場次」，並在 LINE 官方帳號公告，加入好友就能收到通知。每梯次約在開課前一個月開放報名；付款方式在確認報名時說明。" },
+      { q: "學費有包含 AI 工具的訂閱費嗎？", at: ["A", "B", "C", "D", "E"],
+        a: "學費不包含 AI 工具訂閱費（包括但不限於 ChatGPT、Claude、Gemini 等），上課前須訂閱其中一種才能學習；不知道如何訂閱，可在課堂中由阿茲協助。" },
+      { q: "上完課保證找到工作嗎？", at: ["E"],
+        a: "不保證。但課程目標是做出可檢視、可反覆操作的作品和能力，讓妳在求職履歷增加相關應用能力佐證；不保證就業、錄取、收入或接案。" }
+    ];
+
+    // 報名流程與近期場次（index.html 原文）
+    var SIGNUP = {
+      steps: [["加 LINE 官方帳號", "點下方按鈕加入好友。"], ["用文字說說妳的狀況", "過去的工作經驗、想做的事、目前會用哪些工具。"], ["幫妳判斷適合的方案", "AI 新手會建議從 A 開始。確定想報名、還有個別問題時，再約時間通話。"], ["選場次、完成報名", "從下方場次挑一場，付款方式在 LINE 上說明。"]],
+      note: "不需要先預約一對一諮詢，也不用參加說明會，用文字問就可以。",
+      sessions: [["A 一日班", "場次確認中"], ["B 任務班", "場次確認中"], ["C 網頁班", "場次確認中"], ["D LINE 班", "場次確認中"], ["E 作品方案", "隨 C 或 D 場次開課"]],
+      sessionNote: "場次確定後會更新在這裡，並在 LINE 官方帳號通知；每梯次約在開課前一個月開放報名。"
+    };
+
+    // 選課小測驗：依 PRD v0.3 第 3 節「方案選擇決策：學員如何選」
+    var QUIZ = [
+      { q: "妳現在用 AI 的程度？", key: "level", opts: [["new", "還沒用過，或只問過幾次"], ["used", "已經會用 ChatGPT 之類的工具做事"]] },
+      { q: "妳最想先解決哪一件事？", key: "goal", opts: [["A", "試試用 AI 做文案、圖片、簡報、影片"], ["B", "提高行政／客服工作的交付能力"], ["C", "把工作做成自己的管理網站"], ["D", "用 LINE 接商品訂單或服務申請"]] },
+      { q: "想不想把課堂的共同作品，改成貼近自己經歷的個人作品，並有四週輔導？", key: "own", when: function (a) { return a.goal === "C" || a.goal === "D"; }, opts: [["yes", "想，轉職時要拿得出自己的作品"], ["no", "先學會做出共同作品就好"]] }
+    ];
+    var QUIZ_WHY = {
+      A: "第一次認識 AI，想試文案、圖片、簡報、影片：從 A 開始。",
+      B: "想提高行政／客服工作交付能力：B 任務班。",
+      C: "想做工作管理網站：C 網頁班。",
+      D: "想用 LINE 接商品或服務申請：D LINE 班。",
+      E: "想拿到「個人化作品＋四週輔導」：E 方案，只能選 C 或 D 其中一個主軌。",
+      newbie: "AI 新手建議先從 A 一日班開始，基礎不夠直接上進階課，通常學得比較辛苦。"
+    };
+
+    // model：這個狀況在島上用哪個小模型表示（放在 to[0] 那一區）
+    var SYMPTOMS = [
+      { t: "完全沒碰過 AI，不知道從哪開始", to: ["A"], tag: "入門｜先做出第一批作品", model: "signpost",
+        d: "先別急著學最難的。A 一日班帶妳實際做出文案、圖片、簡報、短影音四類成果，做過一次就知道 AI 能幫妳什麼。",
+        todo: "打開 ChatGPT，請它用三種不同語氣幫妳改寫一段自我介紹。" },
+      { t: "活動通知、海報、簡報每次都從零開始做，很花時間", to: ["A"], tag: "入門｜用 AI 加快日常產出", model: "easel",
+        d: "這類內容最適合先交給 AI 打草稿。A 一日班帶妳實際用 AI 做出文案、圖片和簡報初稿，並留下提示詞，下次換個主題就能再用。",
+        todo: "挑一份最近做過的通知或簡報，記下從開始到完成花了多久。" },
+      { t: "AI 工具好多，文案、圖片、簡報不知道該用哪個", to: ["A"], tag: "入門｜工具怎麼選", model: "desk",
+        d: "每個工具擅長的事不一樣。A 一日班一次比較 ChatGPT、NotebookLM、豆包或即夢，並規劃整理成選工具速查表。",
+        todo: "列出妳最常需要做的 3 種內容，例如通知文案、活動海報、簡報。" },
+      { t: "想轉做跟 AI 有關的工作，卻不知道上班實際怎麼用 AI", to: ["B", "C", "D"], tag: "實作｜職場上的 AI 用法", model: "jobBoard",
+        d: "職場上的 AI 不只是聊天：用 AI 處理交辦文件、把重複登記做成工具、讓 LINE 自動接單。B 班練交辦任務，C 班做網頁工具，D 班做 LINE 接單系統，挑最接近妳想做的工作那一門。",
+        todo: "打開 104，找 3 個寫到「AI」的職缺，圈出它們實際要求妳用 AI 做什麼。" },
+      { t: "AI 生出來的東西，不知道能不能直接交給主管", to: ["B"], tag: "實作｜查核再交付", model: "clipboard",
+        d: "AI 會生成內容，但主管要的是正確、完整、能用的成果。B 任務班練的就是人工查核和整理交付說明。",
+        todo: "找一份 AI 幫妳寫的內容，逐句標出哪裡需要自己再確認。" },
+      { t: "主管交辦一件事，不知道先問什麼、怎麼拆", to: ["B"], tag: "實作｜從接任務開始", model: "docDesk",
+        d: "很多工作卡在一開始資訊就不完整。B 任務班從接收交辦、提出待確認問題、拆分工作開始練。",
+        todo: "回想一件以前被退件的工作，寫下當時其實該先問清楚的 2 個問題。" },
+      { t: "每天在表格和訊息裡，重複登記同樣的資料", to: ["C"], tag: "技能｜做成網頁工具", model: "cabinet",
+        d: "重複登記是最適合改成工具的工作。C 網頁班帶妳用 AI 協作，把它做成能新增、查看、更新狀態的網頁工具。",
+        todo: "寫下妳每天重複填的那張表有哪些欄位。" },
+      { t: "想用 AI 做一個自己的工作管理工具", to: ["C"], tag: "技能｜程式碼＋展示網址", model: "workstation",
+        d: "不需要先會寫程式。C 網頁班跟著共同範例做完，帶走原始碼、展示網址和修改指引。",
+        todo: "用一句話寫出需求：「我想要一個可以＿＿的工具」。" },
+      { t: "LINE 訂單散在聊天紀錄，客人一直問價格", to: ["D"], tag: "技能｜LINE 接單＋後台", model: "stall",
+        d: "D LINE 班讓客人在 LINE 上直接下單，商品和價格在後台統一管理，訂單狀態一眼看清楚。",
+        todo: "數數看上週 LINE 上有幾次是在回答同一個價格問題。" },
+      { t: "接服務或場地申請，要來回問好多次資料", to: ["D"], tag: "技能｜LIFF 申請表", model: "kiosk",
+        d: "一問一答很耗時。D 班教妳用 LIFF 表單，讓客人一次填完日期、時段、聯絡方式和需求，再由妳人工確認。",
+        todo: "列出接一筆服務申請時，妳一定要問的 5 個資料。" },
+      { t: "轉職想拿出作品，卻不知道怎麼說明自己會做什麼", to: ["E", "C", "D"], tag: "轉職｜個人化作品集", model: "gallery",
+        d: "履歷上寫「會用 AI」很難讓人相信，打開一個自己做的工具就清楚多了。C 或 D 先做出全班共同作品；E 方案再用四週，把它改成貼近妳經歷的個人專題，並整理成作品介紹，讓妳說得清楚這個作品解決了什麼問題。",
+        todo: "寫下妳想應徵的職務，以及一個「如果有工具就好了」的工作情境。" },
+      // 以下四個為島上新增：情境取自 10/19 會議紀錄、首頁 Q&A 與 PRD E 方案 Problem
+      { t: "離開職場幾年，回來發現大家都在用 AI", to: ["A", "B"], tag: "入門｜重返職場", model: "suitcase", added: true,
+        d: "先從 A 一日班把常用的 AI 工具摸過一輪，親手做出文案、圖片、簡報、短影音四類成果。想回到行政、客服、助理工作，再接 B 任務班，練習把一件辦公室工作從接任務做到可以放心交付。",
+        todo: "寫下妳離開職場前最常做的 3 件工作，之後可以拿來練習用 AI 做。" },
+      { t: "不會寫程式，怕跟不上網頁班或 LINE 班", to: ["C", "D"], tag: "技能｜不用先會寫程式", model: "studyDesk", added: true,
+        d: "兩門課都以 AI 協作與全班共同範例引導，不需要先會寫程式。電腦與帳號準備清單會在課前公告；不保證適合所有零基礎程度，報名前可先透過 LINE 文字諮詢確認。",
+        todo: "請 ChatGPT「用表格列出一個請假登記工具需要哪些欄位」，看看自己看不看得懂。" },
+      { t: "我有自己的商品或服務，想做成自己的版本", to: ["D", "E"], tag: "技能｜改成自己的業務", model: "shelf", added: true,
+        d: "D 班全班先做完同一套共同系統，課後再依教材改成自己的業務。如果需要老師陪妳改成個人版本，可以選 E 方案的 LINE 路徑（E-D）。",
+        todo: "列出妳的商品或服務有哪幾項、各自的價格，以及客人下單時妳一定要知道的資料。" },
+      { t: "跟著範例做完了，換成自己的欄位和流程就不知道怎麼改", to: ["E", "C", "D"], tag: "轉職｜個人化專題", model: "toolbox", added: true,
+        d: "C 或 D 課堂上做的是全班共同範例。E 方案在共同作品的基礎上用四週陪妳走：W1 確認需求、限縮題目、訂驗收條件；W2 做第一輪 AI 協作修改；W3 測試、排錯；W4 作品展示，整理作品介紹與履歷上的技能說明。",
+        todo: "挑一個想改的地方，寫成一句「原本是＿＿，我想改成＿＿」。" }
+    ];
+
+    // 課程之間的進階路線（橘色發光線）；阿茲照 TOUR 的順序巡島
+    var ROUTES = [
+      { a: "A", b: "B", note: "想回到行政、客服、助理工作" },
+      { a: "A", b: "C", note: "想把重複登記做成網頁工具" },
+      { a: "A", b: "D", note: "有商品或服務要用 LINE 接單" },
+      { a: "C", b: "E", note: "E-C 網頁路徑：改成個人專題" },
+      { a: "D", b: "E", note: "E-D LINE 路徑：改成個人專題" }
+    ];
+    var TOUR = ["studio", "A", "B", "A", "C", "E", "D", "studio"];
+    // 島的中心：對不到狀況的人，從這裡把狀況傳到 LINE
+    var STUDIO = { name: "阿茲的工作室", color: "#E8743B", ground: "#F1E4D3", tex: "brick", say: "對不到狀況？傳 LINE 給我們" };
+    var LINE_ID = "@143yrbwb";
+
+    // ---------- 基本設定 ----------
+    var reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var state = { sel: null, labels: true, routes: true, carry: true, walking: !reduceMotion, auto: !reduceMotion, hour: 10, hourTarget: null };
+    // 「今天就做這一件事」完成紀錄只存在這位訪客的瀏覽器
+    var DONE_KEY = "career-island-done";
+    var done = {};
+    try { JSON.parse(localStorage.getItem(DONE_KEY) || "[]").forEach(function (id) { done[id] = true; }); } catch (e) { done = {}; }
+    function saveDone() { try { localStorage.setItem(DONE_KEY, JSON.stringify(Object.keys(done))); } catch (e) { /* 無痕模式存不了，就只在這次瀏覽有效 */ } }
+    function lineMessage(text) { return "https://line.me/R/oaMessage/" + encodeURIComponent(LINE_ID) + "/?" + encodeURIComponent(text); }
+    var $ = function (id) { return document.getElementById(id); };
+    function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+    function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; var t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+    var rand = rng(20261016);
+    var PI = Math.PI;
+
+    var canvas = $("scene");
+    var renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+    } catch (err) {
+      fallback();
+      throw err;
+    }
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+    var scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xF4EEE3);
+    scene.fog = new THREE.Fog(0xF4EEE3, 30, 78);
+    var camera = new THREE.PerspectiveCamera(30, 1, 0.3, 320);
+    var CENTER = new THREE.Vector3(0, 0, 0.6);
+    var HOME_DIR = new THREE.Vector3(0.08, 0.5, 0.86).normalize();
+    var controls = new OrbitControls(camera, canvas);
+    controls.enableDamping = true;
+    controls.maxPolarAngle = 1.22;
+    controls.minDistance = 6;
+    controls.maxDistance = 90;
+    controls.target.copy(CENTER);
+
+    var hemi = new THREE.HemisphereLight(0xEEF6FA, 0x8F8270, 1.3);
+    scene.add(hemi);
+    var sun = new THREE.DirectionalLight(0xFFF1DE, 2.8);
+    sun.castShadow = true;
+    sun.shadow.mapSize.set(2048, 2048);
+    Object.assign(sun.shadow.camera, { left: -16, right: 16, top: 16, bottom: -16, near: 1, far: 80 });
+    sun.shadow.bias = -0.0006;
+    sun.shadow.normalBias = 0.04;
+    sun.shadow.radius = 3;
+    sun.target.position.copy(CENTER);
+    scene.add(sun, sun.target);
+    var fill = new THREE.DirectionalLight(0xBFD6FF, 0.35);
+    fill.position.set(-20, 12, -10);
+    scene.add(fill);
+
+    // ---------- 材質 ----------
+    var SOLID = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.82 });
+    var GLOW = new THREE.MeshStandardMaterial({ color: 0xFFE7B0, emissive: 0xFFC35A, emissiveIntensity: 0.15, roughness: 0.5 });
+    var SCREEN = new THREE.MeshStandardMaterial({ color: 0xA8D4F0, emissive: 0x6CC0FF, emissiveIntensity: 0.25, roughness: 0.35 });
+    var C = {
+      wood: "#B98A5E", darkwood: "#8A6240", cream: "#FBF5EA", white: "#FFFFFF", ink: "#3A3633", grey: "#A9B0B8",
+      stone: "#D8CFC2", leaf: "#86BC6E", leafDark: "#5E9E57", pine: "#4F8C5E", skin: "#F6D3B5", cork: "#D9B98C",
+      line: "#06C755", gold: "#F2C14E", red: "#E8743B", pink: "#EE9BB5", blue: "#7FB5DA", paper: "#FFFDF8"
+    };
+
+    // ---------- 模型工具：零件合併成一個 mesh，顏色寫在頂點上 ----------
+    var BASE = {
+      box: new RoundedBoxGeometry(1, 1, 1, 2, 0.12),
+      flat: new THREE.BoxGeometry(1, 1, 1),
+      cyl: new THREE.CylinderGeometry(0.5, 0.5, 1, 14),
+      cone: new THREE.ConeGeometry(0.5, 1, 14),
+      roof: new THREE.ConeGeometry(0.5, 1, 4),
+      sph: new THREE.SphereGeometry(0.5, 14, 10),
+      ico: new THREE.IcosahedronGeometry(0.5, 0)
+    };
+    Object.keys(BASE).forEach(function (k) { BASE[k] = BASE[k].index ? BASE[k].toNonIndexed() : BASE[k]; BASE[k].deleteAttribute("uv"); });
+    function Kit() { this.solid = []; this.glow = []; this.screen = []; }
+    // 加一個零件：種類、顏色、尺寸 (sx,sy,sz)、中心位置 (x,y,z)、旋轉 ry；glow 為 "glow" / "screen" 時另外發光
+    Kit.prototype.add = function (kind, color, sx, sy, sz, x, y, z, ry, glow) {
+      var g = BASE[kind].clone();
+      if (kind === "roof") g.rotateY(PI / 4);
+      g.scale(sx, sy, sz);
+      if (ry) g.rotateY(ry);
+      g.translate(x || 0, y || 0, z || 0);
+      if (glow) { (glow === "screen" ? this.screen : this.glow).push(g); return this; }
+      var col = new THREE.Color(color), n = g.attributes.position.count, arr = new Float32Array(n * 3);
+      for (var i = 0; i < n; i++) { arr[i * 3] = col.r; arr[i * 3 + 1] = col.g; arr[i * 3 + 2] = col.b; }
+      g.setAttribute("color", new THREE.BufferAttribute(arr, 3));
+      this.solid.push(g);
+      return this;
+    };
+    Kit.prototype.build = function (mat) {
+      var grp = new THREE.Group();
+      if (this.solid.length) { var m = new THREE.Mesh(mergeGeometries(this.solid), mat || SOLID); m.castShadow = m.receiveShadow = true; grp.add(m); }
+      if (this.glow.length) grp.add(new THREE.Mesh(mergeGeometries(this.glow), GLOW));
+      if (this.screen.length) grp.add(new THREE.Mesh(mergeGeometries(this.screen), SCREEN));
+      return grp;
+    };
+
+    // 小模型：每個大約 1 單位高，y=0 是地面
+    function legs4(k, w, d, h, color) {
+      [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(function (s) { k.add("flat", color, 0.04, h, 0.04, s[0] * w / 2, h / 2, s[1] * d / 2); });
+    }
+    var MODELS = {
+      desk: function (k, col) {
+        k.add("box", C.wood, 1.0, 0.06, 0.55, 0, 0.5, 0); legs4(k, 0.9, 0.45, 0.48, C.darkwood);
+        k.add("box", C.grey, 0.38, 0.03, 0.26, -0.15, 0.545, 0.05);
+        k.add("flat", C.ink, 0.38, 0.26, 0.02, -0.15, 0.69, -0.08); k.add("flat", "", 0.33, 0.21, 0.01, -0.15, 0.69, -0.065, 0, "screen");
+        k.add("cyl", col, 0.08, 0.1, 0.08, 0.3, 0.58, 0.05); k.add("box", C.paper, 0.2, 0.02, 0.26, 0.2, 0.54, -0.1, 0.3);
+        k.add("box", col, 0.32, 0.05, 0.3, -0.1, 0.3, 0.5); k.add("box", col, 0.32, 0.3, 0.05, -0.1, 0.45, 0.64); legs4(k, 0.26, 0.24, 0.28, C.ink);
+      },
+      easel: function (k, col) {
+        k.add("flat", C.wood, 0.05, 1.05, 0.05, -0.28, 0.52, 0); k.add("flat", C.wood, 0.05, 1.05, 0.05, 0.28, 0.52, 0); k.add("flat", C.wood, 0.05, 1.0, 0.05, 0, 0.5, -0.28);
+        k.add("box", C.cream, 0.72, 0.52, 0.04, 0, 0.78, 0.04); k.add("flat", col, 0.56, 0.36, 0.01, 0, 0.8, 0.065);
+        k.add("flat", C.paper, 0.3, 0.05, 0.012, -0.08, 0.86, 0.072); k.add("flat", C.paper, 0.2, 0.04, 0.012, -0.13, 0.76, 0.072); k.add("sph", C.gold, 0.12, 0.12, 0.02, 0.15, 0.76, 0.07);
+        k.add("box", C.wood, 0.75, 0.04, 0.12, 0, 0.5, 0.06);
+        k.add("box", C.paper, 0.4, 0.3, 0.03, 0.62, 0.15, 0.15, -0.4); k.add("flat", C.blue, 0.3, 0.2, 0.01, 0.6, 0.16, 0.17, -0.4);
+      },
+      signpost: function (k, col) {
+        k.add("cyl", C.wood, 0.08, 1.1, 0.08, 0, 0.55, 0);
+        k.add("box", col, 0.62, 0.16, 0.05, 0.18, 0.92, 0, 0.3); k.add("box", C.cream, 0.55, 0.15, 0.05, -0.15, 0.72, 0, -0.45); k.add("box", C.gold, 0.5, 0.14, 0.05, 0.12, 0.52, 0, 0.9);
+        k.add("cone", col, 0.12, 0.1, 0.05, 0.47, 0.95, -0.1, 0.3);
+        k.add("ico", C.stone, 0.3, 0.2, 0.3, 0.35, 0.08, 0.25); k.add("ico", C.stone, 0.2, 0.15, 0.2, -0.3, 0.06, 0.2);
+      },
+      jobBoard: function (k, col) {
+        k.add("flat", C.wood, 0.07, 1.2, 0.07, -0.55, 0.6, 0); k.add("flat", C.wood, 0.07, 1.2, 0.07, 0.55, 0.6, 0);
+        k.add("box", C.cork, 1.12, 0.7, 0.05, 0, 0.85, 0); k.add("box", C.wood, 1.25, 0.07, 0.18, 0, 1.24, 0);
+        [[-0.35, 0.98, C.paper], [-0.05, 1.0, col], [0.28, 0.97, C.paper], [-0.32, 0.7, C.gold], [0.0, 0.72, C.paper], [0.33, 0.7, C.pink]].forEach(function (p) {
+          k.add("flat", p[2], 0.22, 0.24, 0.01, p[0], p[1], 0.03); k.add("sph", C.red, 0.03, 0.03, 0.03, p[0], p[1] + 0.1, 0.04);
+        });
+      },
+      clipboard: function (k, col) {
+        k.add("flat", C.ink, 0.05, 0.85, 0.05, 0, 0.42, 0); k.add("box", C.ink, 0.4, 0.04, 0.4, 0, 0.02, 0);
+        k.add("box", C.wood, 0.5, 0.66, 0.04, 0, 0.98, 0.03); k.add("box", C.grey, 0.18, 0.06, 0.05, 0, 1.3, 0.04);
+        k.add("flat", C.paper, 0.42, 0.54, 0.01, 0, 0.96, 0.055);
+        for (var i = 0; i < 4; i++) { k.add("flat", i < 3 ? C.line : C.grey, 0.06, 0.06, 0.012, -0.13, 1.13 - i * 0.12, 0.062); k.add("flat", C.grey, 0.22, 0.03, 0.012, 0.06, 1.13 - i * 0.12, 0.062); }
+        k.add("box", col, 0.32, 0.4, 0.26, 0.5, 0.2, 0.1, 0.3); k.add("box", C.paper, 0.28, 0.06, 0.22, 0.5, 0.42, 0.1, 0.3);
+      },
+      docDesk: function (k, col) {
+        k.add("box", C.cream, 1.0, 0.06, 0.6, 0, 0.5, 0); legs4(k, 0.9, 0.5, 0.48, C.grey);
+        for (var i = 0; i < 4; i++) k.add("flat", i % 2 ? C.paper : "#F1EADC", 0.28, 0.035, 0.2, -0.28, 0.55 + i * 0.035, 0, i * 0.08);
+        for (var j = 0; j < 2; j++) k.add("flat", j ? col : C.paper, 0.26, 0.035, 0.2, 0.05, 0.55 + j * 0.035, 0.05, -0.1);
+        k.add("cyl", C.ink, 0.1, 0.03, 0.1, 0.33, 0.545, -0.12); k.add("flat", C.ink, 0.025, 0.3, 0.025, 0.33, 0.7, -0.12); k.add("cone", "", 0.2, 0.14, 0.2, 0.3, 0.85, -0.06, 0, "glow");
+        k.add("box", col, 0.32, 0.05, 0.3, 0, 0.3, 0.52); k.add("box", col, 0.32, 0.3, 0.05, 0, 0.45, 0.66); legs4(k, 0.26, 0.24, 0.28, C.ink);
+      },
+      cabinet: function (k, col) {
+        k.add("box", C.grey, 0.5, 0.95, 0.45, -0.25, 0.475, 0);
+        for (var i = 0; i < 3; i++) { k.add("flat", "#C3C9CF", 0.42, 0.25, 0.02, -0.25, 0.2 + i * 0.3, 0.23); k.add("flat", C.ink, 0.12, 0.03, 0.02, -0.25, 0.26 + i * 0.3, 0.245); }
+        k.add("cyl", col, 0.2, 0.18, 0.2, -0.25, 1.04, 0); k.add("sph", C.leaf, 0.3, 0.3, 0.3, -0.25, 1.22, 0);
+        k.add("box", C.wood, 0.55, 0.05, 0.4, 0.38, 0.45, 0.05); legs4(k, 0.45, 0.3, 0.43, C.darkwood);
+        for (var j = 0; j < 3; j++) k.add("flat", j % 2 ? C.paper : col, 0.3, 0.03, 0.22, 0.38, 0.49 + j * 0.03, 0.05, j * 0.2);
+      },
+      workstation: function (k, col) {
+        k.add("box", C.wood, 1.1, 0.06, 0.55, 0, 0.5, 0); legs4(k, 1.0, 0.45, 0.48, C.darkwood);
+        k.add("flat", C.ink, 0.5, 0.32, 0.03, -0.22, 0.78, -0.12); k.add("flat", "", 0.45, 0.27, 0.01, -0.22, 0.78, -0.1, 0, "screen");
+        k.add("flat", C.ink, 0.04, 0.2, 0.04, -0.22, 0.6, -0.14);
+        k.add("flat", C.ink, 0.36, 0.26, 0.03, 0.3, 0.74, -0.08, -0.4); k.add("flat", "", 0.32, 0.22, 0.01, 0.295, 0.74, -0.065, -0.4, "screen");
+        k.add("flat", C.ink, 0.04, 0.16, 0.04, 0.3, 0.58, -0.1);
+        k.add("box", C.cream, 0.42, 0.03, 0.14, -0.15, 0.545, 0.12); k.add("cyl", col, 0.08, 0.1, 0.08, 0.38, 0.58, 0.12);
+        k.add("box", C.ink, 0.36, 0.06, 0.34, 0, 0.3, 0.52); k.add("box", C.ink, 0.36, 0.36, 0.06, 0, 0.5, 0.68); k.add("cyl", C.ink, 0.04, 0.27, 0.04, 0, 0.14, 0.52);
+      },
+      stall: function (k, col) {
+        k.add("box", C.wood, 1.1, 0.48, 0.45, 0, 0.24, 0); k.add("flat", C.cream, 1.0, 0.3, 0.01, 0, 0.26, 0.23);
+        [[-0.5, -0.2], [0.5, -0.2], [-0.5, 0.2], [0.5, 0.2]].forEach(function (p) { k.add("cyl", C.darkwood, 0.05, 1.1, 0.05, p[0], 0.55, p[1]); });
+        for (var i = 0; i < 6; i++) k.add("flat", i % 2 ? C.white : col, 0.2, 0.05, 0.62, -0.5 + i * 0.2, 1.12, 0, 0);
+        k.add("flat", col, 1.2, 0.12, 0.02, 0, 1.06, 0.31);
+        [[-0.35, C.gold], [-0.1, C.pink], [0.15, C.blue], [0.37, C.red]].forEach(function (p) { k.add("box", p[1], 0.18, 0.16, 0.18, p[0], 0.56, -0.02); });
+        k.add("box", C.cream, 0.28, 0.2, 0.03, 0.62, 0.62, 0.3, -0.5); k.add("flat", C.line, 0.18, 0.05, 0.01, 0.62, 0.65, 0.32, -0.5);
+        k.add("box", C.cork, 0.3, 0.25, 0.3, -0.75, 0.125, 0.25, 0.3); k.add("box", C.cork, 0.25, 0.2, 0.25, -0.72, 0.35, 0.25, 0.1);
+      },
+      kiosk: function (k, col) {
+        k.add("box", C.ink, 0.6, 1.1, 0.16, 0, 0.6, 0); k.add("flat", "", 0.5, 0.86, 0.01, 0, 0.62, 0.085, 0, "screen");
+        for (var i = 0; i < 4; i++) k.add("flat", C.paper, 0.36, 0.06, 0.012, 0, 0.88 - i * 0.14, 0.092);
+        k.add("flat", C.line, 0.3, 0.08, 0.012, 0, 0.32, 0.092);
+        k.add("box", C.grey, 0.7, 0.06, 0.4, 0, 0.03, 0.05);
+        k.add("sph", C.line, 0.62, 0.42, 0.16, 0.2, 1.38, 0); k.add("cone", C.line, 0.12, 0.2, 0.1, 0.02, 1.18, 0, 0);
+        k.add("sph", C.white, 0.07, 0.07, 0.04, 0.05, 1.38, 0.08); k.add("sph", C.white, 0.07, 0.07, 0.04, 0.2, 1.38, 0.08); k.add("sph", C.white, 0.07, 0.07, 0.04, 0.35, 1.38, 0.08);
+      },
+      gallery: function (k, col) {
+        [[-0.48, 0.3, col, -0.25], [0, 0.42, C.blue, 0], [0.48, 0.3, C.gold, 0.25]].forEach(function (f) {
+          k.add("flat", C.darkwood, 0.04, 0.6, 0.04, f[0], 0.3, f[1] - 0.06, f[3]);
+          k.add("box", C.ink, 0.42, 0.34, 0.04, f[0], 0.75, f[1] - 0.05, f[3]);
+          k.add("flat", C.paper, 0.36, 0.28, 0.01, f[0], 0.75, f[1] - 0.025, f[3]);
+          k.add("flat", f[2], 0.26, 0.12, 0.012, f[0], 0.72, f[1] - 0.018, f[3]);
+        });
+        k.add("box", C.cream, 0.5, 0.12, 0.3, 0, 0.06, -0.2);
+        k.add("flat", C.ink, 0.03, 1.2, 0.03, 0.75, 0.6, -0.3); k.add("cone", "", 0.18, 0.16, 0.18, 0.72, 1.18, -0.24, 0, "glow");
+      },
+      suitcase: function (k, col) {
+        k.add("box", col, 0.62, 0.44, 0.22, -0.15, 0.24, 0); k.add("flat", C.darkwood, 0.62, 0.05, 0.23, -0.15, 0.3, 0);
+        k.add("box", C.ink, 0.2, 0.06, 0.05, -0.15, 0.5, 0); k.add("flat", C.gold, 0.08, 0.06, 0.24, -0.38, 0.3, 0);
+        k.add("cyl", C.darkwood, 0.05, 1.2, 0.05, 0.42, 0.6, -0.1); k.add("cyl", C.darkwood, 0.32, 0.04, 0.32, 0.42, 0.02, -0.1);
+        k.add("box", C.blue, 0.34, 0.5, 0.16, 0.42, 0.88, -0.02); k.add("sph", C.cream, 0.18, 0.12, 0.18, 0.42, 1.18, -0.1);
+        k.add("box", C.paper, 0.32, 0.24, 0.02, -0.15, 0.62, 0.05, 0.1); k.add("flat", C.red, 0.2, 0.04, 0.01, -0.15, 0.66, 0.065, 0.1);
+      },
+      studyDesk: function (k, col) {
+        k.add("box", C.wood, 0.95, 0.05, 0.5, 0, 0.42, 0); legs4(k, 0.85, 0.4, 0.4, C.darkwood);
+        k.add("flat", C.paper, 0.22, 0.02, 0.3, -0.24, 0.46, 0.04, 0.2); k.add("flat", C.paper, 0.22, 0.02, 0.3, -0.03, 0.46, 0.04, -0.2);
+        k.add("flat", col, 0.47, 0.012, 0.32, -0.13, 0.448, 0.04);
+        k.add("box", C.grey, 0.32, 0.02, 0.22, 0.28, 0.455, 0.05); k.add("flat", C.ink, 0.32, 0.22, 0.02, 0.28, 0.58, -0.06, 0); k.add("flat", "", 0.28, 0.18, 0.01, 0.28, 0.58, -0.045, 0, "screen");
+        for (var i = 0; i < 3; i++) k.add("box", [C.red, C.blue, C.gold][i], 0.26, 0.06, 0.2, 0.62, 0.03 + i * 0.06, 0.25, i * 0.2);
+        k.add("box", col, 0.3, 0.32, 0.05, 0, 0.42, 0.55);
+      },
+      shelf: function (k, col) {
+        k.add("flat", C.wood, 0.05, 1.1, 0.35, -0.48, 0.55, 0); k.add("flat", C.wood, 0.05, 1.1, 0.35, 0.48, 0.55, 0);
+        for (var i = 0; i < 3; i++) {
+          k.add("flat", C.wood, 1.0, 0.04, 0.35, 0, 0.12 + i * 0.4, 0);
+          for (var j = 0; j < 3; j++) k.add("box", [col, C.gold, C.pink, C.blue, C.cream][(i + j) % 5], 0.2, 0.2 + (j % 2) * 0.06, 0.2, -0.3 + j * 0.3, 0.26 + i * 0.4 + (j % 2) * 0.03, 0);
+        }
+        k.add("flat", C.wood, 1.0, 0.04, 0.35, 0, 1.12, 0);
+        k.add("box", C.paper, 0.26, 0.16, 0.02, 0.62, 0.7, 0.15, -0.3); k.add("flat", C.line, 0.18, 0.04, 0.01, 0.62, 0.72, 0.165, -0.3); k.add("flat", C.ink, 0.03, 0.6, 0.03, 0.62, 0.3, 0.12);
+      },
+      toolbox: function (k, col) {
+        k.add("box", col, 0.55, 0.28, 0.3, -0.3, 0.14, 0.1); k.add("flat", C.ink, 0.3, 0.05, 0.04, -0.3, 0.33, 0.1); k.add("flat", C.ink, 0.04, 0.08, 0.04, -0.44, 0.31, 0.1); k.add("flat", C.ink, 0.04, 0.08, 0.04, -0.16, 0.31, 0.1);
+        k.add("flat", C.grey, 0.4, 0.04, 0.06, -0.25, 0.04, 0.42, 0.6); k.add("box", C.grey, 0.12, 0.05, 0.12, -0.1, 0.04, 0.52, 0.6);
+        k.add("box", C.cork, 0.5, 0.42, 0.45, 0.3, 0.21, -0.05); k.add("box", C.grey, 0.4, 0.02, 0.28, 0.3, 0.43, -0.02);
+        k.add("flat", C.ink, 0.4, 0.27, 0.02, 0.3, 0.57, -0.16); k.add("flat", "", 0.36, 0.23, 0.01, 0.3, 0.57, -0.145, 0, "screen");
+        k.add("flat", C.paper, 0.2, 0.25, 0.01, 0.62, 0.5, 0.05, -0.5); k.add("flat", C.line, 0.05, 0.05, 0.012, 0.58, 0.55, 0.06, -0.5); k.add("flat", C.ink, 0.03, 0.5, 0.03, 0.62, 0.25, 0.04);
+      },
+      noticeBoard: function (k) {
+        k.add("flat", C.darkwood, 0.07, 1.25, 0.07, -0.5, 0.62, 0); k.add("flat", C.darkwood, 0.07, 1.25, 0.07, 0.5, 0.62, 0);
+        k.add("box", C.cream, 1.05, 0.72, 0.05, 0, 0.88, 0); k.add("roof", C.red, 1.3, 0.25, 0.3, 0, 1.36, 0);
+        k.add("flat", C.red, 0.3, 0.3, 0.01, -0.28, 1.0, 0.03); k.add("flat", C.white, 0.08, 0.16, 0.012, -0.28, 1.01, 0.036);
+        [[0.08, 1.04], [0.32, 1.04], [0.08, 0.76], [0.32, 0.76], [-0.28, 0.72]].forEach(function (p, i) { k.add("flat", [C.paper, C.gold, C.paper, C.pink, C.blue][i], 0.2, 0.2, 0.012, p[0], p[1], 0.03); });
+      },
+      mailbox: function (k) {
+        k.add("cyl", C.ink, 0.07, 0.75, 0.07, 0, 0.37, 0);
+        k.add("box", C.line, 0.4, 0.34, 0.52, 0, 0.9, 0); k.add("cyl", C.line, 0.4, 0.52, 0.4, 0, 1.06, 0); k.add("flat", C.white, 0.22, 0.04, 0.01, 0, 0.98, 0.262);
+        k.add("flat", C.red, 0.04, 0.3, 0.04, 0.23, 1.05, -0.1); k.add("flat", C.red, 0.04, 0.12, 0.14, 0.23, 1.17, -0.03);
+        k.add("box", C.paper, 0.3, 0.2, 0.02, 0, 0.1, 0.35, 0.3);
+      },
+      pedestal: function (k, col) { k.add("cyl", C.cream, 0.7, 0.28, 0.7, 0, 0.14, 0); k.add("cyl", col, 0.74, 0.05, 0.74, 0, 0.29, 0); },
+      caseLine: function (k) {
+        k.add("sph", C.line, 0.62, 0.44, 0.18, 0, 0.82, 0); k.add("cone", C.line, 0.1, 0.18, 0.08, -0.16, 0.6, 0);
+        k.add("flat", C.white, 0.3, 0.06, 0.02, 0, 0.84, 0.09);
+        k.add("box", C.grey, 0.32, 0.22, 0.04, 0.32, 0.45, 0.05, -0.4); for (var i = 0; i < 3; i++) k.add("flat", C.line, 0.24, 0.025, 0.01, 0.325, 0.5 - i * 0.05, 0.075, -0.4);
+      },
+      caseGroup: function (k) {
+        k.add("box", C.ink, 0.24, 0.44, 0.04, -0.15, 0.55, 0, 0.2); k.add("flat", "", 0.2, 0.38, 0.01, -0.145, 0.55, 0.022, 0.2, "screen");
+        for (var i = 0; i < 3; i++) k.add("box", [C.cork, "#C9A877", C.gold][i], 0.18, 0.15, 0.18, 0.18 + (i % 2) * 0.12, 0.38 + Math.floor(i / 2) * 0.15, 0.05 - (i % 2) * 0.1);
+      },
+      caseWhale: function (k) {
+        k.add("cyl", "#9FD3E2", 0.6, 0.04, 0.6, 0, 0.31, 0);
+        k.add("sph", "#5C8FB8", 0.5, 0.26, 0.26, 0, 0.42, 0); k.add("cone", "#5C8FB8", 0.18, 0.2, 0.06, 0.3, 0.52, 0, 0); k.add("sph", C.white, 0.1, 0.16, 0.1, -0.12, 0.62, 0);
+        k.add("box", C.paper, 0.2, 0.2, 0.02, 0.32, 0.72, 0.1, -0.3); k.add("flat", C.ink, 0.12, 0.12, 0.012, 0.32, 0.72, 0.115, -0.3);
+      },
+      caseCasio: function (k) {
+        k.add("box", C.ink, 0.36, 0.24, 0.18, -0.12, 0.43, 0); k.add("cyl", C.grey, 0.14, 0.12, 0.14, -0.12, 0.45, 0.12); k.add("box", C.grey, 0.08, 0.04, 0.06, -0.24, 0.57, 0);
+        k.add("box", C.white, 0.5, 0.06, 0.18, 0.18, 0.34, 0.12, -0.4); for (var i = 0; i < 4; i++) k.add("flat", C.ink, 0.03, 0.02, 0.08, 0.04 + i * 0.09, 0.375, 0.1 + i * 0.04, -0.4);
+      },
+      // ---- 各區地標（比較大） ----
+      school: function (k, col) {
+        k.add("box", C.cream, 1.25, 0.75, 0.85, 0, 0.375, 0); k.add("roof", col, 1.9, 0.6, 1.3, 0, 1.05, 0);
+        k.add("flat", C.wood, 0.28, 0.45, 0.02, 0, 0.225, 0.43);
+        k.add("flat", "", 0.24, 0.2, 0.02, -0.38, 0.45, 0.43, 0, "glow"); k.add("flat", "", 0.24, 0.2, 0.02, 0.38, 0.45, 0.43, 0, "glow");
+        k.add("box", C.cream, 0.35, 0.35, 0.35, 0, 1.45, 0); k.add("roof", col, 0.55, 0.3, 0.55, 0, 1.77, 0); k.add("cyl", C.gold, 0.2, 0.04, 0.2, 0, 1.45, 0.18);
+        k.add("flat", C.ink, 0.03, 0.5, 0.03, 0.55, 1.1, 0.3); k.add("flat", C.gold, 0.25, 0.15, 0.01, 0.68, 1.27, 0.3);
+      },
+      office: function (k, col) {
+        k.add("box", C.cream, 1.0, 1.7, 0.85, 0, 0.85, 0); k.add("box", col, 1.08, 0.12, 0.93, 0, 1.76, 0);
+        for (var r = 0; r < 4; r++) for (var c = -1; c <= 1; c++) k.add("flat", "", 0.18, 0.2, 0.02, c * 0.3, 0.55 + r * 0.33, 0.43, 0, "glow");
+        k.add("flat", C.ink, 0.36, 0.38, 0.02, 0, 0.19, 0.43); k.add("box", col, 0.6, 0.05, 0.3, 0, 0.42, 0.55);
+        k.add("box", C.grey, 0.25, 0.18, 0.25, 0.25, 1.9, -0.15); k.add("cyl", C.ink, 0.03, 0.4, 0.03, -0.3, 2.0, 0.1);
+      },
+      billboard: function (k, col) {
+        k.add("flat", C.ink, 0.08, 1.0, 0.08, -0.55, 0.5, 0); k.add("flat", C.ink, 0.08, 1.0, 0.08, 0.55, 0.5, 0);
+        k.add("box", C.ink, 1.55, 0.98, 0.1, 0, 1.4, 0); k.add("flat", "", 1.43, 0.86, 0.01, 0, 1.4, 0.052, 0, "screen");
+        k.add("flat", col, 1.43, 0.12, 0.012, 0, 1.77, 0.058);
+        [[-0.4, 1.5, 0.5], [-0.3, 1.35, 0.7], [-0.45, 1.2, 0.4], [0.4, 1.38, 0.42]].forEach(function (b) { k.add("flat", C.paper, b[2], 0.07, 0.012, b[0] + b[2] / 2 - 0.2, b[1], 0.06); });
+        k.add("box", col, 0.4, 0.2, 0.4, 0, 0.1, 0.25);
+      },
+      lineTower: function (k, col) {
+        k.add("cyl", C.ink, 0.1, 1.0, 0.1, 0, 0.5, 0);
+        k.add("sph", C.line, 1.3, 0.9, 0.32, 0, 1.5, 0); k.add("cone", C.line, 0.25, 0.35, 0.2, -0.38, 1.08, 0);
+        k.add("flat", C.white, 0.6, 0.16, 0.02, 0, 1.52, 0.16);
+        [[-0.55, 0.15], [-0.3, 0.12], [0.45, 0.14]].forEach(function (b, i) { k.add("box", i === 1 ? C.cork : "#C9A877", 0.3, b[1] * 2, 0.3, b[0], b[1], 0.35, i * 0.4); });
+      },
+      stage: function (k, col) {
+        k.add("box", C.wood, 1.5, 0.22, 1.0, 0, 0.11, 0); k.add("box", col, 1.5, 0.62, 0.06, 0, 0.55, -0.47); k.add("box", C.cream, 1.6, 0.06, 0.1, 0, 0.88, -0.47);
+        k.add("flat", C.paper, 0.3, 0.22, 0.01, -0.4, 0.55, -0.435); k.add("flat", C.paper, 0.3, 0.22, 0.01, 0.4, 0.55, -0.435);
+        k.add("sph", C.gold, 0.26, 0.26, 0.05, 0, 0.58, -0.42); k.add("cyl", C.gold, 0.22, 0.3, 0.22, 0.35, 0.4, -0.05); k.add("box", C.ink, 0.25, 0.1, 0.25, 0.35, 0.26, -0.05);
+        k.add("flat", C.ink, 0.03, 1.5, 0.03, -0.7, 0.75, 0.4); k.add("flat", C.red, 0.4, 0.26, 0.01, -0.5, 1.35, 0.4);
+        k.add("cone", "", 0.16, 0.14, 0.16, 0.6, 1.3, -0.3, 0, "glow"); k.add("cone", "", 0.16, 0.14, 0.16, -0.4, 1.3, -0.3, 0, "glow");
+        k.add("flat", C.ink, 0.03, 0.9, 0.03, -0.1, 0.65, 0.2); k.add("sph", C.ink, 0.1, 0.12, 0.1, -0.1, 1.1, 0.2);
+      },
+      house: function (k, col) {
+        k.add("box", C.cream, 1.35, 0.9, 1.05, 0, 0.45, 0); k.add("roof", col, 2.05, 0.75, 1.6, 0, 1.25, 0);
+        k.add("flat", C.line, 0.32, 0.55, 0.02, 0, 0.275, 0.53);
+        k.add("flat", "", 0.28, 0.24, 0.02, -0.42, 0.55, 0.53, 0, "glow"); k.add("flat", "", 0.28, 0.24, 0.02, 0.42, 0.55, 0.53, 0, "glow");
+        k.add("box", C.ink, 0.2, 0.5, 0.2, 0.42, 1.5, -0.25);
+        k.add("box", C.line, 0.7, 0.22, 0.05, 0, 1.12, 0.62); k.add("flat", C.white, 0.5, 0.06, 0.01, 0, 1.12, 0.65);
+      },
+      fountain: function (k) {
+        k.add("cyl", C.stone, 1.0, 0.22, 1.0, 0, 0.11, 0); k.add("cyl", "#A9D8E6", 0.86, 0.04, 0.86, 0, 0.21, 0);
+        k.add("cyl", C.stone, 0.14, 0.5, 0.14, 0, 0.45, 0); k.add("cyl", C.stone, 0.4, 0.08, 0.4, 0, 0.7, 0); k.add("sph", "#CDEFF7", 0.16, 0.2, 0.16, 0, 0.82, 0);
+      },
+      // ---- 裝飾 ----
+      tree: function (k) { k.add("cyl", C.darkwood, 0.08, 0.4, 0.08, 0, 0.2, 0); k.add("sph", rand() < 0.5 ? C.leaf : "#9CC77E", 0.5, 0.48, 0.5, 0, 0.6, 0); },
+      pine: function (k) { k.add("cyl", C.darkwood, 0.08, 0.3, 0.08, 0, 0.15, 0); k.add("cone", C.pine, 0.6, 0.6, 0.6, 0, 0.55, 0); k.add("cone", C.pine, 0.45, 0.5, 0.45, 0, 0.85, 0); k.add("cone", C.pine, 0.3, 0.4, 0.3, 0, 1.1, 0); },
+      lamp: function (k) { k.add("cyl", C.ink, 0.04, 1.0, 0.04, 0, 0.5, 0); k.add("cyl", C.ink, 0.12, 0.05, 0.12, 0, 0.02, 0); k.add("sph", "", 0.16, 0.16, 0.16, 0, 1.05, 0, 0, "glow"); },
+      bench: function (k) { k.add("box", C.wood, 0.7, 0.05, 0.22, 0, 0.25, 0); k.add("box", C.wood, 0.7, 0.18, 0.04, 0, 0.4, -0.1); legs4(k, 0.6, 0.15, 0.23, C.ink); },
+      flowers: function (k) { for (var i = 0; i < 6; i++) { var x = (rand() - 0.5) * 0.5, z = (rand() - 0.5) * 0.5; k.add("cyl", C.leafDark, 0.02, 0.2, 0.02, x, 0.1, z); k.add("sph", [C.pink, C.gold, C.red, C.white][i % 4], 0.1, 0.1, 0.1, x, 0.22, z); } },
+      soapbox: function (k) { k.add("box", C.wood, 0.42, 0.22, 0.42, 0, 0.11, 0); k.add("flat", C.darkwood, 0.36, 0.02, 0.01, 0, 0.12, 0.21); }
+    };
+    function model(name, col, scale) {
+      var k = new Kit();
+      MODELS[name](k, col);
+      var g = k.build();
+      if (scale) g.scale.setScalar(scale);
+      return g;
+    }
+
+    // ---------- 地面紋理 ----------
+    function groundTex(base, kind) {
+      var cv = document.createElement("canvas"); cv.width = cv.height = 256;
+      var x = cv.getContext("2d"), r = rng(kind.length * 131 + base.charCodeAt(2));
+      x.fillStyle = base; x.fillRect(0, 0, 256, 256);
+      var dark = new THREE.Color(base).offsetHSL(0, 0, -0.05).getStyle(), light = new THREE.Color(base).offsetHSL(0, 0, 0.03).getStyle();
+      var i, j;
+      if (kind === "brick") { x.strokeStyle = dark; x.lineWidth = 2; for (i = 0; i < 8; i++) for (j = 0; j < 6; j++) x.strokeRect(j * 52 + (i % 2) * 26 - 26, i * 32, 52, 32); }
+      if (kind === "plank") { for (i = 0; i < 10; i++) { x.fillStyle = i % 2 ? dark : light; x.fillRect(0, i * 25.6, 256, 24); } x.fillStyle = dark; for (i = 0; i < 30; i++) x.fillRect(r() * 256, Math.floor(r() * 10) * 25.6, 2, 24); }
+      if (kind === "tile") { x.strokeStyle = dark; x.lineWidth = 2; for (i = 0; i <= 256; i += 32) { x.beginPath(); x.moveTo(i, 0); x.lineTo(i, 256); x.moveTo(0, i); x.lineTo(256, i); x.stroke(); } }
+      if (kind === "dots" || kind === "speckle") {
+        for (i = 0; i < (kind === "dots" ? 240 : 520); i++) { x.fillStyle = r() < 0.5 ? dark : light; x.beginPath(); x.arc(r() * 256, r() * 256, kind === "dots" ? 2.5 + r() * 3 : 1 + r() * 2, 0, PI * 2); x.fill(); }
+      }
+      var t = new THREE.CanvasTexture(cv);
+      t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4;
+      return t;
+    }
+    function waterTex() {
+      var cv = document.createElement("canvas"); cv.width = cv.height = 256;
+      var x = cv.getContext("2d"), r = rng(7);
+      x.fillStyle = "#ffffff"; x.fillRect(0, 0, 256, 256);
+      x.strokeStyle = "rgba(120,170,185,.22)"; x.lineCap = "round";
+      for (var i = 0; i < 70; i++) { var px = r() * 256, py = r() * 256, w = 8 + r() * 22; x.lineWidth = 1.5 + r() * 1.5; x.beginPath(); x.moveTo(px, py); x.quadraticCurveTo(px + w / 2, py - 3, px + w, py); x.stroke(); }
+      var t = new THREE.CanvasTexture(cv);
+      t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(40, 40); t.colorSpace = THREE.SRGBColorSpace;
+      return t;
+    }
+
+    // ---------- 海、海岸森林 ----------
+    var WATER_Y = -0.55;
+    var water = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.MeshStandardMaterial({ color: 0xBFE0E6, map: waterTex(), roughness: 0.6 }));
+    water.rotation.x = -PI / 2; water.position.y = WATER_Y; water.receiveShadow = true;
+    scene.add(water);
+
+    (function shoreline() {
+      // 遠方一圈岸邊：沙灘 + 草地，上面種滿樹
+      var shore = new THREE.Mesh(new THREE.RingGeometry(25, 90, 72, 1), new THREE.MeshStandardMaterial({ color: 0xC9D9A4, roughness: 1 }));
+      shore.rotation.x = -PI / 2; shore.position.y = WATER_Y + 0.25; scene.add(shore);
+      var beach = new THREE.Mesh(new THREE.RingGeometry(23.5, 26, 72, 1), new THREE.MeshStandardMaterial({ color: 0xEADBB8, roughness: 1 }));
+      beach.rotation.x = -PI / 2; beach.position.y = WATER_Y + 0.15; scene.add(beach);
+      var pineK = new Kit(); MODELS.pine(pineK); var pineGeo = mergeGeometries(pineK.solid);
+      var leafK = new Kit(); leafK.add("cyl", C.darkwood, 0.1, 0.4, 0.1, 0, 0.2, 0); leafK.add("ico", C.leaf, 0.85, 0.8, 0.85, 0, 0.75, 0); var leafGeo = mergeGeometries(leafK.solid);
+      var N = 420, pm = new THREE.InstancedMesh(pineGeo, SOLID, N), lm = new THREE.InstancedMesh(leafGeo, SOLID, N);
+      var m = new THREE.Matrix4(), q = new THREE.Quaternion(), s = new THREE.Vector3(), p = new THREE.Vector3(), np = 0, nl = 0;
+      for (var i = 0; i < N * 2; i++) {
+        var a = rand() * PI * 2, d = 26 + Math.pow(rand(), 0.7) * 22, sc = 0.9 + rand() * 1.1;
+        p.set(Math.cos(a) * d, WATER_Y + 0.25, Math.sin(a) * d);
+        q.setFromAxisAngle(new THREE.Vector3(0, 1, 0), rand() * PI * 2);
+        s.set(sc, sc * (0.9 + rand() * 0.4), sc);
+        m.compose(p, q, s);
+        if (rand() < 0.55 && np < N) pm.setMatrixAt(np++, m); else if (nl < N) lm.setMatrixAt(nl++, m);
+      }
+      pm.count = np; lm.count = nl;
+      pm.castShadow = lm.castShadow = false;
+      scene.add(pm, lm);
+    })();
+
+    // ---------- 主島：中央工作室 + 六塊六角平台 ----------
+    var R = 2.4, H = 1.3, TOP = 0;
+    var GAP = 0.32, DIST = R * Math.sqrt(3) + GAP;
+    // 六個方位：0 正前方，順時針
+    var DIRS = [0, 1, 2, 3, 4, 5].map(function (i) { var a = i * PI / 3; return new THREE.Vector3(Math.sin(a), 0, Math.cos(a)); });
+    var sideMat = new THREE.MeshStandardMaterial({ color: "#D9C7AD", roughness: 0.95 });
+    var curbMat = new THREE.MeshStandardMaterial({ color: "#E7DAC7", roughness: 0.9 });
+    var foamMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.6, depthWrite: false });
+    var shallowMat = new THREE.MeshBasicMaterial({ color: 0xD3EEEE, transparent: true, opacity: 0.5, depthWrite: false });
+    var pickables = [];
+    var NODES = {};
+    var EDGES = [];
+
+    function hexRing(rOut, rIn) {
+      return new THREE.RingGeometry(rIn, rOut, 6, 1).rotateX(-PI / 2);
+    }
+    // 一塊六角平台：側面、紋理頂面、路緣、彩色腰帶、淺灘與浪花
+    function platform(pos, radius, top, ground, tex, band, id) {
+      var g = new THREE.Group(); g.position.copy(pos); scene.add(g);
+      var body = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius * 0.96, H + top, 6).rotateY(PI / 6), sideMat);
+      body.position.y = top - (H + top) / 2; body.castShadow = body.receiveShadow = true; g.add(body);
+      var topGeo = new THREE.CircleGeometry(radius - 0.04, 6).rotateX(-PI / 2);
+      var uv = topGeo.attributes.uv, ps = topGeo.attributes.position;
+      for (var i = 0; i < uv.count; i++) uv.setXY(i, (ps.getX(i) + pos.x) / 2.4, (ps.getZ(i) + pos.z) / 2.4);
+      var topMesh = new THREE.Mesh(topGeo, new THREE.MeshStandardMaterial({ map: groundTex(ground, tex), roughness: 0.92 }));
+      topMesh.position.y = top + 0.002; topMesh.receiveShadow = true; g.add(topMesh);
+      var curb = new THREE.Mesh(hexRing(radius, radius - 0.1), curbMat); curb.position.y = top + 0.005; g.add(curb);
+      var bandMat = band ? new THREE.MeshStandardMaterial({ color: band, roughness: 0.8, emissive: 0x000000 }) : null;
+      if (band) { var b = new THREE.Mesh(new THREE.CylinderGeometry(radius + 0.012, radius + 0.012, 0.18, 6, 1, true).rotateY(PI / 6), bandMat); b.position.y = top - 0.1; g.add(b); }
+      var sh = new THREE.Mesh(hexRing(radius + 0.8, radius), shallowMat); sh.position.y = WATER_Y + 0.01; g.add(sh);
+      var fo = new THREE.Mesh(hexRing(radius + 0.18, radius - 0.02), foamMat); fo.position.y = WATER_Y + 0.015; g.add(fo);
+      // 選中時頂面外圈亮起
+      var halo = new THREE.Mesh(hexRing(radius - 0.02, radius - 0.22), new THREE.MeshBasicMaterial({ color: 0xE8743B, transparent: true, opacity: 0.9, depthWrite: false }));
+      halo.position.y = top + 0.012; halo.visible = false; g.add(halo);
+      if (id) { topMesh.userData.id = id; body.userData.id = id; pickables.push(topMesh, body); }
+      return { group: g, halo: halo, bandMat: bandMat };
+    }
+    // 平台上的局部座標：u 沿「離開中心」方向，v 沿側向
+    function local(center, dir, u, v) {
+      return new THREE.Vector3(center.x + dir.x * u - dir.z * v, TOP, center.z + dir.z * u + dir.x * v);
+    }
+    function place(obj, p, faceTo) {
+      obj.position.copy(p);
+      if (faceTo) obj.rotation.y = Math.atan2(faceTo.x - p.x, faceTo.z - p.z);
+      scene.add(obj);
+      return obj;
+    }
+
+    // 工作室（中央）
+    (function () {
+      var pos = new THREE.Vector3(0, 0, 0);
+      var pf = platform(pos, R, TOP, STUDIO.ground, STUDIO.tex, STUDIO.color, "studio");
+      var node = NODES.studio = { id: "studio", kind: "studio", data: STUDIO, pos: pos, dir: DIRS[0], halo: pf.halo, bandMat: pf.bandMat };
+      var house = model("house", STUDIO.color, 0.95); place(house, new THREE.Vector3(0.2, TOP, -0.65)); house.rotation.y = -0.15;
+      house.traverse(function (o) { if (o.isMesh) { o.userData.id = "studio"; pickables.push(o); } });
+      place(model("fountain", null, 0.8), new THREE.Vector3(-0.95, TOP, 0.75));
+      place(model("tree"), new THREE.Vector3(1.35, TOP, 0.1)).scale.setScalar(0.9);
+      place(model("bench"), new THREE.Vector3(-0.1, TOP, 1.5)).rotation.y = PI;
+      place(model("lamp", null, 0.8), new THREE.Vector3(1.0, TOP, 1.25));
+      place(model("flowers", null, 0.8), new THREE.Vector3(-0.6, TOP, -1.55));
+      place(model("soapbox", null, 1), new THREE.Vector3(0.75, TOP, 0.9));
+      node.anchor = new THREE.Vector3(0.75, TOP + 0.22, 0.9);
+      node.labelAt = new THREE.Vector3(0.2, TOP + 2.1, -0.65);
+      // Q&A 告示牌與報名信箱：工作室旁兩個可以點的小站
+      [["faq", "noticeBoard", new THREE.Vector3(-1.5, TOP, -0.15), 0.75, 1.3], ["signup", "mailbox", new THREE.Vector3(1.6, TOP, -1.0), 0.8, 1.15]].forEach(function (s) {
+        var g = model(s[1], null, s[3]); place(g, s[2]); g.rotation.y = s[0] === "faq" ? 0.5 : -0.4;
+        g.traverse(function (o) { if (o.isMesh) { o.userData.id = s[0]; pickables.push(o); } });
+        NODES[s[0]] = { id: s[0], kind: s[0], pos: s[2], labelAt: s[2].clone().setY(TOP + s[4]) };
+      });
+    })();
+
+    // 五個課程區 + 後方的山
+    Object.keys(COURSES).forEach(function (id) {
+      var c = COURSES[id], dir = DIRS[c.slot];
+      var pos = dir.clone().multiplyScalar(DIST);
+      var pf = platform(pos, R, TOP, c.ground, c.tex, c.color, id);
+      var node = NODES[id] = { id: id, kind: "course", data: c, pos: pos, dir: dir, halo: pf.halo, bandMat: pf.bandMat, items: [] };
+      var lm = model(c.mark, c.color, 0.95);
+      place(lm, local(pos, dir, 1.15, 0));
+      lm.rotation.y = (c.slot === 1 ? -0.5 : c.slot === 5 ? 0.5 : 0);   // 地標都朝向鏡頭
+      lm.traverse(function (o) { if (o.isMesh) { o.userData.id = id; pickables.push(o); } });
+      // 裝飾
+      place(model(rand() < 0.5 ? "tree" : "pine", null, 0.7 + rand() * 0.25), local(pos, dir, 1.35, -1.25));
+      place(model("tree", null, 0.6), local(pos, dir, 1.45, 1.15));
+      place(model("lamp", null, 0.75), local(pos, dir, -1.55, 1.2));
+      place(model("bench", null, 0.85), local(pos, dir, 0.55, -1.45), pos);
+      place(model("flowers", null, 0.7), local(pos, dir, -1.05, -1.15));
+      var soapAt = local(pos, dir, -0.55, 0);
+      place(model("soapbox"), soapAt);
+      node.anchor = soapAt.clone().setY(TOP + 0.22);
+      node.labelAt = local(pos, dir, 1.15, 0).setY(TOP + 2.75);
+    });
+    (function mountain() {
+      var pos = DIRS[3].clone().multiplyScalar(DIST);
+      platform(pos, R, TOP, "#E3DCCF", "speckle", "#9A8F80");
+      var k = new Kit();
+      k.add("cone", "#B9AC99", 2.6, 3.4, 2.6, -0.3, 1.7, -0.4, 0.3); k.add("cone", C.white, 0.95, 1.05, 0.95, -0.3, 2.9, -0.4, 0.3);
+      k.add("cone", "#C8BCA9", 1.9, 2.5, 1.9, 0.9, 1.25, 0.3, 0.8); k.add("cone", C.white, 0.7, 0.7, 0.7, 0.9, 2.15, 0.3, 0.8);
+      k.add("cone", "#AFA28E", 1.4, 1.7, 1.4, -1.2, 0.85, 0.7, 0.1);
+      var m = k.build(); m.children[0].material = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.9, flatShading: true });
+      m.children[0].castShadow = true;
+      place(m, pos.clone());
+      for (var i = 0; i < 6; i++) place(model("pine", null, 0.55 + rand() * 0.3), local(pos, DIRS[3], -0.6 + rand() * 1.8, (rand() - 0.5) * 3));
+    })();
+
+    // 中央與各區之間的木橋
+    DIRS.forEach(function (dir) {
+      var mid = dir.clone().multiplyScalar(DIST / 2);
+      var k = new Kit();
+      k.add("box", C.wood, 0.75, 0.06, GAP + 0.7, 0, -0.02, 0);
+      for (var i = -2; i <= 2; i++) k.add("flat", C.darkwood, 0.75, 0.015, 0.025, 0, 0.015, i * 0.19);
+      [[-0.36, 0.3], [0.36, 0.3], [-0.36, -0.3], [0.36, -0.3]].forEach(function (p) { k.add("cyl", C.darkwood, 0.05, 0.22, 0.05, p[0], 0.1, p[1]); });
+      k.add("flat", C.wood, 0.03, 0.03, 0.65, -0.36, 0.2, 0); k.add("flat", C.wood, 0.03, 0.03, 0.65, 0.36, 0.2, 0);
+      var b = k.build(); b.position.copy(mid); b.rotation.y = Math.atan2(dir.x, dir.z); scene.add(b);
+    });
+
+    // ---------- 衛星小島：燈塔、森林、花園、碼頭 ----------
+    var boats = [];
+    var CASE_AT = new THREE.Vector3(-6.9, 0, 7.0);
+    function islet(pos, radius, ground, tex) { return platform(pos, radius, TOP - 0.25, ground, tex, null); }
+    (function () {
+      var p1 = new THREE.Vector3(9.4, 0, -4.6); islet(p1, 1.15, "#E3D8C6", "speckle");
+      var lh = new Kit();
+      lh.add("cyl", C.white, 0.7, 2.0, 0.7, 0, 1.0, 0); lh.add("cyl", C.red, 0.74, 0.3, 0.74, 0, 0.55, 0); lh.add("cyl", C.red, 0.7, 0.3, 0.7, 0, 1.35, 0);
+      lh.add("cyl", C.ink, 0.8, 0.08, 0.8, 0, 2.02, 0); lh.add("cyl", "", 0.45, 0.4, 0.45, 0, 2.26, 0, 0, "glow"); lh.add("cone", C.red, 0.7, 0.45, 0.7, 0, 2.68, 0);
+      place(lh.build(), p1.clone().setY(TOP - 0.25));
+      var p2 = new THREE.Vector3(-10.5, 0, 3.4); islet(p2, 1.6, "#D9E6C2", "speckle");
+      for (var i = 0; i < 9; i++) { var a = rand() * PI * 2, d = rand() * 1.1; place(model("pine", null, 0.7 + rand() * 0.6), new THREE.Vector3(p2.x + Math.cos(a) * d, TOP - 0.25, p2.z + Math.sin(a) * d)); }
+      var p3 = new THREE.Vector3(8.6, 0, 5.4); islet(p3, 1.2, "#DCE8C9", "dots");
+      for (var j = 0; j < 5; j++) place(model("flowers", null, 0.9), new THREE.Vector3(p3.x + (rand() - 0.5) * 1.3, TOP - 0.25, p3.z + (rand() - 0.5) * 1.1));
+      var sign = model("signpost", C.green, 0.7); place(sign, new THREE.Vector3(p3.x + 0.5, TOP - 0.25, p3.z - 0.5));
+      // 阿茲的案例展覽島：四個展示台，各放一個真實案例的小模型
+      var p4 = CASE_AT;
+      platform(p4, 1.9, TOP - 0.15, "#EFE7DA", "tile", "#8A7F72");
+      CASES.forEach(function (c, i) {
+        var a = -PI / 4 + i * PI / 2 + PI / 4, at = new THREE.Vector3(p4.x + Math.sin(a) * 0.85, TOP - 0.15, p4.z + Math.cos(a) * 0.85);
+        var k = new Kit(); MODELS.pedestal(k, c.course ? COURSES[c.course].color : "#8A7F72"); MODELS[c.model](k);
+        var g = k.build(); g.scale.setScalar(0.95); place(g, at); g.rotation.y = (rand() - 0.5) * 0.5;
+        var id = "case" + i;
+        g.traverse(function (o) { if (o.isMesh) { o.userData.id = id; pickables.push(o); } });
+        NODES[id] = { id: id, kind: "case", index: i, data: c, pos: at, labelAt: at.clone().setY(TOP + 0.95) };
+      });
+      place(model("tree", null, 0.7), new THREE.Vector3(p4.x + 1.2, TOP - 0.15, p4.z - 0.6));
+      // 從 A 區接過來的小木橋
+      var bk = new Kit(); bk.add("box", C.wood, 0.6, 0.06, 1.5, 0, 0, 0); for (var bi = -3; bi <= 3; bi++) bk.add("flat", C.darkwood, 0.6, 0.015, 0.025, 0, 0.035, bi * 0.2);
+      var bridgeA = bk.build(), aPos = DIRS[COURSES.A.slot].clone().multiplyScalar(DIST);
+      bridgeA.position.copy(aPos.clone().lerp(p4, 0.525)).setY(TOP - 0.1); bridgeA.rotation.y = Math.atan2(p4.x - aPos.x, p4.z - aPos.z); scene.add(bridgeA);
+      // 碼頭與小船
+      var dk = new Kit();
+      dk.add("box", C.wood, 3.2, 0.1, 0.8, 0, 0, 0);
+      for (var n = 0; n < 4; n++) dk.add("cyl", C.darkwood, 0.1, 0.8, 0.1, -1.4 + n * 0.95, -0.35, 0.38);
+      var dock = dk.build(); dock.position.set(-9.2, TOP - 0.2, -4.6); dock.rotation.y = 0.5; scene.add(dock);
+      [[-10.3, -3.0, 0.3, C.blue], [-8.2, -6.1, -0.4, C.red]].forEach(function (b) {
+        var k = new Kit();
+        k.add("box", b[3], 0.5, 0.22, 1.3, 0, 0, 0); k.add("box", C.cream, 0.42, 0.06, 1.1, 0, 0.1, 0);
+        k.add("flat", C.darkwood, 0.04, 1.2, 0.04, 0, 0.7, 0); k.add("flat", C.white, 0.02, 0.9, 0.6, 0.03, 0.75, 0.3);
+        var boat = k.build(); boat.position.set(b[0], WATER_Y + 0.12, b[1]); boat.rotation.y = b[2]; boat.userData.bob = rand() * 6; scene.add(boat); boats.push(boat);
+      });
+    })();
+
+    // ---------- 狀況小模型：放在 to[0] 那一區 ----------
+    var ITEM_SLOTS = [[0.15, -1.15], [0.15, 1.15], [-0.95, -0.6], [-0.95, 0.65]];
+    SYMPTOMS.forEach(function (s, i) {
+      var home = NODES[s.to[0]];
+      var slot = ITEM_SLOTS[home.items.length];
+      var at = local(home.pos, home.dir, slot[0], slot[1]);
+      var mat = SOLID.clone(); mat.emissive = new THREE.Color(0x000000);
+      var k = new Kit(); MODELS[s.model](k, home.data.color);
+      var g = k.build(mat); g.scale.setScalar(0.8);
+      place(g, at);
+      g.rotation.y = (rand() - 0.5) * 0.6;   // 大致朝向鏡頭，帶一點隨機角度
+      var id = "s" + i;
+      g.traverse(function (o) { if (o.isMesh) { o.userData.id = id; pickables.push(o); } });
+      NODES[id] = { id: id, kind: "symptom", index: i, data: s, pos: at, home: home, mat: mat, group: g,
+        anchor: at.clone().setY(TOP + 0.9), labelAt: at.clone().setY(TOP + 1.35) };
+      home.items.push(id);
+    });
+
+    // ---------- 連線：會流動的發光管 ----------
+    function arc(a, b, lift) {
+      var p0 = a.clone(), p2 = b.clone();
+      var mid = p0.clone().lerp(p2, 0.5);
+      mid.y += lift + p0.distanceTo(p2) * 0.18;
+      return new THREE.QuadraticBezierCurve3(p0, mid, p2);
+    }
+    function flowMaterial(color, len) {
+      return new THREE.ShaderMaterial({
+        transparent: true, depthWrite: false,
+        uniforms: { uTime: { value: 0 }, uOn: { value: 0 }, uLen: { value: len }, uColor: { value: new THREE.Color(color) } },
+        vertexShader: "varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }",
+        fragmentShader: [
+          "uniform float uTime; uniform float uOn; uniform float uLen; uniform vec3 uColor; varying vec2 vUv;",
+          "void main(){",
+          "  float k = fract(vUv.x * uLen * 0.9 - uTime * 1.2);",
+          "  float dash = smoothstep(0.0, 0.15, k) * smoothstep(0.6, 0.4, k);",
+          "  gl_FragColor = vec4(uColor * (0.9 + dash * 0.5), uOn * (0.35 + 0.65 * dash));",
+          "}"
+        ].join("\n")
+      });
+    }
+    function addEdge(a, b, kind, note) {
+      var from = kind === "route" ? NODES[a].labelAt.clone().setY(TOP + 1.6) : NODES[a].anchor.clone();
+      var to = NODES[b].labelAt.clone().setY(TOP + 1.6);
+      var curve = arc(from, to, kind === "route" ? 1.0 : 0.6);
+      var len = curve.getLength();
+      var mat = flowMaterial(kind === "route" ? 0xE8743B : 0xE2B33C, len);
+      var tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, kind === "route" ? 0.05 : 0.04, 6, false), mat);
+      tube.renderOrder = 2;
+      scene.add(tube);
+      EDGES.push({ a: a, b: b, kind: kind, note: note || "", curve: curve, mesh: tube, mat: mat, target: 0 });
+    }
+    ROUTES.forEach(function (r) { addEdge(r.a, r.b, "route", r.note); });
+    SYMPTOMS.forEach(function (s, i) { s.to.forEach(function (id) { addEdge("s" + i, id, "need"); }); });
+    function edgesOf(id) { return EDGES.filter(function (e) { return e.a === id || e.b === id; }); }
+    function other(e, id) { return e.a === id ? e.b : e.a; }
+
+    // ---------- 地面步道：走橋、繞工作室外圈 ----------
+    var RING = 1.75;
+    function angleOf(dir) { return Math.atan2(dir.x, dir.z); }
+    function ringPoint(a) { return new THREE.Vector3(Math.sin(a) * RING, TOP, Math.cos(a) * RING); }
+    // 從某區（或工作室）的某點走到另一區的某點
+    function groundPath(from, fromNode, to, toNode) {
+      var pts = [from.clone()];
+      if (fromNode !== toNode) {
+        if (fromNode.kind !== "studio") { pts.push(local(fromNode.pos, fromNode.dir, -1.7, 0)); pts.push(fromNode.dir.clone().multiplyScalar(DIST / 2)); }
+        var a0 = fromNode.kind === "studio" ? Math.atan2(from.x, from.z) : angleOf(fromNode.dir);
+        var a1 = toNode.kind === "studio" ? Math.atan2(to.x, to.z) : angleOf(toNode.dir);
+        var d = ((a1 - a0 + PI * 3) % (PI * 2)) - PI;
+        var steps = Math.max(1, Math.ceil(Math.abs(d) / 0.45));
+        for (var i = 0; i <= steps; i++) pts.push(ringPoint(a0 + d * i / steps));
+        if (toNode.kind !== "studio") { pts.push(toNode.dir.clone().multiplyScalar(DIST / 2)); pts.push(local(toNode.pos, toNode.dir, -1.7, 0)); }
+      }
+      pts.push(to.clone());
+      pts.forEach(function (p) { p.y = TOP + 0.02; });
+      return new THREE.CatmullRomCurve3(pts, false, "centripetal");
+    }
+
+    // ---------- 小人 ----------
+    var PART = { body: new THREE.CapsuleGeometry(0.2, 0.3, 4, 10), head: new THREE.SphereGeometry(0.21, 16, 12), hair: new THREE.SphereGeometry(0.225, 16, 12, 0, PI * 2, 0, PI / 2), leg: new THREE.CapsuleGeometry(0.07, 0.18, 3, 6), eye: new THREE.SphereGeometry(0.03, 6, 5) };
+    var figMats = {};
+    function fm(c) { return figMats[c] || (figMats[c] = new THREE.MeshStandardMaterial({ color: c, roughness: 0.8 })); }
+    function figure(shirt, hair, pants) {
+      var g = new THREE.Group();
+      function add(geo, col, x, y, z) { var m = new THREE.Mesh(geo, fm(col)); m.position.set(x, y, z); m.castShadow = true; g.add(m); return m; }
+      var l1 = add(PART.leg, pants || "#5B6470", -0.08, 0.16, 0), l2 = add(PART.leg, pants || "#5B6470", 0.08, 0.16, 0);
+      add(PART.body, shirt, 0, 0.55, 0);
+      add(PART.head, C.skin, 0, 0.98, 0); add(PART.hair, hair || "#3A2E28", 0, 1.0, -0.02);
+      add(PART.eye, "#2A2724", -0.07, 0.99, 0.19); add(PART.eye, "#2A2724", 0.07, 0.99, 0.19);
+      g.userData.legs = [l1, l2];
+      return g;
+    }
+    function stride(f, t, on) {
+      var L = f.userData.legs;
+      L[0].rotation.x = on ? Math.sin(t) * 0.5 : 0; L[1].rotation.x = on ? -Math.sin(t) * 0.5 : 0;
+    }
+    // 站在各區的人
+    var idlers = [];
+    var SHIRTS = ["#7FB5DA", "#EE9BB5", "#F2C14E", "#86BC6E", "#FFFFFF", "#C9A0DC", "#E8743B"], HAIRS = ["#3A2E28", "#6B4A2E", "#1E1E1E", "#B9875A"];
+    Object.keys(NODES).forEach(function (id) {
+      var n = NODES[id];
+      if (n.kind !== "symptom") return;
+      var f = figure(SHIRTS[n.index % SHIRTS.length], HAIRS[n.index % HAIRS.length]);
+      f.scale.setScalar(0.42);
+      var at = local(n.home.pos, n.home.dir, -0.5, 0).lerp(n.pos, 0.62);
+      at.x += (rand() - 0.5) * 0.3; at.z += (rand() - 0.5) * 0.3;
+      place(f, at, n.pos);
+      idlers.push({ fig: f, phase: rand() * 6 });
+    });
+    [[-1.4, 1.2], [0.0, 0.9]].forEach(function (p, i) {
+      var f = figure(SHIRTS[(i + 3) % SHIRTS.length], HAIRS[i]); f.scale.setScalar(0.42);
+      place(f, new THREE.Vector3(p[0], TOP, p[1]), new THREE.Vector3(-0.95, 0, 0.75));
+      idlers.push({ fig: f, phase: rand() * 6 });
+    });
+
+    // 阿茲：橘衣、黃色頭帶，沿步道巡島
+    var aaz = figure("#E8743B", "#2A2724", "#3E4A5C");
+    var band = new THREE.Mesh(new THREE.TorusGeometry(0.215, 0.035, 6, 20), fm("#F2C14E")); band.rotation.x = PI / 2; band.position.y = 1.07; aaz.add(band);
+    aaz.scale.setScalar(0.5);
+    scene.add(aaz);
+    // queue：接下來要去的站；走完就照 TOUR 再巡一圈。guided：帶路模式的終點
+    var walk = { from: "studio", to: null, queue: [], t: 0, pause: 1.5, curve: null, guided: null };
+    function nextLeg() {
+      if (!walk.queue.length) walk.queue = TOUR.slice(1);
+      while (walk.queue.length && walk.queue[0] === walk.from) walk.queue.shift();
+      walk.to = walk.queue.shift();
+      var a = NODES[walk.from], b = NODES[walk.to];
+      walk.curve = groundPath(a.anchor, a, b.anchor, b);
+      walk.t = 0;
+    }
+    function guide(path) {
+      walk.from = "studio";
+      walk.queue = path.slice();
+      walk.guided = path[path.length - 1];
+      walk.pause = 0.6;
+      walk.curve = null;
+      aaz.position.copy(NODES.studio.anchor);
+      say.innerHTML = "<b>阿茲</b>：跟我來，我們走 " + esc(path.join(" → "));
+      say.classList.add("show");
+      if (!state.walking) $("t-walk").click();
+      state.labels || $("t-labels").click();
+      flyTo(new THREE.Vector3(0, 0, 1.2), closeDist(16));
+      log("🧭 阿茲開始帶路：" + path.join(" → "));
+    }
+    aaz.position.copy(NODES.studio.anchor);
+
+    // 搬運小人：頭頂黃箱子，從狀況模型走到對應課程區
+    var needEdges = EDGES.filter(function (e) { return e.kind === "need"; });
+    var carriers = ["#7FB5DA", "#EE9BB5", "#86BC6E", "#FFFFFF"].map(function (shirt, k) {
+      var f = figure(shirt, HAIRS[k]);
+      var crate = new THREE.Mesh(new RoundedBoxGeometry(0.42, 0.32, 0.42, 2, 0.05), fm("#F2C14E")); crate.position.y = 1.38; crate.castShadow = true; f.add(crate);
+      f.scale.setScalar(0.42);
+      scene.add(f);
+      var c = { fig: f, edge: null, curve: null, t: 0, wait: 0 };
+      assignCarrier(c);
+      c.t = 0.1 + rand() * 0.7; c.wait = 0;
+      f.position.copy(c.curve.getPoint(c.t));
+      return c;
+    });
+    function assignCarrier(c) {
+      c.edge = needEdges[Math.floor(Math.random() * needEdges.length)];
+      var s = NODES[c.edge.a], target = NODES[c.edge.b];
+      var start = local(s.home.pos, s.home.dir, -0.5, 0).lerp(s.pos, 0.75);
+      c.curve = groundPath(start, s.home, target.anchor.clone().add(new THREE.Vector3((Math.random() - 0.5) * 0.5, 0, (Math.random() - 0.5) * 0.5)), target);
+      c.t = 0;
+      c.wait = 0.6 + Math.random() * 2.4;
+    }
+
+    // ---------- HTML 名牌 ----------
+    var labelsEl = $("labels");
+    Object.keys(NODES).forEach(function (id) {
+      var n = NODES[id];
+      var el = document.createElement("button");
+      el.type = "button";
+      if (n.kind === "studio") {
+        el.className = "tag studio";
+        el.innerHTML = '<span class="n">★</span>' + esc(STUDIO.name);
+      } else if (n.kind === "case") {
+        el.className = "tag sym extra";
+        el.style.setProperty("--c", n.data.course ? COURSES[n.data.course].color : "#8A7F72");
+        el.innerHTML = '<span class="n">' + n.data.icon + "</span><span>" + esc(n.data.title) + "</span>";
+        el.setAttribute("aria-label", "案例：" + n.data.title);
+      } else if (n.kind === "faq" || n.kind === "signup") {
+        el.className = "tag extra";
+        el.style.setProperty("--c", n.kind === "faq" ? "#E8743B" : "#06C755");
+        el.innerHTML = n.kind === "faq" ? '<span class="n">Q</span>Q&amp;A 告示牌' : '<span class="n">📮</span>報名信箱';
+      } else if (n.kind === "course") {
+        el.className = "tag course";
+        el.style.setProperty("--c", n.data.color);
+        el.innerHTML = '<span class="n">' + id + "</span>" + esc(n.data.name.slice(2)) + " <small>" + esc(n.data.price.replace("NT$", "")) + "</small>";
+        el.setAttribute("aria-label", n.data.full + "，" + n.data.price);
+      } else {
+        el.className = "tag sym";
+        el.style.setProperty("--c", n.home.data.color);
+        el.innerHTML = '<span class="n">' + (n.index + 1) + "</span><span>" + esc(n.data.t) + "</span>";
+        el.title = n.data.t;
+        el.setAttribute("aria-label", "狀況 " + (n.index + 1) + "：" + n.data.t);
+      }
+      el.addEventListener("click", function () { select(state.sel === id ? null : id); });
+      labelsEl.appendChild(el);
+      n.label = el;
+    });
+    var say = document.createElement("div");
+    say.className = "say";
+    labelsEl.appendChild(say);
+
+    // ---------- 晨昏日夜 ----------
+    var KEYS = [
+      { h: 0, sky: "#1C2438", sun: "#8C9CFF", si: 0.35, hemi: 0.35, glow: 1, water: "#2C3F5E" },
+      { h: 5, sky: "#2A3150", sun: "#9C9CFF", si: 0.4, hemi: 0.4, glow: 1, water: "#34496A" },
+      { h: 6.5, sky: "#F3CDB5", sun: "#FFB98A", si: 1.7, hemi: 0.95, glow: 0.45, water: "#C6D8DC" },
+      { h: 9, sky: "#F4EEE3", sun: "#FFF1DE", si: 2.8, hemi: 1.3, glow: 0, water: "#BFE0E6" },
+      { h: 16, sky: "#F3ECE0", sun: "#FFEBD0", si: 2.6, hemi: 1.25, glow: 0, water: "#BFE0E6" },
+      { h: 18, sky: "#F1BE9C", sun: "#FF9F66", si: 1.8, hemi: 0.9, glow: 0.5, water: "#D7C8C0" },
+      { h: 19.5, sky: "#3A3456", sun: "#9C8CFF", si: 0.55, hemi: 0.5, glow: 1, water: "#33405E" },
+      { h: 24, sky: "#1C2438", sun: "#8C9CFF", si: 0.35, hemi: 0.35, glow: 1, water: "#2C3F5E" }
+    ];
+    var NOTES = [[5, "清晨・島還在睡"], [9, "上午・島上開始忙起來"], [12, "中午・課程區都是人"], [17, "下午・小人還在搬"], [19.5, "黃昏・燈塔亮起來"], [24, "夜晚・工作室的燈還亮著"]];
+    var cA = new THREE.Color(), cB = new THREE.Color(), skyCol = new THREE.Color();
+    var night = 0;
+    function applyTime(h) {
+      var k = 0;
+      while (k < KEYS.length - 2 && KEYS[k + 1].h <= h) k++;
+      var a = KEYS[k], b = KEYS[k + 1], f = (h - a.h) / (b.h - a.h);
+      skyCol.copy(cA.set(a.sky)).lerp(cB.set(b.sky), f);
+      scene.background.copy(skyCol);
+      scene.fog.color.copy(skyCol);
+      sun.color.copy(cA.set(a.sun)).lerp(cB.set(b.sun), f);
+      sun.intensity = a.si + (b.si - a.si) * f;
+      hemi.intensity = a.hemi + (b.hemi - a.hemi) * f;
+      night = a.glow + (b.glow - a.glow) * f;
+      water.material.color.copy(cA.set(a.water)).lerp(cB.set(b.water), f);
+      GLOW.emissiveIntensity = 0.15 + night * 2.2;
+      SCREEN.emissiveIntensity = 0.25 + night * 1.6;
+      var ang = (h - 6) / 12 * PI;
+      sun.position.set(Math.cos(ang) * 22, Math.max(9, Math.sin(ang) * 26), 14);
+      var hh = Math.floor(h), mm = Math.floor((h - hh) * 60);
+      $("clock-time").textContent = (hh < 10 ? "0" : "") + hh + ":" + (mm < 10 ? "0" : "") + mm;
+      for (var i = 0; i < NOTES.length; i++) if (h < NOTES[i][0]) { $("clock-note").textContent = NOTES[i][1]; break; }
+    }
+
+    // ---------- 相機運鏡 ----------
+    var fly = null;
+    function homeDistance() { return Math.max(24, 14 / (0.54 * Math.min(camera.aspect, 1.6))); }
+    function flyTo(target, dist) {
+      var dir = camera.position.clone().sub(controls.target).normalize();
+      if (dir.y < 0.45) dir.copy(HOME_DIR);
+      fly = { fp: camera.position.clone(), ft: controls.target.clone(), tp: target.clone().add(dir.multiplyScalar(dist)), tt: target.clone(), k: reduceMotion ? 1 : 0 };
+    }
+    function goHome() {
+      fly = { fp: camera.position.clone(), ft: controls.target.clone(), tp: CENTER.clone().add(HOME_DIR.clone().multiplyScalar(homeDistance())), tt: CENTER.clone(), k: reduceMotion ? 1 : 0 };
+    }
+    function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+    function closeDist(d) { return camera.aspect < 0.8 ? d * 1.7 : d; }
+
+    // ---------- 選取與面板 ----------
+    var detail = $("detail");
+    function lineUrl() { return document.body.dataset.lineUrl; }
+    function select(id, keepView) {
+      if (id !== state.sel) courseTab = "overview";
+      state.sel = id;
+      var lit = {};
+      if (id) { lit[id] = true; edgesOf(id).forEach(function (e) { lit[other(e, id)] = true; }); }
+      if (id && NODES[id].kind === "case" && NODES[id].data.course) lit[NODES[id].data.course] = true;
+      EDGES.forEach(function (e) {
+        var hit = id && (e.a === id || e.b === id);
+        e.target = !id ? (e.kind === "route" ? 0.5 : 0) : hit ? 1 : (e.kind === "route" ? 0.1 : 0);
+      });
+      Object.keys(NODES).forEach(function (k) {
+        var n = NODES[k];
+        if (n.halo) n.halo.visible = !!lit[k];
+        n.label.classList.toggle("lit", !!id && !!lit[k] && k !== id);
+        n.label.classList.toggle("sel", k === id);
+        n.label.classList.toggle("open", k === id);
+        n.label.classList.toggle("dim", !!id && !lit[k] && !(n.kind === "symptom" && lit[n.home.id] && NODES[id].kind === "course"));
+      });
+      document.querySelectorAll("#sym-list .row, #course-list .row").forEach(function (r) {
+        r.classList.toggle("on", r.dataset.id === id);
+      });
+      if (!id) {
+        faqOpen = -1;
+        detail.hidden = true;
+        document.body.classList.remove("has-detail");
+        return;
+      }
+      var n = NODES[id];
+      var scroll = detail.scrollTop;
+      detail.innerHTML = { course: courseHtml, studio: studioHtml, symptom: symptomHtml, "case": caseHtml, faq: faqBoardHtml, signup: signupHtml }[n.kind](n);
+      detail.style.setProperty("--c", n.kind === "course" ? n.data.color : n.kind === "symptom" ? n.home.data.color : n.kind === "case" && n.data.course ? COURSES[n.data.course].color : STUDIO.color);
+      detail.hidden = false;
+      document.body.classList.add("has-detail");
+      detail.scrollTop = keepView ? scroll : 0;
+      detail.querySelectorAll("[data-line]").forEach(function (a) { a.href = lineUrl(); a.target = "_blank"; a.rel = "noopener"; });
+      if (keepView) return;
+      if (n.kind === "symptom") {
+        var c = n.pos.clone();
+        n.data.to.forEach(function (t) { c.add(NODES[t].pos); });
+        c.divideScalar(n.data.to.length + 1);
+        flyTo(c, closeDist(n.data.to.length > 1 ? 17 : 10));
+      } else if (n.kind === "case") flyTo(CASE_AT, closeDist(9));
+      else flyTo(n.pos, closeDist(n.kind === "faq" || n.kind === "signup" ? 8 : 12));
+    }
+    var X_BTN = '<button class="btn x" type="button" data-close aria-label="關閉">×</button>';
+    function list(items) { return "<ul>" + items.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>"; }
+    function stepsHtml(steps) { return '<div class="steps">' + steps.map(function (s) { return "<span>" + esc(s) + "</span>"; }).join("<i>→</i>") + "</div>"; }
+    function daysHtml(days) {
+      return days.map(function (d) {
+        return '<div class="day"><h4>' + esc(d.h) + "</h4><ol>" + d.items.map(function (it) { return "<li><span>" + esc(it[0]) + "</span>" + esc(it[1]) + "</li>"; }).join("") + "</ol>" +
+          (d.out ? '<p class="out">' + esc(d.out) + "</p>" : "") + "</div>";
+      }).join("");
+    }
+    function faqHtml(f, open) { return '<details class="faq-item"' + (open ? " open" : "") + "><summary>" + esc(f.q) + "</summary><p>" + esc(f.a) + "</p></details>"; }
+    function caseCard(c) { return '<div class="case-card"><b>' + c.icon + " " + esc(c.title) + "</b>" + esc(c.d) + "</div>"; }
+    var courseTab = "overview";
+    function courseHtml(n) {
+      var c = n.data, dt = DETAILS[n.id], tab = courseTab;
+      var from = edgesOf(n.id).filter(function (e) { return e.kind === "need"; });
+      var next = edgesOf(n.id).filter(function (e) { return e.kind === "route" && e.a === n.id; });
+      var prev = edgesOf(n.id).filter(function (e) { return e.kind === "route" && e.b === n.id; });
+      var faqs = FAQS.filter(function (f) { return f.at.indexOf(n.id) > -1; });
+      var cases = CASES.filter(function (k) { return k.course === n.id; });
+      var tabs = [["overview", "概覽"], ["sched", "時程"], ["kit", "帶走什麼"], ["more", "狀況與 Q&A"]];
+      var body;
+      if (tab === "sched") {
+        body = n.id === "E"
+          ? '<div class="lab">實體兩天怎麼上</div><p>' + esc(dt.twoDays) + '</p><div class="chipset"><button class="btn" type="button" data-go="C" data-ct="sched">看 C 網頁班時程</button><button class="btn" type="button" data-go="D" data-ct="sched">看 D LINE 班時程</button></div>' +
+            '<div class="lab">四週怎麼走<span class="soon">輔導形式與次數開課前公告</span></div><div class="day"><ol>' + dt.weeks.map(function (w) { return "<li><span>" + w[0] + "</span>" + esc(w[1]) + "</li>"; }).join("") + "</ol></div>"
+          : '<div class="lab">' + esc(dt.schedTitle) + '<span class="soon">暫定，試教後公告定版</span></div>' + daysHtml(dt.days);
+      } else if (tab === "kit") {
+        body = '<div class="lab">課堂成果</div>' + list(c.take) +
+          '<div class="lab">課後工具包（規劃中）</div>' + list(dt.kit) +
+          '<p class="fmt">工具包內容依方案規劃製作中，實際交付清單以開課前公告為準。</p>' +
+          (dt.tools ? '<div class="lab">使用工具</div><p>' + esc(dt.tools) + "</p>" : "") +
+          (dt.core ? '<div class="lab">工具核心功能</div>' + list(dt.core) : "") +
+          (dt.career ? '<div class="lab">對應職涯</div><p>' + esc(dt.career) + "</p>" : "");
+      } else if (tab === "more") {
+        body = (from.length ? '<div class="lab">這一區能解決的狀況</div><div class="chipset">' + from.map(function (e) {
+            var s = NODES[e.a]; return '<button class="btn" type="button" data-go="' + s.id + '">' + (done[s.id] ? "✓ " : (s.index + 1) + "．") + esc(s.data.t) + "</button>";
+          }).join("") + "</div>" : "") +
+          (faqs.length ? '<div class="lab">常見問題</div>' + faqs.map(function (f) { return faqHtml(f); }).join("") : "") +
+          (prev.length ? '<div class="lab">上一站</div><div class="chipset">' + prev.map(function (e) {
+            return '<button class="btn" type="button" data-go="' + e.a + '">' + esc(COURSES[e.a].name) + "</button>";
+          }).join("") + "</div>" : "") +
+          (next.length ? '<div class="lab">下一站</div><div class="chipset">' + next.map(function (e) {
+            return '<button class="btn" type="button" data-go="' + e.b + '">' + esc(COURSES[e.b].name) + "：" + esc(e.note) + "</button>";
+          }).join("") + "</div>" : "");
+      } else {
+        body = "<p>" + esc(c.lead) + "</p>" +
+          (dt.who ? '<div class="lab">適合誰</div><p>' + esc(dt.who) + "</p>" : "") +
+          (dt.scenes ? '<div class="lab">兩種接單情境</div><ul>' + dt.scenes.map(function (s) { return "<li><b>" + esc(s[0]) + "</b>：" + esc(s[1]) + "</li>"; }).join("") + "</ul>" : "") +
+          (dt.tracks ? '<div class="lab">選一條主軌</div><ul>' + dt.tracks.map(function (s) { return "<li><b>" + esc(s[0]) + "</b>：" + esc(s[1]) + "</li>"; }).join("") + "</ul>" : "") +
+          (dt.steps ? '<div class="lab">怎麼學</div>' + stepsHtml(dt.steps) : "") +
+          (cases.length ? '<div class="lab">阿茲用同一套做法做過的案子</div>' + cases.map(caseCard).join("") : "") +
+          (c.warn ? '<div class="warn"><b>注意</b>' + esc(c.warn) + "</div>" : "");
+      }
+      return X_BTN +
+        '<div class="kicker">Island · ' + n.id + "</div><h2>" + esc(c.full) + '</h2><span class="pill">' + esc(c.stage) + "</span>" +
+        '<div class="price" style="margin-top:10px"><strong>' + esc(c.price) + "</strong>" + esc(c.unit) + '</div><div class="fmt">' + esc(c.format) + "</div>" +
+        '<div class="ctabs" role="tablist">' + tabs.map(function (t) { return '<button type="button" role="tab" data-ctab="' + t[0] + '" aria-selected="' + (t[0] === tab) + '"' + (t[0] === tab ? ' class="on"' : "") + ">" + t[1] + "</button>"; }).join("") + "</div>" +
+        body +
+        '<div class="acts"><a class="btn ink" href="index.html#' + c.card + '">看 ' + esc(c.name) + " 完整方案卡 →</a>" +
+        '<a class="btn line" href="index.html#signup" data-line>LINE 詢問 ' + esc(c.name) + "</a></div>";
+    }
+    function caseHtml(n) {
+      var c = n.data;
+      return X_BTN + '<div class="kicker">阿茲的案例展 · ' + (n.index + 1) + " / " + CASES.length + "</div><h2>" + c.icon + " " + esc(c.title) + "</h2>" +
+        '<span class="pill">' + (c.course ? "對應 " + esc(COURSES[c.course].name) : "長期合作") + "</span>" +
+        "<p>" + esc(c.d) + "</p>" +
+        '<p class="fmt">課堂上教的，就是實際案子在用的做法。</p>' +
+        '<div class="lab">講師 阿茲 ARZ・AI 自動化工程師／AI 工作流程設計師</div><p>' + esc(COACH) + "</p>" +
+        '<div class="acts">' + (c.course ? '<button class="btn ink" type="button" data-go="' + c.course + '">去 ' + esc(COURSES[c.course].name) + " 區看看 →</button>" : "") +
+        '<a class="btn" href="https://arz-ai-showcase.pages.dev/" target="_blank" rel="noopener">看阿茲的作品集 ↗</a></div>' +
+        '<div class="navrow"><button class="btn" type="button" data-go="case' + ((n.index + CASES.length - 1) % CASES.length) + '">← 上一個</button>' +
+        '<button class="btn" type="button" data-go="case' + ((n.index + 1) % CASES.length) + '">下一個 →</button></div>';
+    }
+    var faqOpen = -1;
+    function faqBoardHtml() {
+      return X_BTN + '<div class="kicker">Q&amp;A 告示牌</div><h2>報名前常被問的 8 題</h2>' +
+        FAQS.map(function (f, i) { return faqHtml(f, i === faqOpen); }).join("") +
+        '<div class="acts"><a class="btn line" href="index.html#signup" data-line>還有問題？加 LINE 用文字問 →</a></div>';
+    }
+    function signupHtml() {
+      return X_BTN + '<div class="kicker">報名信箱</div><h2>先用 LINE 文字聊，確定適合再報名</h2>' +
+        '<div class="day"><ol>' + SIGNUP.steps.map(function (s, i) { return "<li><span>步驟 " + (i + 1) + "</span><div><b>" + esc(s[0]) + "</b><br>" + esc(s[1]) + "</div></li>"; }).join("") + "</ol></div>" +
+        '<p class="fmt">' + esc(SIGNUP.note) + "</p>" +
+        '<div class="lab">近期場次</div><div class="day"><ol>' + SIGNUP.sessions.map(function (s) { return "<li><span>" + esc(s[0]) + "</span>" + esc(s[1]) + "</li>"; }).join("") + "</ol></div>" +
+        '<p class="fmt">' + esc(SIGNUP.sessionNote) + "</p>" +
+        '<div class="acts"><a class="btn line" href="index.html#signup" data-line>加入 LINE 官方帳號，開始文字諮詢 →</a>' +
+        '<button class="btn" type="button" data-quiz="start">還不確定？先做選課小測驗</button></div>';
+    }
+
+    // ---------- 選課小測驗 ----------
+    var quiz = { step: 0, ans: {} };
+    function quizSteps() { return QUIZ.filter(function (q) { return !q.when || q.when(quiz.ans); }); }
+    function quizPath(a) {
+      var path = [];
+      if (a.level === "new" && a.goal !== "A") path.push("A");
+      path.push(a.goal);
+      if (a.own === "yes") path.push("E");
+      return path;
+    }
+    function quizHtml() {
+      var steps = quizSteps(), q = steps[quiz.step];
+      // 第 3 題要看目標才決定出不出現，還沒選目標前先當成 3 題
+      var total = quiz.ans.goal ? steps.length : QUIZ.length;
+      var dots = '<div class="quiz-dots">' + QUIZ.slice(0, total).map(function (s, i) { return '<i class="' + (i <= quiz.step ? "on" : "") + '"></i>'; }).join("") + "</div>";
+      if (q) {
+        return X_BTN + '<div class="kicker">選課小測驗 · 第 ' + (quiz.step + 1) + " / " + total + " 題</div>" + dots + "<h2>" + esc(q.q) + "</h2>" +
+          q.opts.map(function (o) { return '<button class="btn opt" type="button" data-ans="' + q.key + ":" + o[0] + '">' + esc(o[1]) + "</button>"; }).join("") +
+          (quiz.step ? '<div class="navrow"><button class="btn" type="button" data-quiz="back">← 上一題</button></div>' : "");
+      }
+      var path = quizPath(quiz.ans);
+      var why = [];
+      if (path[0] === "A" && quiz.ans.goal !== "A") why.push(QUIZ_WHY.newbie);
+      path.forEach(function (id) { why.push(QUIZ_WHY[id]); });
+      var msg = "我做了職涯島的選課小測驗，建議路線是 " + path.join(" → ") + "，想問適不適合我？";
+      return X_BTN + '<div class="kicker">選課小測驗 · 結果</div>' + dots + "<h2>建議妳這樣走</h2>" +
+        '<div class="path">' + path.map(function (id) { return '<b style="background:' + COURSES[id].color + '">' + id + "</b>"; }).join("<i>→</i>") + "</div>" +
+        list(path.map(function (id) { return COURSES[id].name + "｜" + COURSES[id].price + "　" + COURSES[id].say; })) +
+        '<div class="lab">為什麼這樣排</div>' + list(why) +
+        '<p class="fmt">這是依課程規劃整理的建議，不是報名資格；實際適不適合，加 LINE 用文字問我們最準。</p>' +
+        '<div class="acts"><button class="btn ink" type="button" data-guide="' + path.join(",") + '">🚶 請阿茲帶路，走一次這條路線</button>' +
+        path.map(function (id) { return '<button class="btn" type="button" data-go="' + id + '">看 ' + esc(COURSES[id].name) + "</button>"; }).join("") +
+        '<a class="btn line" href="' + lineMessage(msg) + '" target="_blank" rel="noopener">把結果傳給我們 →</a>' +
+        '<button class="btn" type="button" data-quiz="start">重新測一次</button></div>';
+    }
+    function openQuiz(reset) {
+      if (reset) quiz = { step: 0, ans: {} };
+      select(null);
+      detail.innerHTML = quizHtml();
+      detail.style.setProperty("--c", "#E8743B");
+      detail.hidden = false;
+      document.body.classList.add("has-detail");
+      detail.scrollTop = 0;
+      var steps = quizSteps();
+      if (quiz.step >= steps.length) showPath(quizPath(quiz.ans));
+    }
+    // 在地圖上亮出一條課程路線
+    function showPath(path) {
+      var on = {};
+      path.forEach(function (id) { on[id] = true; });
+      EDGES.forEach(function (e) {
+        var hit = false;
+        for (var i = 0; i < path.length - 1; i++) if (e.kind === "route" && e.a === path[i] && e.b === path[i + 1]) hit = true;
+        e.target = hit ? 1 : (e.kind === "route" ? 0.08 : 0);
+      });
+      Object.keys(NODES).forEach(function (k) {
+        var n = NODES[k];
+        if (n.halo) n.halo.visible = !!on[k];
+        n.label.classList.toggle("lit", !!on[k]);
+        n.label.classList.toggle("sel", false);
+        n.label.classList.toggle("dim", !on[k] && n.kind === "course");
+      });
+      var c = new THREE.Vector3();
+      path.forEach(function (id) { c.add(NODES[id].pos); });
+      flyTo(c.divideScalar(path.length), closeDist(path.length > 1 ? 18 : 12));
+    }
+    function askText(s) { return "我的狀況是：「" + s.t + "」，想問該從哪一門課開始？"; }
+    function symptomHtml(n) {
+      var s = n.data, i = n.index, total = SYMPTOMS.length, ok = !!done[n.id];
+      return '<button class="btn x" type="button" data-close aria-label="關閉">×</button>' +
+        '<div class="kicker">' + esc(n.home.data.name) + " 區 · 狀況 " + (i + 1) + " / " + total + "</div><h2>" + esc(s.t) + '</h2><span class="pill">' + esc(s.tag) + "</span>" +
+        "<p>" + esc(s.d) + "</p>" +
+        '<div class="todo"><span class="pill">今天就做這一件事</span><p>' + esc(s.todo) + "</p>" +
+        '<button class="btn' + (ok ? " done" : "") + '" type="button" data-done="' + n.id + '" aria-pressed="' + ok + '" style="margin-top:10px">' +
+        (ok ? "✓ 這一小步我做完了" : "我做完這一小步了") + "</button></div>" +
+        '<div class="acts">' + s.to.map(function (id) {
+          return '<button class="btn ink" type="button" data-go="' + id + '">去 ' + esc(COURSES[id].name) + " 區看看 →</button>";
+        }).join("") +
+        '<a class="btn line" href="' + lineMessage(askText(s)) + '" target="_blank" rel="noopener">把這個狀況傳給我們 →</a></div>' +
+        '<p class="copy-note">沒有跳到 LINE？打開 LINE 搜尋 ' + LINE_ID + '，貼上這句：<br>「' + esc(askText(s)) + '」 <button type="button" data-copy="' + n.id + '">複製這句</button></p>' +
+        '<div class="navrow"><button class="btn" type="button" data-go="s' + ((i + total - 1) % total) + '">← 上一個</button>' +
+        '<button class="btn" type="button" data-go="s' + ((i + 1) % total) + '">下一個 →</button></div>';
+    }
+    function studioHtml() {
+      return '<button class="btn x" type="button" data-close aria-label="關閉">×</button>' +
+        '<div class="kicker">Studio · 島的中心</div><h2>' + esc(STUDIO.name) + "</h2>" +
+        "<p>對不到自己的狀況，或想直接問該從哪一門開始？加 LINE 官方帳號，用文字說說妳的背景和想做的事，我們幫妳判斷從哪一門開始。</p>" +
+        '<div class="acts"><a class="btn line" href="index.html#signup" data-line>加 LINE 文字諮詢 →</a>' +
+        '<button class="btn ink" type="button" data-quiz="start">🧭 先做選課小測驗（3 題）</button></div>' +
+        '<div class="progress">' + progressText() + "</div>" +
+        '<div class="lab">工作室旁邊還有</div><div class="chipset">' +
+        '<button class="btn" type="button" data-go="faq">Q&amp;A 告示牌</button><button class="btn" type="button" data-go="signup">📮 報名信箱</button>' +
+        '<button class="btn" type="button" data-go="case0">阿茲的案例展</button></div>' +
+        '<div class="lab">或先去找妳的那一區</div><div class="chipset">' + Object.keys(COURSES).map(function (id) {
+          return '<button class="btn" type="button" data-go="' + id + '">' + esc(COURSES[id].name) + "</button>";
+        }).join("") + "</div>";
+    }
+    function progressText() {
+      var n = Object.keys(done).length;
+      return n ? "已完成 " + n + " / " + SYMPTOMS.length + " 個「今天就做這一件事」" : "點一個小模型，先做一件 5 分鐘內做得到的小事。";
+    }
+    function refreshDone() {
+      Object.keys(NODES).forEach(function (k) { if (NODES[k].kind === "symptom") NODES[k].label.classList.toggle("done", !!done[k]); });
+      $("progress").textContent = progressText();
+      renderSymptoms($("q").value);
+    }
+    detail.addEventListener("click", function (e) {
+      var go = e.target.closest("[data-go]");
+      var mark = e.target.closest("[data-done]");
+      var copy = e.target.closest("[data-copy]");
+      var ctab = e.target.closest("[data-ctab]");
+      var qz = e.target.closest("[data-quiz]");
+      var ans = e.target.closest("[data-ans]");
+      var guideBtn = e.target.closest("[data-guide]");
+      if (ctab) { courseTab = ctab.dataset.ctab; select(state.sel, true); }
+      else if (go) {
+        select(go.dataset.go);
+        if (go.dataset.ct) { courseTab = go.dataset.ct; select(go.dataset.go, true); }
+      }
+      else if (qz) {
+        if (qz.dataset.quiz === "back") { quiz.step = Math.max(0, quiz.step - 1); openQuiz(false); }
+        else openQuiz(true);
+      } else if (ans) {
+        var kv = ans.dataset.ans.split(":");
+        quiz.ans[kv[0]] = kv[1];
+        if (kv[0] === "goal" && kv[1] !== "C" && kv[1] !== "D") delete quiz.ans.own;
+        quiz.step++;
+        openQuiz(false);
+        if (quiz.step >= quizSteps().length) log("🧭 有人做完選課小測驗：建議 " + quizPath(quiz.ans).join(" → "));
+      } else if (guideBtn) {
+        guide(guideBtn.dataset.guide.split(","));
+      } else if (mark) {
+        var id = mark.dataset.done;
+        if (done[id]) delete done[id];
+        else { done[id] = true; log("✅ 完成一小步：" + NODES[id].data.todo); }
+        saveDone();
+        refreshDone();
+        select(id, true);
+      } else if (copy) {
+        var text = askText(NODES[copy.dataset.copy].data);
+        if (navigator.clipboard) navigator.clipboard.writeText(text).then(function () { copy.textContent = "已複製"; }, function () { copy.textContent = "請手動選取複製"; });
+        else copy.textContent = "請手動選取複製";
+      } else if (e.target.closest("[data-close]")) { select(null); goHome(); }
+    });
+    addEventListener("keydown", function (e) { if (e.key === "Escape" && state.sel) { select(null); goHome(); } });
+
+    // ---------- 右側面板 ----------
+    var dock = $("dock");
+    var tabs = dock.querySelectorAll("[data-tab]");
+    tabs.forEach(function (t) {
+      t.addEventListener("click", function () {
+        var wasOn = t.classList.contains("on");
+        if (matchMedia("(max-width: 760px)").matches && wasOn) { dock.classList.toggle("collapsed"); return; }
+        dock.classList.remove("collapsed");
+        tabs.forEach(function (o) { o.classList.toggle("on", o === t); o.setAttribute("aria-selected", o === t ? "true" : "false"); });
+        dock.querySelectorAll("[data-pane]").forEach(function (p) { p.hidden = p.dataset.pane !== t.dataset.tab; });
+      });
+    });
+    function renderSymptoms(q) {
+      q = (q || "").trim().toLowerCase();
+      var html = SYMPTOMS.map(function (s, i) {
+        var hay = (s.t + s.tag + s.d + s.to.join("")).toLowerCase();
+        if (q && hay.indexOf(q) < 0) return "";
+        var ok = done["s" + i];
+        return '<button class="row' + (state.sel === "s" + i ? " on" : "") + '" type="button" data-id="s' + i + '" style="--c:' + (ok ? "#4FA87A" : COURSES[s.to[0]].color) + '"><span class="n"' + (ok ? ' title="已完成這一小步"' : "") + ">" + (ok ? "✓" : i + 1) + "</span><span>" + esc(s.t) +
+          "<small>→ " + s.to.map(function (id) { return COURSES[id].name; }).join("、") + "</small></span></button>";
+      }).join("");
+      if (q) {
+        html += FAQS.map(function (f, i) {
+          if ((f.q + f.a).toLowerCase().indexOf(q) < 0) return "";
+          return '<button class="row extra" type="button" data-faq="' + i + '" style="--c:#E8743B"><span class="n">Q</span><span>' + esc(f.q) + "<small>Q&amp;A 告示牌</small></span></button>";
+        }).join("");
+        html += CASES.map(function (c, i) {
+          if ((c.title + c.d).toLowerCase().indexOf(q) < 0) return "";
+          return '<button class="row extra" type="button" data-id="case' + i + '" style="--c:#8A7F72"><span class="n">' + c.icon + "</span><span>" + esc(c.title) + "<small>阿茲的案例展</small></span></button>";
+        }).join("");
+      }
+      $("sym-list").innerHTML = html || '<p class="empty">找不到這個關鍵字。<a href="index.html#signup" data-line>加 LINE 用文字描述妳的狀況</a>，我們幫妳判斷。</p>';
+      $("sym-list").querySelectorAll("[data-line]").forEach(function (a) { a.href = lineUrl(); a.target = "_blank"; a.rel = "noopener"; });
+    }
+    renderSymptoms("");
+    $("q").addEventListener("input", function (e) { renderSymptoms(e.target.value); });
+    dock.addEventListener("click", function (e) {
+      var r = e.target.closest(".row[data-id]");
+      var fq = e.target.closest("[data-faq]");
+      if (r) select(r.dataset.id);
+      else if (fq) { faqOpen = +fq.dataset.faq; state.sel = null; select("faq"); }
+      else if (e.target.closest("[data-quiz-open]")) openQuiz(true);
+    });
+    $("quiz-open").addEventListener("click", function () { openQuiz(true); });
+    document.querySelectorAll("[data-line]").forEach(function (a) { a.href = lineUrl(); a.target = "_blank"; a.rel = "noopener"; });
+
+    // ---------- 工作室日誌與搬運清單 ----------
+    var LOG = [];
+    function log(text) {
+      LOG.unshift({ t: $("clock-time").textContent, text: text });
+      if (LOG.length > 40) LOG.pop();
+      $("log-list").innerHTML = LOG.map(function (l) { return "<li><time>" + esc(l.t) + "</time>" + esc(l.text) + "</li>"; }).join("");
+    }
+    function renderCarry() {
+      $("carry-list").innerHTML = state.carry ? carriers.map(function (c) {
+        var s = NODES[c.edge.a];
+        return '<button class="row" type="button" data-id="' + s.id + '" style="--c:#F2C14E"><span class="n">📦</span><span>「' + esc(s.data.t) + "」<small>" +
+          (c.wait > 0 ? "準備出發 → " : "搬往 → ") + esc(COURSES[c.edge.b].name) + " 區</small></span></button>";
+      }).join("") : '<p class="empty">搬運暫停中。按下方工具列的「搬運」讓小人繼續工作。</p>';
+    }
+
+    // ---------- 工具列與時間 ----------
+    function toggle(btn, key, after) {
+      btn.addEventListener("click", function () {
+        state[key] = !state[key];
+        btn.classList.toggle("on", state[key]);
+        btn.setAttribute("aria-pressed", String(state[key]));
+        if (after) after();
+      });
+    }
+    toggle($("t-labels"), "labels");
+    toggle($("t-routes"), "routes");
+    toggle($("t-carry"), "carry", renderCarry);
+    toggle($("t-walk"), "walking");
+    $("t-walk").classList.toggle("on", state.walking);
+    $("t-walk").setAttribute("aria-pressed", String(state.walking));
+    $("t-home").addEventListener("click", function () { select(null); goHome(); });
+    var autoBtn = $("auto");
+    function setAuto(on) { state.auto = on; autoBtn.classList.toggle("on", on); autoBtn.setAttribute("aria-pressed", String(on)); }
+    setAuto(state.auto);
+    autoBtn.addEventListener("click", function () { setAuto(!state.auto); state.hourTarget = null; });
+    document.querySelectorAll("[data-h]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        setAuto(false);
+        state.hourTarget = parseFloat(b.dataset.h);
+        if (reduceMotion) { state.hour = state.hourTarget; state.hourTarget = null; }
+      });
+    });
+
+    // ---------- 點擊 3D 物件 ----------
+    var ray = new THREE.Raycaster(), ndc = new THREE.Vector2(), down = null;
+    function hit(ev) {
+      var r = canvas.getBoundingClientRect();
+      ndc.set((ev.clientX - r.left) / r.width * 2 - 1, -(ev.clientY - r.top) / r.height * 2 + 1);
+      ray.setFromCamera(ndc, camera);
+      var h = ray.intersectObjects(pickables, false)[0];
+      return h ? h.object.userData.id : null;
+    }
+    canvas.addEventListener("pointerdown", function (e) { down = [e.clientX, e.clientY]; });
+    canvas.addEventListener("pointerup", function (e) {
+      if (!down || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 6) return;
+      var id = hit(e);
+      if (id) select(state.sel === id ? null : id);
+    });
+    canvas.addEventListener("pointermove", function (e) {
+      if (e.pointerType === "mouse" && !e.buttons) canvas.style.cursor = hit(e) ? "pointer" : "grab";
+    });
+
+    // ---------- 尺寸 ----------
+    function resize() {
+      var w = innerWidth, h = innerHeight;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      // 霧從島的後方開始，手機鏡頭比較遠也不會把島蓋掉
+      var d = homeDistance();
+      scene.fog.near = d + 6;
+      scene.fog.far = d + 54;
+    }
+    addEventListener("resize", resize);
+    resize();
+    camera.position.copy(CENTER).add(HOME_DIR.clone().multiplyScalar(homeDistance() * 1.5));
+    goHome();
+    select(null);
+    applyTime(state.hour);
+
+    // ---------- 主迴圈 ----------
+    var clock = new THREE.Clock(), v = new THREE.Vector3(), elapsed = 0, prevHour = state.hour;
+    var MOMENTS = [
+      { h: 6, text: "🌅 天亮了，島上開始忙起來" },
+      { h: 12, text: "☀️ 中午，課程區都是人" },
+      { h: 18, text: "🌇 黃昏，燈塔和螢幕亮起來了" },
+      { h: 21, text: "🌙 入夜，工作室的燈還亮著" }
+    ];
+    log("🏠 阿茲打開工作室，準備出發巡島");
+    refreshDone();
+    renderCarry();
+    function pin(el, worldPos, dy) {
+      v.copy(worldPos).project(camera);
+      if (v.z > 1 || v.x < -1.2 || v.x > 1.2 || v.y < -1.2 || v.y > 1.2) { el.style.visibility = "hidden"; return; }
+      el.style.visibility = "";
+      var x = (v.x * 0.5 + 0.5) * innerWidth, y = (-v.y * 0.5 + 0.5) * innerHeight;
+      el.style.transform = "translate(" + x.toFixed(1) + "px," + (y - (dy || 0)).toFixed(1) + "px) translate(-50%,-100%)";
+    }
+    function tick() {
+      var dt = Math.min(clock.getDelta(), 0.05);
+      elapsed += dt;
+
+      if (state.hourTarget !== null) {
+        var diff = (state.hourTarget - state.hour + 24) % 24;
+        var step = Math.min(diff, dt * 9);
+        state.hour = (state.hour + step) % 24;
+        if (diff - step < 0.01) { state.hour = state.hourTarget; state.hourTarget = null; }
+      } else if (state.auto) {
+        state.hour = (state.hour + dt * 0.2) % 24;
+      }
+      MOMENTS.forEach(function (m) {
+        var crossed = prevHour <= state.hour ? prevHour < m.h && state.hour >= m.h : prevHour < m.h || state.hour >= m.h;
+        if (crossed && prevHour !== state.hour) log(m.text);
+      });
+      prevHour = state.hour;
+      applyTime(state.hour);
+      if (!reduceMotion) { water.material.map.offset.x = elapsed * 0.004; water.material.map.offset.y = elapsed * 0.002; }
+
+      EDGES.forEach(function (e) {
+        var on = state.routes || e.target >= 1 ? e.target : 0;
+        var u = e.mat.uniforms;
+        u.uOn.value += (on - u.uOn.value) * Math.min(1, dt * 6);
+        u.uTime.value = reduceMotion ? 0 : elapsed;
+        e.mesh.visible = u.uOn.value > 0.01;
+      });
+      var pulse = 0.55 + Math.sin(elapsed * 4) * 0.35;
+      Object.keys(NODES).forEach(function (k) {
+        var n = NODES[k], lit = n.halo ? n.halo.visible : false;
+        if (n.halo && lit) n.halo.material.opacity = pulse;
+        if (n.bandMat) n.bandMat.emissive.setHex(lit ? 0xE8743B : 0x000000), n.bandMat.emissiveIntensity = lit ? pulse * 0.6 : 0;
+        if (n.kind === "symptom") {
+          var on = state.sel === k || (state.sel && edgesOf(state.sel).some(function (e) { return other(e, state.sel) === k; }));
+          n.mat.emissive.setHex(on ? 0xE8743B : 0x000000);
+          n.mat.emissiveIntensity = on ? pulse * 0.35 : 0;
+          n.group.position.y = TOP + (on && !reduceMotion ? Math.abs(Math.sin(elapsed * 3)) * 0.08 : 0);
+        }
+      });
+      boats.forEach(function (b) { if (!reduceMotion) { b.position.y = WATER_Y + 0.12 + Math.sin(elapsed * 1.3 + b.userData.bob) * 0.04; b.rotation.z = Math.sin(elapsed + b.userData.bob) * 0.05; } });
+      idlers.forEach(function (p) { if (!reduceMotion) p.fig.position.y = TOP + Math.max(0, Math.sin(elapsed * 2 + p.phase)) * 0.025; });
+
+      // 阿茲巡島
+      if (state.walking) {
+        if (walk.pause > 0 || !walk.curve) {
+          walk.pause -= dt;
+          stride(aaz, 0, false);
+          aaz.position.y = TOP + 0.22 + Math.abs(Math.sin(elapsed * 5)) * 0.04;
+          if (walk.pause <= 0) { say.classList.remove("show"); nextLeg(); }
+        } else {
+          walk.t += dt * (walk.guided ? 1.6 : 1.15) / walk.curve.getLength();
+          if (walk.t >= 1) {
+            walk.from = walk.to;
+            walk.curve = null;
+            walk.pause = 2.8;
+            aaz.position.copy(NODES[walk.from].anchor);
+            var stop = walk.from === "studio" ? STUDIO : COURSES[walk.from];
+            var where = walk.from === "studio" ? stop.name : stop.name + " 區";
+            if (walk.guided && walk.from === walk.guided && !walk.queue.length) {
+              say.innerHTML = "<b>到了！" + esc(where) + "</b>：這就是妳這條路線的終點";
+              walk.pause = 5;
+              walk.guided = null;
+            } else say.innerHTML = "<b>" + esc(where) + "</b>：" + esc(stop.say);
+            say.classList.add("show");
+            log("🚶 阿茲抵達 " + where + "：" + stop.say);
+            if (walk.guided || walk.pause === 5) flyTo(NODES[walk.from].pos, closeDist(12));
+          } else {
+            var p = walk.curve.getPoint(walk.t), tan = walk.curve.getTangent(walk.t);
+            aaz.position.copy(p);
+            aaz.rotation.y = Math.atan2(tan.x, tan.z);
+            stride(aaz, elapsed * 10, true);
+          }
+        }
+      } else {
+        say.classList.remove("show");
+        stride(aaz, 0, false);
+      }
+
+      carriers.forEach(function (c) {
+        c.fig.visible = state.carry && c.wait <= 0;
+        if (!state.carry || reduceMotion) return;
+        if (c.wait > 0) {
+          c.wait -= dt;
+          if (c.wait <= 0) renderCarry();
+          return;
+        }
+        c.t += dt * 0.9 / c.curve.getLength();
+        if (c.t >= 1) {
+          log("📦 小人把「" + NODES[c.edge.a].data.t + "」搬到 " + COURSES[c.edge.b].name + " 區");
+          assignCarrier(c);
+          renderCarry();
+          return;
+        }
+        var cp = c.curve.getPoint(c.t), ct = c.curve.getTangent(c.t);
+        c.fig.position.copy(cp);
+        c.fig.rotation.y = Math.atan2(ct.x, ct.z);
+        stride(c.fig, elapsed * 10 + c.t * 9, true);
+      });
+
+      if (fly) {
+        fly.k = Math.min(1, fly.k + dt / 1.2);
+        var f = ease(fly.k);
+        camera.position.lerpVectors(fly.fp, fly.tp, f);
+        controls.target.lerpVectors(fly.ft, fly.tt, f);
+        if (fly.k >= 1) fly = null;
+      }
+      controls.update();
+      renderer.render(scene, camera);
+
+      Object.keys(NODES).forEach(function (k) {
+        var n = NODES[k];
+        n.label.classList.toggle("off", !state.labels && k !== state.sel);
+        pin(n.label, n.labelAt);
+      });
+      if (say.classList.contains("show")) pin(say, aaz.position.clone().setY(aaz.position.y + 0.85));
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+
+    // ---------- 開場 ----------
+    $("load-title").textContent = "職涯島組好了";
+    $("start").disabled = false;
+    $("start").addEventListener("click", function () {
+      $("loading").classList.add("gone");
+      if (matchMedia("(max-width: 760px)").matches) dock.classList.add("collapsed");
+    });
+
+    function fallback() {
+      $("load-title").textContent = "這台裝置開不了 3D 地圖";
+      $("load-text").innerHTML = '可以改看課程首頁的<a href="index.html#diagnose">對症地圖</a>，內容一樣。';
+    }
+  </script>
+</body>
+</html>
