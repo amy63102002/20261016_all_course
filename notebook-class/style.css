@@ -72,6 +72,11 @@ h1{font-weight:900;font-size:clamp(2rem,5.4vw,3.4rem);line-height:1.25;margin:0 
 .hl{background:linear-gradient(transparent 55%,var(--yellow) 55%);font-weight:900}
 .lede{max-width:700px;margin:18px auto 26px;font-size:1.05rem}
 .lede strong{font-weight:900}
+.hero .lede{margin-bottom:10px;color:var(--muted)}
+.ph{display:inline-block}
+@media (max-width:640px){br.dk{display:none}}
+.promise{max-width:700px;margin:0 auto 28px;font-size:1.12rem;font-weight:700;line-height:1.8}
+.promise mark{background:linear-gradient(transparent 55%,var(--yellow) 55%);color:inherit;padding:0 2px}
 .cta{
   display:inline-flex;align-items:center;justify-content:center;gap:6px;
   background:var(--ink);color:#fff;text-decoration:none;font-weight:900;border-radius:999px;
