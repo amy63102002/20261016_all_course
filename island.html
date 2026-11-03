@@ -256,9 +256,9 @@
     <div class="kicker">女力 AI 數位職涯培育</div>
     <h1>AI 職涯島</h1>
     <p>找到妳卡住的那一格，先走一小步。</p>
-    <a class="btn line" href="index.html#signup" data-line>加 LINE 問適合哪門課 →</a>
+    <a class="btn line" href="live-plan.html#signup" data-line>加 LINE 問適合哪門課 →</a>
     <button class="btn ink quiz-btn" type="button" id="quiz-open">🧭 3 題幫我選起點</button>
-    <a class="back" href="index.html">← 回課程首頁</a>
+    <a class="back" href="live-plan.html">← 回課程首頁</a>
   </header>
 
   <nav class="dock panel" id="dock" aria-label="地圖面板">
@@ -337,7 +337,7 @@
     </div>
   </div>
 
-  <noscript><p style="position:fixed;inset:auto 16px 16px;background:#fff;padding:12px;border-radius:12px">這張 3D 地圖需要 JavaScript。<a href="index.html#diagnose">改看課程首頁的對症地圖</a>。</p></noscript>
+  <noscript><p style="position:fixed;inset:auto 16px 16px;background:#fff;padding:12px;border-radius:12px">這張 3D 地圖需要 JavaScript。<a href="live-plan.html#diagnose">改看課程首頁的對症地圖</a>。</p></noscript>
 
   <script type="module">
     import * as THREE from "three";
@@ -1435,8 +1435,8 @@
         '<div class="price" style="margin-top:10px"><strong>' + esc(c.price) + "</strong>" + esc(c.unit) + '</div><div class="fmt">' + esc(c.format) + "</div>" +
         '<div class="ctabs" role="tablist">' + tabs.map(function (t) { return '<button type="button" role="tab" data-ctab="' + t[0] + '" aria-selected="' + (t[0] === tab) + '"' + (t[0] === tab ? ' class="on"' : "") + ">" + t[1] + "</button>"; }).join("") + "</div>" +
         body +
-        '<div class="acts"><a class="btn ink" href="index.html#' + c.card + '">看 ' + esc(c.name) + " 完整方案卡 →</a>" +
-        '<a class="btn line" href="index.html#signup" data-line>LINE 詢問 ' + esc(c.name) + "</a></div>";
+        '<div class="acts"><a class="btn ink" href="live-plan.html#' + c.card + '">看 ' + esc(c.name) + " 完整方案卡 →</a>" +
+        '<a class="btn line" href="live-plan.html#signup" data-line>LINE 詢問 ' + esc(c.name) + "</a></div>";
     }
     function caseHtml(n) {
       var c = n.data;
@@ -1454,7 +1454,7 @@
     function faqBoardHtml() {
       return X_BTN + '<div class="kicker">Q&amp;A 告示牌</div><h2>報名前常被問的 8 題</h2>' +
         FAQS.map(function (f, i) { return faqHtml(f, i === faqOpen); }).join("") +
-        '<div class="acts"><a class="btn line" href="index.html#signup" data-line>還有問題？加 LINE 用文字問 →</a></div>';
+        '<div class="acts"><a class="btn line" href="live-plan.html#signup" data-line>還有問題？加 LINE 用文字問 →</a></div>';
     }
     function signupHtml() {
       return X_BTN + '<div class="kicker">報名信箱</div><h2>先用 LINE 文字聊，確定適合再報名</h2>' +
@@ -1462,7 +1462,7 @@
         '<p class="fmt">' + esc(SIGNUP.note) + "</p>" +
         '<div class="lab">近期場次</div><div class="day"><ol>' + SIGNUP.sessions.map(function (s) { return "<li><span>" + esc(s[0]) + "</span>" + esc(s[1]) + "</li>"; }).join("") + "</ol></div>" +
         '<p class="fmt">' + esc(SIGNUP.sessionNote) + "</p>" +
-        '<div class="acts"><a class="btn line" href="index.html#signup" data-line>加入 LINE 官方帳號，開始文字諮詢 →</a>' +
+        '<div class="acts"><a class="btn line" href="live-plan.html#signup" data-line>加入 LINE 官方帳號，開始文字諮詢 →</a>' +
         '<button class="btn" type="button" data-quiz="start">還不確定？先做選課小測驗</button></div>';
     }
 
@@ -1553,7 +1553,7 @@
       return '<button class="btn x" type="button" data-close aria-label="關閉">×</button>' +
         '<div class="kicker">Studio · 島的中心</div><h2>' + esc(STUDIO.name) + "</h2>" +
         "<p>對不到自己的狀況，或想直接問該從哪一門開始？加 LINE 官方帳號，用文字說說妳的背景和想做的事，我們幫妳判斷從哪一門開始。</p>" +
-        '<div class="acts"><a class="btn line" href="index.html#signup" data-line>加 LINE 文字諮詢 →</a>' +
+        '<div class="acts"><a class="btn line" href="live-plan.html#signup" data-line>加 LINE 文字諮詢 →</a>' +
         '<button class="btn ink" type="button" data-quiz="start">🧭 先做選課小測驗（3 題）</button></div>' +
         '<div class="progress">' + progressText() + "</div>" +
         '<div class="lab">工作室旁邊還有</div><div class="chipset">' +
@@ -1643,7 +1643,7 @@
           return '<button class="row extra" type="button" data-id="case' + i + '" style="--c:#8A7F72"><span class="n">' + c.icon + "</span><span>" + esc(c.title) + "<small>阿茲的案例展</small></span></button>";
         }).join("");
       }
-      $("sym-list").innerHTML = html || '<p class="empty">找不到這個關鍵字。<a href="index.html#signup" data-line>加 LINE 用文字描述妳的狀況</a>，我們幫妳判斷。</p>';
+      $("sym-list").innerHTML = html || '<p class="empty">找不到這個關鍵字。<a href="live-plan.html#signup" data-line>加 LINE 用文字描述妳的狀況</a>，我們幫妳判斷。</p>';
       $("sym-list").querySelectorAll("[data-line]").forEach(function (a) { a.href = lineUrl(); a.target = "_blank"; a.rel = "noopener"; });
     }
     renderSymptoms("");
@@ -1885,7 +1885,7 @@
 
     function fallback() {
       $("load-title").textContent = "這台裝置開不了 3D 地圖";
-      $("load-text").innerHTML = '可以改看課程首頁的<a href="index.html#diagnose">對症地圖</a>，內容一樣。';
+      $("load-text").innerHTML = '可以改看課程首頁的<a href="live-plan.html#diagnose">對症地圖</a>，內容一樣。';
     }
   </script>
 </body>

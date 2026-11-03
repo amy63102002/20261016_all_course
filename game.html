@@ -244,7 +244,7 @@
   <header>
     <div class="wrap">
       <div class="bar">
-        <a class="brand" href="index.html"><b>AI</b>數位職涯培育 × 阿茲</a>
+        <a class="brand" href="live-plan.html"><b>AI</b>數位職涯培育 × 阿茲</a>
         <nav aria-label="遊戲導覽">
           <button type="button" data-go="setup">抽三張牌</button>
           <button type="button" data-go="daily">今日挑戰</button>
@@ -335,9 +335,9 @@
     <div class="wrap">
       <p>重新上場的 90 天｜AI 數位職涯培育 × 阿茲</p>
       <nav aria-label="頁尾導覽">
-        <a href="index.html">回課程首頁</a>
-        <a href="index.html#diagnose">對症找課</a>
-        <a href="index.html#cards">方案詳情</a>
+        <a href="live-plan.html">回課程首頁</a>
+        <a href="live-plan.html#diagnose">對症找課</a>
+        <a href="live-plan.html#cards">方案詳情</a>
         <a href="https://lin.ee/7j3Hi2Z" data-line>LINE 文字諮詢</a>
       </nav>
       <p class="small">遊戲概念參考「開公司的人生」與「自媒體人生」模擬遊戲。</p>
@@ -1048,7 +1048,7 @@
         (vetoed ? '<p class="veto">分數不低，但精力或家人見底，這輪不算贏。</p>' : "") +
         '<div class="dims">' + sc.dims.map(([n, v]) => '<div class="dim"><span>' + n + "</span><b>" + v + '</b><i style="--w:' + v * 5 + '%"></i></div>').join("") + "</div>" +
         (earned.length ? '<div class="badges got-list" aria-label="這一輪拿到的徽章">' + earned.map((b) => '<span class="badge got">' + b.name + "</span>").join("") + "</div>" : "") +
-        '<div class="rec"><div class="code">' + code + "</div><div><h3>如果是真的，建議從 " + C.name + " 開始</h3><p>" + C.why + "（" + C.price + '）</p><div class="acts"><a class="btn line" href="' + LINE + '" target="_blank" rel="noopener">加 LINE 問適不適合 →</a><a class="btn light" href="index.html#course-' + code.toLowerCase() + '">看 ' + code + " 方案內容</a></div></div></div>" +
+        '<div class="rec"><div class="code">' + code + "</div><div><h3>如果是真的，建議從 " + C.name + " 開始</h3><p>" + C.why + "（" + C.price + '）</p><div class="acts"><a class="btn line" href="' + LINE + '" target="_blank" rel="noopener">加 LINE 問適不適合 →</a><a class="btn light" href="live-plan.html#course-' + code.toLowerCase() + '">看 ' + code + " 方案內容</a></div></div></div>" +
         '<div class="result-acts"><button class="btn" type="button" id="again">再玩一輪</button><button class="btn light" type="button" id="share">複製分享文字</button></div><p class="copied" id="copied" aria-live="polite"></p>';
       $("#again").addEventListener("click", () => newSetup(false));
       $("#share").addEventListener("click", () => copyText(share));

@@ -1,540 +1,304 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI 職場實作直播班｜8 週把 AI 變成你的工作技能</title>
-  <meta name="description" content="小班線上直播，每週一次、每次約 2–2.5 小時，提供課後回放與助教協助。從 AI 文案、圖片、簡報、短影音、LINE 官方帳號應用，到一件完整工作任務的交付，8 週帶走作品與可重複使用的範本。講師阿茲，AI 自動化工程師。">
-
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="AI 職場實作直播班｜8 週把 AI 變成你的工作技能">
-  <meta property="og:description" content="小班線上直播＋課後回放＋助教協助，8 週帶走 AI 作品與工作範本。先加 LINE 文字諮詢。">
-  <meta property="og:locale" content="zh_TW">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --ink: #141414;
-      --paper: #FFFDF7;
-      --yellow: #FFD43B;
-      --pink: #F7AFC6;
-      --blue: #93CBEA;
-      --green: #5BB592;
-      --mint: #CFEBDD;
-      --orange: #FF6B3D;
-      --peach: #FFB79E;
-      --cream: #FFF4D6;
-      --line-green: #06C755;
-      --line: 3px solid var(--ink);
-      --display: "Lilita One", "Noto Sans TC", sans-serif;
-      --sans: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; scroll-padding-top: 76px; }
-    body {
-      font-family: var(--sans); color: var(--ink); line-height: 1.75; font-size: 16px;
-      background:
-        radial-gradient(ellipse 30% 8% at 20% 6%, rgba(255,255,255,.9), transparent 70%),
-        radial-gradient(ellipse 25% 6% at 75% 12%, rgba(255,255,255,.8), transparent 70%),
-        linear-gradient(180deg, #3E8FD6 0, #7DB9E8 600px, #BFE0F5 1100px, #BFE0F5 100%);
-    }
-    a { color: inherit; }
-    .wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
-    .skip-link { position: absolute; left: -9999px; top: 0; background: var(--yellow); padding: 8px 14px; border: var(--line); z-index: 100; }
-    .skip-link:focus { left: 8px; top: 8px; }
-    :focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
-
-    .panel { background: var(--paper); border: var(--line); border-radius: 26px; box-shadow: 8px 8px 0 var(--ink); }
-    .dots { background-image: radial-gradient(#D9D4C7 1.4px, transparent 1.4px); background-size: 22px 22px; background-color: var(--paper); }
-    .pill { display: inline-flex; align-items: center; gap: 6px; border: 2.5px solid var(--ink); border-radius: 999px; padding: 4px 14px; font-weight: 700; font-size: .85rem; background: #fff; }
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: var(--ink); color: #fff; text-decoration: none; font-weight: 900; border-radius: 999px; padding: 10px 20px; border: 2.5px solid var(--ink); font-size: .92rem; cursor: pointer; transition: transform .15s, box-shadow .15s; font-family: var(--sans); }
-    .btn:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--orange); }
-    .btn.light { background: #fff; color: var(--ink); }
-    .btn.line { background: var(--line-green); color: #fff; }
-    .btn.block { display: flex; width: 100%; padding: 14px 20px; font-size: 1rem; }
-    .kicker { font-family: var(--display); letter-spacing: .14em; font-size: .85rem; text-transform: uppercase; }
-    .big-title { font-family: var(--display); font-size: clamp(2.6rem, 7vw, 4.6rem); line-height: 1; letter-spacing: .01em; }
-    .hl { background: linear-gradient(transparent 55%, var(--yellow) 55%); font-weight: 900; }
-    .soon { display: inline-block; font-size: .72rem; font-weight: 700; border: 1.5px dashed var(--ink); border-radius: 6px; padding: 0 6px; margin-left: 4px; background: #fff; vertical-align: middle; }
-
-    /* Header */
-    header { position: sticky; top: 0; z-index: 40; padding: 12px 0; }
-    .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--paper); border: var(--line); border-radius: 999px; padding: 8px 10px 8px 20px; box-shadow: 4px 4px 0 var(--ink); flex-wrap: wrap; }
-    .brand { font-weight: 900; }
-    .brand b { background: var(--yellow); border: 2px solid var(--ink); border-radius: 8px; padding: 0 6px; margin-right: 4px; }
-    header nav { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
-    header nav a { text-decoration: none; font-weight: 700; font-size: .88rem; padding: 6px 12px; border-radius: 999px; }
-    header nav a:hover { background: var(--yellow); }
-    header nav a.nav-cta { background: var(--line-green); color: #fff; border: 2px solid var(--ink); }
-
-    /* Hero */
-    .hero { margin-top: 28px; padding: 52px 40px; text-align: center; }
-    .hero .pill { background: var(--yellow); margin-bottom: 18px; }
-    .hero h1 { font-weight: 900; font-size: clamp(2rem, 5.4vw, 3.5rem); line-height: 1.25; }
-    .hero h1 .en { display: block; font-family: var(--display); font-weight: 400; font-size: .5em; letter-spacing: .04em; margin-bottom: 8px; color: var(--orange); }
-    .hero p.lead { max-width: 700px; margin: 18px auto 26px; font-size: 1.05rem; }
-    .hero-cta { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
-    .facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 34px; text-align: left; }
-    .fact { border: var(--line); border-radius: 18px; padding: 12px 16px; box-shadow: 4px 4px 0 var(--ink); }
-    .fact strong { display: block; font-weight: 900; }
-    .fact span { font-size: .84rem; }
-    .fact:nth-child(1) { background: var(--pink); } .fact:nth-child(2) { background: var(--blue); } .fact:nth-child(3) { background: var(--yellow); } .fact:nth-child(4) { background: var(--mint); }
-
-    section.block { padding-top: 80px; }
-    .sec-head { text-align: center; margin-bottom: 30px; }
-    .sec-head p { max-width: 660px; margin: 10px auto 0; font-weight: 500; }
-    .sec-head .sub { font-weight: 900; font-size: 1.15rem; margin-top: 8px; }
-
-    /* Who */
-    .who-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-    .who { border: var(--line); border-radius: 20px; background: #fff; padding: 16px 18px; box-shadow: 5px 5px 0 var(--ink); }
-    .who .ic { display: grid; place-items: center; width: 44px; height: 44px; border: var(--line); border-radius: 50%; background: var(--yellow); font-size: 1.2rem; margin-bottom: 8px; }
-    .who b { display: block; font-weight: 900; line-height: 1.45; margin-bottom: 4px; }
-    .who p { font-size: .9rem; }
-    .not-for { margin-top: 18px; border: 2.5px dashed var(--ink); border-radius: 18px; padding: 14px 18px; background: var(--cream); font-size: .92rem; }
-    .not-for b { background: var(--orange); color: #fff; border-radius: 6px; padding: 0 6px; margin-right: 6px; font-size: .82rem; }
-    .not-for ul { margin: 6px 0 0 1.2em; }
-
-    /* Takeaway */
-    .take-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .take-box { padding: 22px 24px; }
-    .take-box h3 { font-weight: 900; font-size: 1.2rem; margin-bottom: 10px; }
-    .dotlist { list-style: none; display: grid; gap: 6px; }
-    .dotlist li { padding-left: 22px; position: relative; }
-    .dotlist li::before { content: ""; position: absolute; left: 0; top: .55em; width: 12px; height: 12px; border: 2px solid var(--ink); border-radius: 50%; background: var(--pink); }
-    .take-box.kit .dotlist li::before { background: var(--mint); }
-    .foot-note { margin-top: 14px; font-size: .88rem; font-weight: 500; }
-
-    /* Syllabus */
-    .syllabus-zone { margin-top: 80px; background: var(--green); border-top: var(--line); border-bottom: var(--line); padding: 64px 0 72px; }
-    .stage-label { display: inline-block; margin: 0 0 12px; border: var(--line); border-radius: 999px; padding: 4px 16px; background: #fff; font-weight: 900; box-shadow: 4px 4px 0 var(--ink); }
-    .weeks { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 30px; }
-    .wk { background: #fff; border: var(--line); border-radius: 20px; box-shadow: 6px 6px 0 var(--ink); overflow: hidden; display: flex; flex-direction: column; }
-    .wk-head { padding: 12px 16px; border-bottom: var(--line); }
-    .wk-head .n { font-family: var(--display); font-size: 1.5rem; line-height: 1; }
-    .wk-head b { display: block; font-weight: 900; line-height: 1.4; margin-top: 4px; }
-    .wk-body { padding: 12px 16px 14px; font-size: .88rem; flex: 1; display: flex; flex-direction: column; gap: 8px; }
-    .wk-body ul { list-style: none; display: grid; gap: 4px; }
-    .wk-body li { padding-left: 16px; position: relative; }
-    .wk-body li::before { content: "›"; position: absolute; left: 2px; font-weight: 900; color: var(--orange); }
-    .wk-out { margin-top: auto; font-weight: 700; font-size: .82rem; border-top: 2px dashed #D9D2C0; padding-top: 8px; }
-    .s1 .wk-head { background: var(--pink); } .s2 .wk-head { background: var(--blue); } .s3 .wk-head { background: var(--yellow); }
-    .syllabus-note { background: #fff; border: 2.5px dashed var(--ink); border-radius: 18px; padding: 14px 18px; font-weight: 700; font-size: .9rem; }
-
-    /* How */
-    .flow4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; counter-reset: s; }
-    .f4 { border: var(--line); border-radius: 18px; padding: 14px 16px; background: #fff; box-shadow: 4px 4px 0 var(--ink); }
-    .f4::before { counter-increment: s; content: "0" counter(s); font-family: var(--display); font-size: 1.4rem; color: var(--orange); display: block; line-height: 1.1; }
-    .f4 b { display: block; font-weight: 900; }
-    .f4 span { font-size: .88rem; }
-    .pilot { margin-top: 20px; padding: 20px 24px; background: var(--yellow); display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: center; }
-    .pilot h3 { font-weight: 900; font-size: 1.2rem; }
-
-    /* Coach */
-    .coach { display: grid; grid-template-columns: 240px 1fr; gap: 28px; padding: 28px; align-items: center; }
-    .avatar { aspect-ratio: 1; border: var(--line); border-radius: 50%; background: var(--yellow); overflow: hidden; box-shadow: 6px 6px 0 var(--ink); }
-    .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .coach h3 { font-weight: 900; font-size: 1.8rem; line-height: 1.3; }
-    .coach h3 .en-name { font-family: var(--display); font-weight: 400; margin-left: 6px; }
-    .coach .role { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 14px; }
-    .coach .role .pill:nth-child(1) { background: var(--pink); } .coach .role .pill:nth-child(2) { background: var(--blue); }
-    .coach-co { margin-top: 10px; font-weight: 700; }
-    .coach-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
-
-    /* Signup */
-    .signup { padding: 30px; }
-    .price-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
-    .price-card { border: var(--line); border-radius: 18px; padding: 16px 18px; background: #fff; }
-    .price-card .label { font-weight: 900; font-size: .88rem; }
-    .price-card strong { display: block; font-weight: 900; font-size: 1.4rem; line-height: 1.4; margin: 4px 0; }
-    .signup-note { font-weight: 700; font-size: .9rem; margin: 0 0 14px; }
-
-    /* FAQ / Notes */
-    .faq { max-width: 860px; margin: 0 auto; display: grid; gap: 14px; }
-    .faq details { background: #fff; border: var(--line); border-radius: 20px; box-shadow: 5px 5px 0 var(--ink); }
-    .faq summary { cursor: pointer; padding: 14px 18px; font-weight: 900; list-style: none; display: flex; gap: 10px; }
-    .faq summary::-webkit-details-marker { display: none; }
-    .faq summary::before { content: "Q"; flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--yellow); border: 2px solid var(--ink); font-family: var(--display); }
-    .faq details p { padding: 0 18px 16px 56px; }
-    .notice { max-width: 860px; margin: 0 auto; padding: 20px 24px; border: 2.5px dashed var(--ink); border-radius: 20px; background: var(--cream); font-weight: 500; }
-    .notice li { margin-left: 1.2em; }
-
-    footer { margin-top: 80px; background: var(--ink); color: #fff; padding: 36px 0; text-align: center; font-size: .9rem; }
-    footer nav { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin: 12px 0; }
-    footer .small { opacity: .7; font-size: .82rem; }
-
-    /* Sticky mobile CTA + popup */
-    .sticky-cta { display: none; position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 60; gap: 8px; background: var(--paper); border: var(--line); border-radius: 999px; padding: 6px; box-shadow: 4px 4px 0 var(--ink); transform: translateY(150%); transition: transform .25s; }
-    .sticky-cta.show { transform: none; }
-    .sticky-cta .btn { flex: 1; padding: 10px 12px; }
-    .popup { position: fixed; inset: 0; z-index: 80; background: rgba(20,20,20,.55); display: grid; place-items: center; padding: 20px; }
-    .popup[hidden] { display: none; }
-    .popup-card { max-width: 420px; width: 100%; padding: 26px 24px 22px; position: relative; text-align: center; }
-    .popup-card h3 { font-weight: 900; font-size: 1.35rem; line-height: 1.4; margin: 8px 0; }
-    .popup-card p { margin-bottom: 16px; }
-    .popup-close { position: absolute; right: 12px; top: 12px; width: 36px; height: 36px; border-radius: 50%; border: 2.5px solid var(--ink); background: #fff; font-size: 1.1rem; font-weight: 900; cursor: pointer; }
-    .popup-later { margin-top: 10px; background: none; border: 0; font-family: var(--sans); font-weight: 700; text-decoration: underline; cursor: pointer; }
-
-    @media (max-width: 980px) {
-      .facts, .who-grid, .flow4 { grid-template-columns: 1fr 1fr; }
-      .weeks { grid-template-columns: 1fr 1fr; }
-      .coach { grid-template-columns: 160px 1fr; }
-    }
-    @media (max-width: 640px) {
-      header { position: static; }
-      header nav a:not(.nav-cta) { display: none; }
-      .bar { border-radius: 22px; }
-      .hero { padding: 40px 18px; }
-      .facts, .who-grid, .flow4, .weeks, .take-grid, .price-row, .pilot, .coach { grid-template-columns: 1fr; }
-      .avatar { width: 160px; }
-      .signup { padding: 22px 18px; }
-      .sticky-cta { display: flex; }
-      footer { padding-bottom: 100px; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-      * { transition: none !important; }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>工作知識包小班｜Gemini Notebook 四週實作</title>
+<meta name="description" content="4 週線上直播小班，6–8 人。帶著你自己的工作資料，用 Gemini Notebook（原 NotebookLM）做出一套每題都查得到出處的工作知識包。不寫程式、沒有回家作業。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
-<!-- LINE 官方帳號正式加好友連結；所有 data-line CTA 共用此設定。 -->
-<body data-line-url="https://lin.ee/7j3Hi2Z">
-  <a href="#main-content" class="skip-link">跳至主要內容</a>
+<body>
 
-  <header>
+<div class="topnav">
+  <div class="wide">
+    <a class="brand" href="index.html"><b>AI</b>數位職涯培育 × 阿茲</a>
+    <nav aria-label="頁面">
+      <a href="index.html" aria-current="page">招生說明</a>
+      <a href="course.html">完整課程</a>
+      <a class="nav-cta" href="https://lin.ee/7j3Hi2Z">LINE 報名諮詢</a>
+    </nav>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker">線上直播小班 ・ 4 週 ・ 6–8 人</span>
+    <h1>同一個問題，<br>不用再<span class="hl">回答第 50 次</span>。</h1>
+    <p class="lede">
+      <span class="ph">價目、流程、規則</span><span class="ph">散在 PDF、雲端硬碟</span><span class="ph">跟 LINE 對話裡，</span><br class="dk"><span class="ph">每次有人問，</span><span class="ph">你就再翻一次、再打一次。</span>
+    </p>
+    <p class="promise">
+      <span class="ph">四週、每週二晚上 90 分鐘，</span><span class="ph">帶著你自己的工作資料來，</span><br class="dk"><span class="ph">結業帶走一套</span><span class="ph"><mark>每題都查得到出處</mark>的工作知識包。</span>
+    </p>
+    <a class="cta" href="#signup">報名首班</a><a class="cta ghost" href="course.html">看完整課程</a>
+    <span class="cta-note">早鳥 <b>NT$ 4,500</b>（前 4 名，原價 5,000）・首班 <span class="placeholder">2027/1/5 起（暫定）</span></span>
+
+    <ul class="chips">
+      <li><b>4</b> 週 × 90 分鐘</li>
+      <li><b>6–8</b> 人小班</li>
+      <li><b>4</b> 件作品</li>
+      <li><b>0</b> 回家作業</li>
+      <li><b>0</b> 行程式</li>
+    </ul>
+  </div>
+</header>
+
+<main>
+
+  <section class="story">
     <div class="wrap">
-      <div class="bar">
-        <div class="brand"><b>女力</b>AI 數位職涯培育 × 阿茲</div>
-        <nav aria-label="主要導覽">
-          <a href="#who">適合誰</a>
-          <a href="#takeaway">帶走什麼</a>
-          <a href="#syllabus">8 週課表</a>
-          <a href="#how">上課方式</a>
-          <a href="#coach">講師</a>
-          <a href="#faq">Q&amp;A</a>
-          <a href="all-courses.html">五門課完整版</a>
-          <a class="nav-cta" href="#signup" data-line>LINE 諮詢</a>
-        </nav>
+      <p class="num">01 / 你應該遇過</p>
+      <h2>不是你不會整理，是資料自己在打架</h2>
+      <p>價目表寫一個價，上個月在 LINE 回客人的是另一個價。新規定貼在群組公告，舊的 PDF 還躺在雲端。新人來問，你只好再講一次。</p>
+      <p>Gemini Notebook（原 NotebookLM）的做法是：<strong>只依據你放進去的資料回答，而且每一句都標得出是哪份文件、哪一段。</strong></p>
+      <div class="turn">
+        別的 AI 你只能相信，這個你可以查。<br>查著查著，你會先發現自己的資料哪裡寫錯了。
       </div>
     </div>
-  </header>
+  </section>
 
-  <main id="main-content">
+  <section>
     <div class="wrap">
-      <section class="hero panel dots" aria-labelledby="hero-title">
-        <span class="pill">小班線上直播・第一梯試辦招生中</span>
-        <h1 id="hero-title"><span class="en">AI at Work · Live</span>8 週線上直播，<br>把 AI 變成你的工作技能</h1>
-        <p class="lead">想轉職、重返職場、讓現在的工作做得更快，或替接案服務多一項能力：每週一堂直播，從 AI 文案、圖片、簡報、短影音、LINE 官方帳號應用，一路練到<span class="hl">把一件完整的工作任務做好、交出去</span>。</p>
-        <div class="hero-cta">
-          <a class="btn line" href="#signup" data-line>加 LINE 問開課資訊 →</a>
-          <a class="btn light" href="#syllabus">先看 8 週課表</a>
-        </div>
-        <div class="facts" aria-label="上課方式重點">
-          <div class="fact"><strong>每週一次直播</strong><span>每次約 2–2.5 小時，約兩個月上完</span></div>
-          <div class="fact"><strong>課後有回放</strong><span>沒跟上或請假，看回放補課</span></div>
-          <div class="fact"><strong>助教即時協助</strong><span>操作卡住，助教在 LINE 個別處理</span></div>
-          <div class="fact"><strong>帶走作品＋範本</strong><span>每週一份成果，回家能重複使用</span></div>
-        </div>
-      </section>
-
-      <!-- 01 Who -->
-      <section id="who" class="block" aria-labelledby="who-title">
-        <div class="sec-head">
-          <div class="kicker">01 · Who It's For</div>
-          <h2 id="who-title" class="big-title">Is This You?</h2>
-          <div class="sub">這堂課適合這幾種人</div>
-        </div>
-        <div class="who-grid">
-          <div class="who"><div class="ic" aria-hidden="true">🔄</div><b>準備轉職或重返職場</b><p>發現職場都在用 AI，想補上實際會用、拿得出成果的能力。</p></div>
-          <div class="who"><div class="ic" aria-hidden="true">📣</div><b>行銷企劃、行政人員</b><p>通知、貼文、海報、簡報、報告每次都從零做，想用 AI 加快產出。</p></div>
-          <div class="who"><div class="ic" aria-hidden="true">🧰</div><b>接案者、斜槓族</b><p>想替現在的服務多加一項 AI 與 LINE 官方帳號的應用能力。</p></div>
-          <div class="who"><div class="ic" aria-hidden="true">🌱</div><b>AI 新手</b><p>用過 ChatGPT 聊天，但不知道怎麼用在真正的工作上。</p></div>
-        </div>
-        <div class="not-for">
-          <b>先說清楚</b>這堂課可能不適合：
-          <ul>
-            <li>想學完就靠單一技能穩定賺錢：課程教的是工作能力與作品，不保證收入或接案。</li>
-            <li>沒時間自己動手、只想直接買一套現成系統的店家：建議直接加 LINE 詢問系統服務，不必上課。</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- 02 Takeaway -->
-      <section id="takeaway" class="block" aria-labelledby="take-title">
-        <div class="sec-head">
-          <div class="kicker">02 · Take Away</div>
-          <h2 id="take-title" class="big-title">What You Take Home</h2>
-          <div class="sub">8 週後，你手上會有這些</div>
-        </div>
-        <div class="take-grid">
-          <div class="take-box panel">
-            <h3>課堂上親手完成的作品</h3>
-            <ul class="dotlist">
-              <li>活動通知、社群貼文、Email 文案＋你自己的提示詞</li>
-              <li>AI 生成的海報、社群圖片</li>
-              <li>用 NotebookLM 整理資料產出的簡報初稿</li>
-              <li>短影音分鏡腳本與生成體驗</li>
-              <li>LINE 官方帳號的自動回應、圖文選單文案與群發訊息草稿</li>
-              <li>一份完整工作任務成果包：從接交辦、拆解、AI 產出到人工查核交付</li>
-            </ul>
-          </div>
-          <div class="take-box panel kit">
-            <h3>回家能重複使用的範本</h3>
-            <ul class="dotlist">
-              <li>文案、圖片、影片提示詞卡</li>
-              <li>AI 工具選用速查表</li>
-              <li>需求確認表、任務拆解表</li>
-              <li>交付查核表</li>
-              <li>每堂課的回放影片</li>
-            </ul>
-          </div>
-        </div>
-        <p class="foot-note">範本與工具包規劃製作中，實際交付清單以開課前公告為準。</p>
-      </section>
-    </div>
-
-    <!-- 03 Syllabus -->
-    <section id="syllabus" class="syllabus-zone" aria-labelledby="syl-title">
-      <div class="wrap">
-        <div class="sec-head">
-          <div class="kicker">03 · 8 Weeks</div>
-          <h2 id="syl-title" class="big-title">8-Week Plan</h2>
-          <div class="sub">每週一次直播，每次約 2–2.5 小時<span class="soon">課表草案，試辦後調整</span></div>
-        </div>
-
-        <div class="stage-label">第 1–5 週｜AI 工具上手：做出看得見的作品</div>
-        <div class="weeks">
-          <article class="wk s1">
-            <div class="wk-head"><span class="n">W1</span><b>開課暖身：工具都能用</b></div>
-            <div class="wk-body">
-              <ul><li>確認課前影片的安裝與帳號設定都完成</li><li>AI 能做什麼、怎麼把需求說清楚、資料安全</li><li>寫出第一個好用的提示詞</li></ul>
-              <p class="wk-out">這週內容刻意放輕，留時間處理操作問題</p>
-            </div>
-          </article>
-          <article class="wk s1">
-            <div class="wk-head"><span class="n">W2</span><b>AI 文案</b></div>
-            <div class="wk-body">
-              <ul><li>活動通知、社群貼文、Email 初稿</li><li>調整語氣、長度與受眾</li><li>整理成自己的提示詞卡</li></ul>
-              <p class="wk-out">成果：三種文案＋提示詞</p>
-            </div>
-          </article>
-          <article class="wk s1">
-            <div class="wk-head"><span class="n">W3</span><b>AI 圖片與視覺</b></div>
-            <div class="wk-body">
-              <ul><li>活動海報、社群宣傳圖</li><li>調整風格、修改細節</li><li>圖文搭配一次完成</li></ul>
-              <p class="wk-out">成果：海報與社群圖＋提示詞</p>
-            </div>
-          </article>
-          <article class="wk s1">
-            <div class="wk-head"><span class="n">W4</span><b>資料整理與簡報</b></div>
-            <div class="wk-body">
-              <ul><li>用 NotebookLM 把資料整理成重點</li><li>產出簡報初稿並保留來源</li><li>檢查 AI 摘要哪裡需要人工確認</li></ul>
-              <p class="wk-out">成果：一份簡報初稿</p>
-            </div>
-          </article>
-        </div>
-
-        <div class="weeks">
-          <article class="wk s1">
-            <div class="wk-head"><span class="n">W5</span><b>短影音</b></div>
-            <div class="wk-body">
-              <ul><li>把一個主題拆成分鏡與腳本</li><li>短影片生成體驗（平台受限時用示範案例）</li></ul>
-              <p class="wk-out">成果：分鏡腳本＋短片體驗</p>
-            </div>
-          </article>
-          <article class="wk s2">
-            <div class="wk-head"><span class="n">W6</span><b>LINE 官方帳號 × AI</b></div>
-            <div class="wk-body">
-              <ul><li>用 AI 寫自動回應與常見問題</li><li>圖文選單的文案與圖片</li><li>群發訊息怎麼寫才有人看</li></ul>
-              <p class="wk-out">成果：一套 LINE 官方帳號內容草稿</p>
-            </div>
-          </article>
-          <article class="wk s3">
-            <div class="wk-head"><span class="n">W7</span><b>工作任務①：接住交辦</b></div>
-            <div class="wk-body">
-              <ul><li>收到交辦先問什麼：需求確認表</li><li>把工作拆小：任務拆解表</li><li>選工具、下指令，做出第一版</li></ul>
-              <p class="wk-out">成果：第一版任務成果</p>
-            </div>
-          </article>
-          <article class="wk s3">
-            <div class="wk-head"><span class="n">W8</span><b>工作任務②：放心交付</b></div>
-            <div class="wk-body">
-              <ul><li>人工查核：來源、數字、語氣</li><li>需求臨時改了，怎麼修正</li><li>整理交付說明，成果分享</li></ul>
-              <p class="wk-out">成果：完整任務成果包</p>
-            </div>
-          </article>
-        </div>
-
-        <p class="syllabus-note">第 1–5 週打好工具基礎，第 6 週把 AI 用在 LINE 官方帳號，第 7–8 週把前面學的工具串成一件真正的工作。總時數約 20 小時；正式課表、開課日期依試辦情況公告。</p>
+      <p class="num">02 / 四週帶走的東西</p>
+      <h2>一週一件作品，四件組成你的工作知識包</h2>
+      <div class="kit">
+        <article>
+          <span class="wk">WEEK 1</span>
+          <h3>資料健檢報告</h3>
+          <p>把資料放進去，讓 AI 找出哪幾份互相矛盾、哪幾份已經過期、哪幾份根本讀不到。</p>
+          <p class="gain">第一週就知道自己的資料哪裡會害你出包</p>
+        </article>
+        <article>
+          <span class="wk">WEEK 2</span>
+          <h3>常見問答＋回覆範本</h3>
+          <p>最常被問的 10 題，每題點得回原文；再配一段可以直接貼到 LINE 的回覆。</p>
+          <p class="gain">同一個問題，查一下、貼過去</p>
+        </article>
+        <article>
+          <span class="wk">WEEK 3</span>
+          <h3>新人上手包</h3>
+          <p>一份學習指南、一段中文語音導覽，加上一份交接說明：資料放哪、多久更新、誰負責。</p>
+          <p class="gain">新人自己聽、自己查，你可以安心請假</p>
+        </article>
+        <article>
+          <span class="wk">WEEK 4</span>
+          <h3>對外版＋自己重做一次</h3>
+          <p>整理成可以給客人看的版本、開好分享連結；再用另一組資料，不靠老師從頭做一份。</p>
+          <p class="gain">下課以後，換一份資料你也做得出來</p>
+        </article>
       </div>
-    </section>
+      <p class="muted" style="margin-top:22px">四件都從同一個筆記本長出來，你的資料只要整理一次。</p>
+    </div>
+  </section>
 
+  <section>
     <div class="wrap">
-      <!-- 04 How -->
-      <section id="how" class="block" aria-labelledby="how-title">
-        <div class="sec-head">
-          <div class="kicker">04 · How It Works</div>
-          <h2 id="how-title" class="big-title">How We Teach</h2>
-          <div class="sub">線上上課最怕卡住，所以我們這樣安排</div>
+      <p class="num">03 / 為什麼是 6–8 人</p>
+      <h2>每堂 20 分鐘，拿真實資料當教材</h2>
+      <div class="diag">
+        <div>
+          <h3>個案診斷</h3>
+          <p>每堂挑一到兩位同學，把他的資料投影出來，大家一起看哪裡卡住、怎麼改。掃描檔、口語化的 LINE 對話、新舊兩版的價目表，都是現場會遇到的真問題。</p>
         </div>
-        <div class="flow4">
-          <div class="f4"><b>課前：看前導影片</b><span>工具安裝、帳號註冊、付費方案設定都拍成短片，開課前照著完成，第一堂不必卡在安裝。</span></div>
-          <div class="f4"><b>課中：講師＋助教</b><span>講師專心帶進度；找不到按鈕、畫面跟老師不一樣，助教在 LINE 群組或私訊個別協助。</span></div>
-          <div class="f4"><b>課後：回放與補課</b><span>每堂都錄影。請假或沒跟上，看回放補課，我們也會追蹤缺課同學的進度。</span></div>
-          <div class="f4"><b>每週：一份成果</b><span>每堂都有要完成的作品，下週一開始先看大家的成果、處理卡關。</span></div>
+        <div>
+          <h3>看得到你的螢幕</h3>
+          <p>一位講師加一位助教，帶 6–8 個人。你卡住的時候，有人直接看你的畫面，不用在聊天室裡排隊打字。</p>
+          <p class="muted">要投影的資料會先問過你，客戶姓名、電話可以先遮掉。</p>
         </div>
-        <div class="pilot panel">
-          <div>
-            <h3>第一梯是小班試辦</h3>
-            <p>人數少，講師和助教顧得到每個人。我們會記錄每堂遇到的問題，持續調整課程節奏，你的回饋也會讓下一梯更好。</p>
-          </div>
-          <a class="btn line" href="#signup" data-line>加 LINE 詢問試辦梯次 →</a>
-        </div>
-      </section>
+      </div>
+      <p class="pull">「原來別人的資料也長這樣。」<br>常常比看老師示範學得更多。</p>
+    </div>
+  </section>
 
-      <!-- 05 Coach -->
-      <section id="coach" class="block" aria-labelledby="coach-title">
-        <div class="sec-head">
-          <div class="kicker">05 · Your Coach</div>
-          <h2 class="big-title">Meet ARZ</h2>
-        </div>
-        <div class="coach panel dots">
-          <div class="avatar"><img src="assets/arz.jpg" alt="講師阿茲（ARZ）的頭像" width="560" height="560" loading="lazy"></div>
-          <div>
-            <h3 id="coach-title">阿茲 <span class="en-name">ARZ</span></h3>
-            <div class="role"><span class="pill">AI 自動化工程師</span><span class="pill">AI 工作流程設計師</span></div>
-            <p>20 年工程師經驗，擅長把「我想要有個東西可以幫我⋯⋯」這種模糊的需求，拆成能一步步做出來的工具。課堂上不只教名詞，而是帶你親手做完，再把方法交給你帶回家。</p>
-            <p class="coach-co">阿茲是 <a href="https://www.rain-maker.com.tw/" target="_blank" rel="noopener">造雨人科技</a> 的工程師（2003 年成立的系統開發公司），長期替企業做網站、LINE 串接、後台與流程自動化。</p>
-            <div class="coach-links">
-              <a class="btn light" href="https://arz-ai-showcase.pages.dev/" target="_blank" rel="noopener">看阿茲的作品集 ↗</a>
-              <a class="btn light" href="https://www.rain-maker.com.tw/" target="_blank" rel="noopener">造雨人科技官網 ↗</a>
-            </div>
-          </div>
-        </div>
-      </section>
+  <section>
+    <div class="wrap">
+      <p class="num">04 / 先說清楚</p>
+      <h2>這門課不做的事</h2>
+      <div class="neg">
+        <ul>
+          <li><strong>不出回家作業。</strong>四件作品都在課堂上做完。你只要準時出席、帶資料來。</li>
+          <li><strong>不教 10 個功能。</strong>只用跟四件作品有關的功能；簡報、資訊圖表、測驗這些先不碰。</li>
+          <li><strong>不寫程式。</strong>沒有 API、沒有資料庫、沒有部署。</li>
+          <li><strong>不教接案或變現。</strong>這門課處理的是你每天的工作量，不是你的收入。</li>
+        </ul>
+        <p class="closer">
+          如果你期待的是「設定一次，之後 AI 自己回覆客人」，這門課還做不到：這裡是你查、你貼。<br>
+          如果你要的是「手上一堆資料，四週後有一套交得出去、能少講很多次的東西」，這門課就是為你設計的。
+        </p>
+      </div>
+    </div>
+  </section>
 
-      <!-- 06 Signup -->
-      <section id="signup" class="block" aria-labelledby="signup-title">
-        <div class="sec-head">
-          <div class="kicker">06 · Sign Up</div>
-          <h2 id="signup-title" class="big-title">How to Join</h2>
-          <div class="sub">先用 LINE 文字聊，確定適合再報名</div>
-        </div>
-        <div class="signup panel">
-          <div class="price-row">
-            <div class="price-card"><span class="label">費用</span><strong>試辦價格確認中</strong><span>加 LINE 好友，公布時第一時間通知你。</span></div>
-            <div class="price-card"><span class="label">第一梯（小班試辦）</span><strong>開課日期確認中</strong><span>每週一次線上直播，約兩個月上完。</span></div>
-          </div>
-          <p class="signup-note">報名流程：加 LINE 官方帳號 → 用文字說說你的背景和想學的 → 我們幫你確認適不適合 → 完成報名。不需要先預約一對一諮詢或參加說明會。</p>
-          <a class="btn line block" href="#signup" data-line>加入 LINE 官方帳號，開始文字諮詢 →</a>
-        </div>
-      </section>
-
-      <!-- FAQ -->
-      <section id="faq" class="block" aria-labelledby="faq-title">
-        <div class="sec-head">
-          <div class="kicker">07 · Q&amp;A</div>
-          <h2 id="faq-title" class="big-title">Q &amp; A</h2>
-        </div>
-        <div class="faq">
-          <details><summary>完全沒碰過 AI 可以上嗎？</summary><p>可以。第 1 週會從工具設定和基本用法開始，內容刻意放輕；開課前也有前導影片，帶你完成安裝和帳號設定。</p></details>
-          <details><summary>線上上課，電腦操作卡住怎麼辦？</summary><p>直播時有助教在 LINE 群組或私訊個別協助，講師不必停下來，其他同學也不用等。真的來不及處理的，課後再一對一排除。</p></details>
-          <details><summary>有一堂沒辦法到，怎麼辦？</summary><p>每堂課都有回放，可以看回放補課；我們也會追蹤缺課同學的進度，下週上課前先確認你有跟上。</p></details>
-          <details><summary>有實體課嗎？</summary><p>本課程以線上直播為主，目前不預先安排實體場次；若之後有加開，會在 LINE 官方帳號通知。</p></details>
-          <details><summary>學費有包含 AI 工具的訂閱費嗎？</summary><p>不包含。上課前須訂閱一種 AI 工具（例如 ChatGPT Plus），訂閱步驟在前導影片裡有教，不確定的話也可以在 LINE 上問。</p></details>
-          <details><summary>上完課保證能找到工作或接到案子嗎？</summary><p>不保證。課程目標是讓你做出可檢視的作品、帶走能重複使用的範本，在求職或提供服務時有具體成果可以說明；不保證就業、錄取、收入或接案。</p></details>
-          <details><summary>上完之後想學網頁工具、LINE 接單系統怎麼辦？</summary><p>網頁工具、LINE 官方帳號接單系統與作品集陪跑的進階方案規劃中，確定後會在 LINE 官方帳號公告。想先了解原本的五門課內容，可以看<a href="all-courses.html">五門課完整版</a>。</p></details>
-        </div>
-      </section>
-
-      <section id="important-notes" class="block" aria-labelledby="notes-title">
-        <div class="sec-head">
-          <div class="kicker">Notice</div>
-          <h2 id="notes-title" style="font-weight:900;font-size:1.6rem">重要說明</h2>
-        </div>
-        <div class="notice">
-          <ul>
-            <li>本頁為試辦梯次說明，課表、總時數、費用與開課日期以正式公告為準。</li>
-            <li>課程以建立實際作品與工作能力為目標，不保證就業、錄取、收入或接案。</li>
-            <li>課程使用的第三方 AI 工具與平台，可能因帳號、地區或平台政策而有使用限制。</li>
-            <li>學費不包含 AI 工具訂閱費（包括但不限於 ChatGPT、Claude、Gemini 等），上課前須訂閱其中一種。</li>
+  <section>
+    <div class="wrap">
+      <p class="num">05 / 適合誰</p>
+      <h2>手上有資料、每天被問一樣的問題的人</h2>
+      <div class="who">
+        <div>
+          <h3>為你設計</h3>
+          <ul class="clean">
+            <li>行政、客服、業務<small>AI 給的答案不敢直接貼給客人，每次都要再查一次</small></li>
+            <li>小商家、工作室<small>價目、流程、規則散在 LINE 跟雲端硬碟，每次都要重找</small></li>
+            <li>帶新人的人<small>同一套作業流程講到嘴巴破，新人還是來問</small></li>
+            <li>接案者<small>每接一個新客戶，就要把流程重新解釋一次</small></li>
           </ul>
         </div>
-      </section>
+        <div class="no">
+          <h3>可能不適合</h3>
+          <ul class="clean">
+            <li>手上沒有 5 份以上的工作資料<small>作品就是用你的資料做的</small></li>
+            <li>沒用過任何 AI、不太會開資料夾和上傳檔案<small>首班先不收，報名前會確認</small></li>
+            <li>只想看影片、不開電腦<small>每堂都是同步實作</small></li>
+          </ul>
+        </div>
+      </div>
     </div>
-  </main>
+  </section>
 
-  <footer>
+  <section>
     <div class="wrap">
-      <p>女力 AI 數位職涯培育｜AI 職場實作直播班</p>
-      <nav aria-label="頁尾導覽">
-        <a href="#who">適合誰</a>
-        <a href="#syllabus">8 週課表</a>
-        <a href="#how">上課方式</a>
-        <a href="#faq">Q&amp;A</a>
-        <a href="all-courses.html">五門課完整版</a>
-        <a href="game.html">90 天小遊戲</a>
-        <a href="#signup" data-line>LINE 諮詢</a>
-      </nav>
-      <p class="small">報名與課程諮詢請透過 LINE 官方帳號。</p>
+      <p class="num">06 / 四週安排</p>
+      <h2>每週只多學一件事</h2>
+      <ol class="weeks">
+        <li><span class="d"><b>W0</b>開課前</span><div><h3>課前一對一 15 分鐘</h3><p>確認帳號、電腦，上傳第一份檔案。上課當天不卡在登入。</p></div></li>
+        <li><span class="d"><b>W1</b><span class="placeholder">1/5</span></span><div><h3>放進去，找出資料哪裡打架</h3><p>上傳自己的資料、處理讀不到的檔案，產出資料健檢報告。</p></div></li>
+        <li><span class="d"><b>W2</b><span class="placeholder">1/12</span></span><div><h3>讓它回答，點回原文核對</h3><p>最常被問的 10 題，逐題核對；挑 5 題寫成回覆範本。</p></div></li>
+        <li><span class="d"><b>W3</b><span class="placeholder">1/19</span></span><div><h3>做成新人看得懂的東西</h3><p>學習指南、中文語音導覽、交接說明。</p></div></li>
+        <li><span class="d"><b>W4</b><span class="placeholder">1/26</span></span><div><h3>交出去，然後自己重做一次</h3><p>對外版、分享連結，再用另一組資料獨立做一份。</p></div></li>
+      </ol>
+      <p style="margin-top:22px"><a href="course.html">看每一堂 90 分鐘怎麼分配 →</a></p>
     </div>
-  </footer>
+  </section>
 
-  <div class="sticky-cta" id="sticky-cta">
-    <a class="btn light" href="#syllabus">8 週課表</a>
-    <a class="btn line" href="#signup" data-line>LINE 問開課資訊</a>
-  </div>
-
-  <div class="popup" id="popup" hidden role="dialog" aria-modal="true" aria-labelledby="popup-title">
-    <div class="popup-card panel dots">
-      <button type="button" class="popup-close" id="popup-close" aria-label="關閉">✕</button>
-      <span class="pill" style="background:var(--yellow)">第一梯小班試辦</span>
-      <h3 id="popup-title">想知道開課日期和費用？<br>加 LINE 先收到通知</h3>
-      <p>用文字問就可以，不用先約電話。</p>
-      <a class="btn line block" href="#signup" data-line>加 LINE 文字諮詢 →</a>
-      <button type="button" class="popup-later" id="popup-later">先繼續看看</button>
+  <section>
+    <div class="wrap">
+      <p class="num">07 / 講師</p>
+      <h2>資料對不上，就是出包的開始</h2>
+      <div class="who-card">
+        <div class="portrait"><img src="instructor.jpg" alt="講師吳政穎（阿茲 Arzbar），坐在工作桌前" width="720" height="720"></div>
+        <div>
+          <span class="role">阿茲（Arzbar）｜吳政穎</span>
+          <blockquote>「AI 回答得很有自信，我怎麼知道它有沒有說錯？」</blockquote>
+          <p>2010 年開始接案，做的都是同一件事：讓資料跟工具對得上。CASIO 台灣的官網與 CRM 串接做了 11 年，doTERRA 的年會票務系統承載萬人報名；這幾年，他把同樣的工夫用在 AI、LINE 官方帳號與自動化流程上。</p>
+          <p>他從 2025 年開始帶課，帶的都是沒有程式基礎的人。所以他不講模型架構，他講的是：這一步為什麼要這樣做，卡住的時候從哪裡開始檢查。</p>
+        </div>
+      </div>
     </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="num">08 / 報名前確認</p>
+      <h2>三個問題都是「是」，就可以報名</h2>
+      <ul class="clean">
+        <li>你有一組<strong>個人</strong> Google 帳號嗎？<small>公司或學校的 Workspace 帳號可能無法開公開分享連結，第四週會做不完。</small></li>
+        <li>你會用電腦開資料夾、上傳檔案嗎？<small>不需要會寫程式，但要能自己找到檔案。</small></li>
+        <li>你手上有 5 份以上跟工作有關的資料嗎？<small>PDF、Word、試算表、LINE 對話都算。作品就是用這些做的。</small></li>
+      </ul>
+      <p class="muted" style="margin-top:20px">
+        上課一定要用電腦，手機版功能不完整。報名後會約一次 15 分鐘的課前一對一，把帳號問題在開課前處理掉。
+      </p>
+    </div>
+  </section>
+
+  <section id="signup">
+    <div class="wrap">
+      <p class="num">09 / 梯次與價格</p>
+      <h2>首班 <span class="placeholder">2027/1/5 起，每週二 20:00–21:30</span> <span style="font-family:var(--mono);font-size:12px;color:var(--clay);letter-spacing:.1em">暫定</span></h2>
+
+      <div class="price-grid">
+        <div class="pick">
+          <span>早鳥</span>
+          <b>NT$ 4,500</b>
+          <em>限前 4 名，額滿恢復原價</em>
+        </div>
+        <div>
+          <span>原價</span>
+          <b>NT$ 5,000</b>
+          <em>四週、四件作品、課前一對一</em>
+        </div>
+      </div>
+
+      <div class="meta-row">
+        <div>名額 <b>6–8 人</b></div>
+        <div>形式 <b>線上直播 4 × 90 分鐘</b></div>
+        <div>師資 <b>講師 1 ＋ 助教 1</b></div>
+        <div>課前 <b>一對一 15 分鐘</b></div>
+      </div>
+
+      <h3>開班與退費規則</h3>
+      <ul class="rules">
+        <li><span class="placeholder">12/8</span> 開放報名。</li>
+        <li>至少 6 人完成付款、並通過課前一對一，才確認開班；<span class="placeholder">12/29</span> 前通知。</li>
+        <li>未達 6 人：由你選擇<strong>全額退費</strong>，或<strong>保留名額轉下一梯</strong>。</li>
+        <li>課前一對一確認帳號、電腦或資料不符合上課條件：全額退費。</li>
+      </ul>
+
+      <p style="margin-top:30px">
+        <a class="cta line" href="https://lin.ee/7j3Hi2Z">加 LINE 預約報名</a>
+      </p>
+      <p class="cta-note">報名表單準備中，先加 LINE 留下「工作知識包小班」，我們會回覆你課前一對一的時間。</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="num">10 / 常見問題</p>
+      <h2>你可能會想問</h2>
+
+      <details>
+        <summary>沒有回家作業，四件作品真的做得完嗎？</summary>
+        <div class="body"><p>每堂有 35 分鐘是你自己動手做。AI 回答一題要等幾分鐘，所以做法是一次把問題送出去，等待的時間拿來做個案診斷，回來再核對答案。作品在課堂上完成，不用回家補。</p></div>
+      </details>
+
+      <details>
+        <summary>跟 ChatGPT 有什麼不同？</summary>
+        <div class="body"><p>ChatGPT 會用它看過的大量資料幫你把答案補完整，你只能相信它；Gemini Notebook 只依據你放進去的資料回答，每一句都標得出段落。它一樣可能漏讀、答得不完整，但你看得到它從哪裡來。</p></div>
+      </details>
+
+      <details>
+        <summary>我的資料會不會被拿去訓練？會被別的同學看到嗎？</summary>
+        <div class="body"><p>官方說明不會用你的資料訓練模型，但公司機密仍建議先把客戶姓名、電話換掉。個案診斷要投影的資料，一定先問過你，你可以拒絕或先遮蔽。</p></div>
+      </details>
+
+      <details>
+        <summary>免費版夠用嗎？</summary>
+        <div class="body"><p>一般工作資料用免費版就夠。比較常遇到的限制是生成次數，用完要等一段時間重置，所以上課前一天不要先把額度玩掉。</p></div>
+      </details>
+
+      <details>
+        <summary>為什麼首班不收完全沒用過 AI 的人？</summary>
+        <div class="body"><p>首班要先確認這套教法能讓大家在四週內做出作品。完全沒碰過 AI、也不太會操作檔案的同學，需要的陪伴方式不一樣，我們想先把它設計好再開放，不想讓你花了錢卻跟不上。</p></div>
+      </details>
+
+      <details>
+        <summary>手機可以上課嗎？</summary>
+        <div class="body"><p>不行。手機版的功能不完整，每堂都要同步操作，一定要用電腦。</p></div>
+      </details>
+
+      <details>
+        <summary>工具名稱到底是 NotebookLM 還是 Gemini Notebook？</summary>
+        <div class="body"><p>同一個工具。2026 年 8 月改名為 Gemini Notebook，網址是 notebook.google.com。你在網路上搜到的舊教學，畫面會跟現在不一樣，上課會直接用新版介面。</p></div>
+      </details>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><strong>工作知識包小班</strong>　Gemini Notebook（原 NotebookLM）四週線上實作。</p>
+    <p style="color:#8A8279">首班試辦。虛線框內的日期為暫定，正式日期以 LINE 通知為準。</p>
   </div>
+</footer>
 
-  <script>
-    (function () {
-      // LINE URL is configured once in body[data-line-url] and applied to every data-line CTA.
-      var lineUrl = document.body.getAttribute("data-line-url") || "";
-      if (lineUrl && lineUrl.indexOf("REPLACE") === -1) {
-        document.querySelectorAll("[data-line]").forEach(function (a) {
-          a.href = lineUrl; a.target = "_blank"; a.rel = "noopener";
-        });
-      }
+<div class="dock">
+  <span>早鳥 NT$ 4,500<b>1/5（二）20:00 開課・暫定</b></span>
+  <a class="cta" href="#signup">報名</a>
+</div>
 
-      // Sticky CTA after the hero; popup at ~40% and ~80% scroll, at most twice per session.
-      // Clicking the LINE button inside it counts as done, so it never shows again.
-      var sticky = document.getElementById("sticky-cta");
-      var popup = document.getElementById("popup");
-      var STOPS = [0.4, 0.8];
-      var shown = 0;
-      try { shown = parseInt(sessionStorage.getItem("livePopupShown") || "0", 10) || 0; } catch (err) {}
-      function remember() { try { sessionStorage.setItem("livePopupShown", String(shown)); } catch (err) {} }
-      function closePopup() { popup.hidden = true; remember(); }
-      function onScroll() {
-        var y = window.scrollY;
-        sticky.classList.toggle("show", y > 500);
-        var max = document.documentElement.scrollHeight - window.innerHeight;
-        if (shown < STOPS.length && popup.hidden && max > 0 && y / max > STOPS[shown]) {
-          shown++;
-          remember();
-          popup.hidden = false;
-          document.getElementById("popup-close").focus();
-        }
-      }
-      window.addEventListener("scroll", onScroll, { passive: true });
-      document.getElementById("popup-close").addEventListener("click", closePopup);
-      document.getElementById("popup-later").addEventListener("click", closePopup);
-      popup.addEventListener("click", function (e) { if (e.target === popup) closePopup(); });
-      popup.querySelector("[data-line]").addEventListener("click", function () { shown = STOPS.length; closePopup(); });
-      document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !popup.hidden) closePopup(); });
-    })();
-  </script>
 </body>
 </html>
