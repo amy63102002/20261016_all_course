@@ -1,0 +1,70 @@
+/* 四週學會指揮 AI：報名頁專用樣式（共用 ../style.css 的色票與面板） */
+
+/* 三個痛點 */
+.pain{display:grid;gap:14px}
+.pain article{background:#fff;border:var(--line);border-radius:18px;padding:14px 18px;box-shadow:4px 4px 0 var(--ink)}
+.pain h3{margin:0 0 6px;font-size:1rem}
+.pain h3 b{font-family:var(--display);font-weight:400;color:var(--orange);margin-right:6px}
+.pain p{margin:0;font-size:.95rem}
+
+/* 三段課程 */
+.kit.three{grid-template-columns:1fr}
+.kit article ul{margin:0;padding:6px 16px 0 2.2em;font-size:.93rem}
+.kit article ul li{margin-bottom:4px}
+
+/* 報名步驟 */
+.steps{list-style:none;margin:0 0 24px;padding:0;display:grid;gap:12px;counter-reset:s}
+.steps li{counter-increment:s;position:relative;background:#fff;border:var(--line);border-radius:18px;padding:14px 18px 14px 64px}
+.steps li::before{
+  content:counter(s,decimal-leading-zero);position:absolute;left:14px;top:12px;
+  font-family:var(--display);font-size:1.5rem;line-height:1.2;color:var(--orange)
+}
+.steps h3{margin:0 0 4px;font-size:1rem}
+.steps p{margin:0;font-size:.93rem}
+
+/* 資訊表 */
+.facts{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border:var(--line);border-radius:18px;overflow:hidden;font-size:.95rem;margin-bottom:8px}
+.facts th,.facts td{padding:10px 14px;border-bottom:2px dashed #D9D2C0;text-align:left;vertical-align:top}
+.facts tr:last-child th,.facts tr:last-child td{border-bottom:0}
+.facts th{width:8em;font-weight:900;background:var(--cream)}
+
+/* 表單 */
+.form{background:var(--cream);border:var(--line);border-radius:22px;padding:24px 22px;box-shadow:6px 6px 0 var(--ink);margin-top:26px}
+.form h3{margin-top:0}
+.field{margin:0 0 18px;border:0;padding:0;min-width:0}
+.field>label,.field>legend{display:block;font-weight:900;margin-bottom:6px;padding:0}
+.field .req{color:var(--orange);margin-left:4px;font-size:.85rem}
+.field .hint{display:block;font-weight:500;font-size:.84rem;color:var(--muted);margin:-2px 0 8px}
+.field input[type=text],.field input[type=email],.field input[type=tel],.field textarea{
+  width:100%;font:inherit;font-size:16px;padding:10px 12px;border:2.5px solid var(--ink);border-radius:12px;background:#fff
+}
+.field textarea{min-height:96px;resize:vertical}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opts label{
+  display:inline-flex;align-items:center;gap:6px;background:#fff;border:2px solid var(--ink);
+  border-radius:999px;padding:6px 14px;font-weight:700;font-size:.92rem;cursor:pointer
+}
+.opts input{accent-color:var(--ink);margin:0}
+.opts label:has(input:checked){background:var(--yellow)}
+.agree label{display:flex;gap:10px;align-items:flex-start;font-weight:700;font-size:.93rem;margin-bottom:10px;cursor:pointer}
+.agree input{margin-top:6px;accent-color:var(--ink);flex:none}
+.agree small{display:block;font-weight:500;color:var(--muted);font-size:.84rem}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.form button.cta{border:var(--line);cursor:pointer;font:inherit;font-weight:900}
+.form button.cta[disabled]{opacity:.6;cursor:wait}
+.privacy{font-size:.84rem;color:var(--muted);margin-top:14px}
+.status{margin-top:16px;padding:14px 16px;border:var(--line);border-radius:14px;font-weight:700;font-size:.95rem}
+.status[hidden]{display:none}
+.status.ok{background:var(--mint)}
+.status.warn{background:#fff}
+.status.err{background:var(--pink)}
+.field.bad input,.field.bad textarea{border-color:#C0392B;background:#FFF1F0}
+.field.bad .opts label{border-color:#C0392B}
+
+.press{margin-top:12px;font-size:.9rem;font-weight:700;border:2px solid var(--ink);border-radius:12px;padding:8px 12px;background:var(--cream);display:inline-block}
+
+@media (max-width:640px){
+  .form{padding:20px 16px}
+  .facts th{width:6em}
+  .steps li{padding-left:56px}
+}
