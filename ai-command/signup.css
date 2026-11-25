@@ -68,18 +68,3 @@
   .facts th{width:6em}
   .steps li{padding-left:56px}
 }
-
-/* 首屏三格示意：會議討論 → AI 先問 → 一頁決議表 */
-.demo{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:28px auto 6px;max-width:980px;text-align:left}
-.demo figure{margin:0;background:#fff;border:var(--line);border-radius:14px;box-shadow:4px 4px 0 var(--ink);padding:14px 14px 12px;font-size:.88rem;line-height:1.6}
-.demo figcaption{font-weight:900;font-size:.82rem;margin-bottom:8px;display:inline-block;background:var(--cream);border:2px solid var(--ink);border-radius:999px;padding:1px 10px}
-.demo .m{margin:0 0 4px}
-.demo .m b{color:var(--orange);margin-right:4px}
-.demo .m s{color:#8A8279}
-.demo .ask{background:var(--mint);border-radius:10px;padding:8px 10px;margin:0}
-.demo table{width:100%;border-collapse:collapse;font-size:.8rem}
-.demo th,.demo td{border-bottom:1px solid #ddd;padding:3px 4px;vertical-align:top}
-.demo th{text-align:left;background:var(--cream)}
-.demo .tbd{color:var(--orange);font-weight:700}
-.demo-note{font-size:.78rem;color:#8A8279;margin:4px 0 18px}
-@media (max-width:760px){.demo{grid-template-columns:1fr}}
